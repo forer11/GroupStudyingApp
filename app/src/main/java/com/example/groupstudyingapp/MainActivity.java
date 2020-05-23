@@ -2,10 +2,13 @@ package com.example.groupstudyingapp;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -17,45 +20,62 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
-    private static final String TAG = "MainActivity";
 
-    private static final String KEY_TITLE = "title";
-    private static final String KEY_DESCRIPTION = "description";
-
-    private EditText editTextTile;
-    private EditText editTextDescription;
-
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private EditText editTextTile, editTextDescription;
+    private Button saveButton;
+    AppData appData;
+    FireStoreHandler fireStoreHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        editTextTile = findViewById(R.id.edit_text_title);
-        editTextDescription = findViewById(R.id.edit_text_description);
+        setToolbar();
+        getAppData();
+        setViews();
+
+        setButtonsClickListeners();
+
     }
 
-    public void saveNote(View v) {
-        String title = editTextTile.getText().toString();
-        String description = editTextDescription.getText().toString();
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
+        return true;
+    }
 
-        Note note = new Note();
-        note.setTitle(title);
-        note.setDescription(description);
+    private void setToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+    }
 
-        db.collection("Notebook").document("My First Note").set(note)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
+    private void setButtonsClickListeners() {
+        saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onSuccess(Void aVoid) {
-                Toast.makeText(MainActivity.this, "Note Saved", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(MainActivity.this, "Error!", Toast.LENGTH_SHORT).show();
-                Log.d(TAG, e.toString());
+            public void onClick(View v) {
+                String title = editTextTile.getText().toString();
+                String description = editTextDescription.getText().toString();
+                Note note = new Note();
+                note.setTitle(title);
+                note.setDescription(description);
+
+                fireStoreHandler.saveNote(note, getBaseContext());
             }
         });
     }
+
+    private void setViews() {
+        editTextTile = findViewById(R.id.edit_text_title);
+        editTextDescription = findViewById(R.id.edit_text_description);
+        saveButton = findViewById(R.id.save_button);
+    }
+
+    private void getAppData() {
+        appData = (AppData) getApplicationContext();
+        fireStoreHandler = appData.fireStoreHandler;
+    }
+
+
 }

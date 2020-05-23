@@ -1,0 +1,15 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/search_bar"
+        android:icon="@drawable/ic_search"
+        app:showAsAction="ifRoom"
+        android:title="Search">
+    </item>
+    <item
+        android:id="@+id/profile"
+        android:icon="@mipmap/ic_launcher"
+        app:showAsAction="ifRoom|withText"
+        android:title="Profile">
+    </item>
+</menu>
