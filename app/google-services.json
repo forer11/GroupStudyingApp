@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "90698286473",
+    "firebase_url": "https://groupstudyingapp.firebaseio.com",
+    "project_id": "groupstudyingapp",
+    "storage_bucket": "groupstudyingapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:90698286473:android:325e3f8029997d7a8a4d58",
+        "android_client_info": {
+          "package_name": "com.example.groupstudyingapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "90698286473-6krdbhkqlb3u8vbp0rvf1j6muvksfec1.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.groupstudyingapp",
+            "certificate_hash": "65e2504c5d76b46b15d6f991daad029e8fbf331d"
+          }
+        },
+        {
+          "client_id": "90698286473-jka6c86v9q58sk519gno7uqjc245tfa0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCtHb8MIX7Ahm6Sf1NJ6ma9s_e01TkYLLM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "90698286473-jka6c86v9q58sk519gno7uqjc245tfa0.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
