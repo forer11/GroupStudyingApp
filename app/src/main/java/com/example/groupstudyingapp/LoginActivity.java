@@ -30,7 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     private SignInButton signInButton;
     private TextView mail;
     private GoogleSignInClient googleSignInClient;
-    private String TAG = "LoginActivity";
+    private String TAG = "Liorrr";
     private int RC_SIGN_IN = 1;
 
     AppData appData;
