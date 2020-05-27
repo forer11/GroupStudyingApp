@@ -1,6 +1,7 @@
 package com.example.groupstudyingapp;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -10,7 +11,6 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-import com.developer.kalert.KAlertDialog;
 import com.diegodobelo.expandingview.ExpandingItem;
 import com.diegodobelo.expandingview.ExpandingList;
 
@@ -117,18 +117,32 @@ public class CoursePageActivity extends AppCompatActivity {
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new KAlertDialog(CoursePageActivity.this, KAlertDialog.CUSTOM_IMAGE_TYPE)
-                        .setTitleText("Question " + subTitle + ":")
-                        .setCustomImage(R.drawable.question)
-                        .setConfirmText("Open question")
-                        .setConfirmClickListener(new KAlertDialog.KAlertClickListener() {
-                            @Override
-                            public void onClick(KAlertDialog kAlertDialog) {
-                                //TODO - open a dialog fragment with desired question
-                            }
-                        }).setCancelText("Cancel")
-                        .show();
+                Intent intent = new Intent(getBaseContext(), QuestionActivity.class);
+                intent.putExtra("EXTRA_SESSION_ID", subTitle);
+                startActivity(intent);
+
             }
+//                final FlatDialog flatDialog = new FlatDialog(CoursePageActivity.this);
+//                flatDialog.setTitle("Question " + subTitle)
+//                        .setFirstButtonText("OPEN QUESTION")
+//                        .setSecondButtonText("CANCEL")
+//                        .withFirstButtonListner(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//                                //TODO - open a dialog fragment with desired question
+//
+//                            }
+//                        })
+//                        .withSecondButtonListner(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//                                flatDialog.dismiss();
+//                            }
+//                        })
+//                        .setBackgroundColor(Color.parseColor("#FFC0CB"))
+//                        .setIcon(R.drawable.nerd_bear)
+//                        .show();
+//            }
         });
     }
 
