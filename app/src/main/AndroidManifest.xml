@@ -13,7 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".LoginActivity">
-
+        <activity android:name=".QuestionActivity"></activity>
+        <activity
+            android:name=".CoursePageActivity"
+            android:parentActivityName=".MainActivity">
         </activity>
         <activity android:name=".OpeningScreenActivity">
             <intent-filter>
@@ -22,13 +25,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity
-            android:name=".CoursePageActivity"
-            android:parentActivityName=".MainActivity" />
         <activity android:name=".MainActivity">
 
         </activity>
-
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

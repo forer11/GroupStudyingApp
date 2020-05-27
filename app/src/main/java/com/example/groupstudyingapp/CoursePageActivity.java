@@ -1,6 +1,7 @@
 package com.example.groupstudyingapp;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -36,11 +37,12 @@ public class CoursePageActivity extends AppCompatActivity {
     }
 
     private void createItems() {
+        //TODO - add one for general questions
         addItem("2019 MOED A", new String[]{"Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7"}, R.color.pink, R.drawable.exam);
         addItem("2019 MOED B", new String[]{"Q1", "Q2", "Q3"}, R.color.blue, R.drawable.exam);
         addItem("2018 MOED A", new String[]{"Q1"}, R.color.purple, R.drawable.exam);
         addItem("2018 MOED B", new String[]{"Q1", "Q2", "Q3"}, R.color.yellow, R.drawable.exam);
-        addItem("2017 MOED A", new String[]{}, R.color.orange, R.drawable.exam);
+        addItem("2017 MOED A", new String[]{"Q1"}, R.color.orange, R.drawable.exam);
         addItem("2017 MOED B", new String[]{"Q1", "Q2"}, R.color.green, R.drawable.exam);
         addItem("2016 MOED A", new String[]{"Q1", "Q2", "Q3", "Q4", "Q5"}, R.color.blue, R.drawable.exam);
         addItem("2016 MOED B", new String[]{"Q1", "Q2", "Q3"}, R.color.yellow, R.drawable.exam);
@@ -57,6 +59,7 @@ public class CoursePageActivity extends AppCompatActivity {
                 positive.itemCreated(text.getText().toString());
             }
         });
+        //TODO - add option to add a pic of the question from gallery or take a pic using camera
         builder.setNegativeButton(android.R.string.cancel, null);
         builder.show();
     }
@@ -102,13 +105,44 @@ public class CoursePageActivity extends AppCompatActivity {
         }
     }
 
-    private void configureSubItem(final ExpandingItem item, final View view, String subTitle) {
+
+    private void configureSubItem(final ExpandingItem item, final View view, final String subTitle) {
         ((TextView) view.findViewById(R.id.sub_title)).setText(subTitle);
         view.findViewById(R.id.remove_sub_item).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 item.removeSubItem(view);
             }
+        });
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(), QuestionActivity.class);
+                intent.putExtra("EXTRA_SESSION_ID", subTitle);
+                startActivity(intent);
+
+            }
+//                final FlatDialog flatDialog = new FlatDialog(CoursePageActivity.this);
+//                flatDialog.setTitle("Question " + subTitle)
+//                        .setFirstButtonText("OPEN QUESTION")
+//                        .setSecondButtonText("CANCEL")
+//                        .withFirstButtonListner(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//                                //TODO - open a dialog fragment with desired question
+//
+//                            }
+//                        })
+//                        .withSecondButtonListner(new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//                                flatDialog.dismiss();
+//                            }
+//                        })
+//                        .setBackgroundColor(Color.parseColor("#FFC0CB"))
+//                        .setIcon(R.drawable.nerd_bear)
+//                        .show();
+//            }
         });
     }
 
