@@ -1,5 +1,6 @@
 package com.example.groupstudyingapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -12,7 +13,7 @@ import androidx.appcompat.widget.Toolbar;
 public class MainActivity extends AppCompatActivity {
 
     private EditText editTextTile, editTextDescription;
-    private Button saveButton;
+    private Button saveButton, gotoButton;
     AppData appData;
     FireStoreHandler fireStoreHandler;
 
@@ -60,12 +61,21 @@ public class MainActivity extends AppCompatActivity {
                 fireStoreHandler.saveNote(note, getBaseContext());
             }
         });
+
+        gotoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(),CoursePageActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void setViews() {
         editTextTile = findViewById(R.id.edit_text_title);
         editTextDescription = findViewById(R.id.edit_text_description);
         saveButton = findViewById(R.id.save_button);
+        gotoButton = findViewById(R.id.goto_button);
     }
 
     private void getAppData() {

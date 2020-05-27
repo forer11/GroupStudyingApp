@@ -9,9 +9,12 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.diegodobelo.expandingview.ExpandingItem;
 import com.diegodobelo.expandingview.ExpandingList;
+
+import java.util.Objects;
 
 public class CoursePageActivity extends AppCompatActivity {
     private ExpandingList expandingList;
@@ -22,7 +25,15 @@ public class CoursePageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_course_page);
         expandingList = findViewById(R.id.expanding_list_main);
         createItems();
+        setToolbar();
 
+    }
+
+    private void setToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("Open source Workshop");
     }
 
     private void createItems() {
