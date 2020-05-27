@@ -9,6 +9,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.developer.kalert.KAlertDialog;
 import com.diegodobelo.expandingview.ExpandingItem;
 import com.diegodobelo.expandingview.ExpandingList;
 
@@ -25,11 +26,12 @@ public class CoursePageActivity extends AppCompatActivity {
     }
 
     private void createItems() {
+        //TODO - add one for general questions
         addItem("2019 MOED A", new String[]{"Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7"}, R.color.pink, R.drawable.exam);
         addItem("2019 MOED B", new String[]{"Q1", "Q2", "Q3"}, R.color.blue, R.drawable.exam);
         addItem("2018 MOED A", new String[]{"Q1"}, R.color.purple, R.drawable.exam);
         addItem("2018 MOED B", new String[]{"Q1", "Q2", "Q3"}, R.color.yellow, R.drawable.exam);
-        addItem("2017 MOED A", new String[]{}, R.color.orange, R.drawable.exam);
+        addItem("2017 MOED A", new String[]{"Q1"}, R.color.orange, R.drawable.exam);
         addItem("2017 MOED B", new String[]{"Q1", "Q2"}, R.color.green, R.drawable.exam);
         addItem("2016 MOED A", new String[]{"Q1", "Q2", "Q3", "Q4", "Q5"}, R.color.blue, R.drawable.exam);
         addItem("2016 MOED B", new String[]{"Q1", "Q2", "Q3"}, R.color.yellow, R.drawable.exam);
@@ -46,6 +48,7 @@ public class CoursePageActivity extends AppCompatActivity {
                 positive.itemCreated(text.getText().toString());
             }
         });
+        //TODO - add option to add a pic of the question from gallery or take a pic using camera
         builder.setNegativeButton(android.R.string.cancel, null);
         builder.show();
     }
@@ -91,12 +94,29 @@ public class CoursePageActivity extends AppCompatActivity {
         }
     }
 
-    private void configureSubItem(final ExpandingItem item, final View view, String subTitle) {
+
+    private void configureSubItem(final ExpandingItem item, final View view, final String subTitle) {
         ((TextView) view.findViewById(R.id.sub_title)).setText(subTitle);
         view.findViewById(R.id.remove_sub_item).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 item.removeSubItem(view);
+            }
+        });
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new KAlertDialog(CoursePageActivity.this, KAlertDialog.CUSTOM_IMAGE_TYPE)
+                        .setTitleText("Question " + subTitle + ":")
+                        .setCustomImage(R.drawable.question)
+                        .setConfirmText("Open question")
+                        .setConfirmClickListener(new KAlertDialog.KAlertClickListener() {
+                            @Override
+                            public void onClick(KAlertDialog kAlertDialog) {
+                                //TODO - open a dialog fragment with desired question
+                            }
+                        }).setCancelText("Cancel")
+                        .show();
             }
         });
     }
