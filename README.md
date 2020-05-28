@@ -29,7 +29,7 @@ Why should i use it?
 *	For those who want to login with google api, generate a SHA-1 Debug key using this
 	toturial - http://fabcoding.com/how-to-obtain-sha1-keys-for-debug-and-release-android-studio-mac/ and send it to ?add mail?
 
-*	start the app login/signUp as you like and contribute to our Group Studying App!
+*	start the app, login/signUp as you like and contribute to our Group Studying App!
 
 
 
