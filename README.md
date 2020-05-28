@@ -1,6 +1,8 @@
 # Group Studying App
 
-##Project description:
+
+## Project description:
+
 A group studying program, whose main functions are uploading and grading questions 
 and answers.
 
@@ -18,14 +20,14 @@ Why should i use it?
 
 
 
+## How to install:
 
-##How to install:
 *	Install android studio https://developer.android.com/studio/install
 
 *	Clone the project via this github repository
 
 *	For those who want to login with google api, generate a SHA-1 Debug key using this
-*	toturial - http://fabcoding.com/how-to-obtain-sha1-keys-for-debug-and-release-android-studio-mac/ and send it to ?add mail?
+	toturial - http://fabcoding.com/how-to-obtain-sha1-keys-for-debug-and-release-android-studio-mac/ and send it to ?add mail?
 
 *	start the app login/signUp as you like and contribute to our Group Studying App!
 
