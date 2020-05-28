@@ -1,6 +1,8 @@
 # Group Studying App
 
-##Project description:
+
+## Project description:
+
 A group studying program, whose main functions are uploading and grading questions 
 and answers.
 
@@ -18,8 +20,8 @@ Why should i use it?
 
 
 
+## How to install:
 
-##How to install:
 *	Install android studio https://developer.android.com/studio/install
 
 *	Clone the project via this github repository
