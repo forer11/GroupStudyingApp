@@ -14,8 +14,9 @@ import com.hsalf.smileyrating.SmileyRating;
 public class QuestionActivity extends AppCompatActivity {
 
     private boolean hiddenSolution = true;
-    private int rating=0;
-    private SmileyRating.Type rateType=null;
+    private boolean hiddenRate = true;
+    private int rating = 0;
+    private SmileyRating.Type rateType = null;
     private SmileyRating smileyRating;
 
     @Override
@@ -31,7 +32,13 @@ public class QuestionActivity extends AppCompatActivity {
         rateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                smileyRating.setVisibility(View.VISIBLE);
+                if (hiddenRate) {
+                    smileyRating.setVisibility(View.VISIBLE);
+                    hiddenRate = false;
+                }else {
+                    smileyRating.setVisibility(View.INVISIBLE);
+                    hiddenRate = true;
+                }
             }
         });
         userRateHandler();
