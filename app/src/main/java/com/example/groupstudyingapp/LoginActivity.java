@@ -1,13 +1,13 @@
 package com.example.groupstudyingapp;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -17,7 +17,6 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -28,7 +27,6 @@ import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
     private SignInButton signInButton;
-    private TextView mail;
     private GoogleSignInClient googleSignInClient;
     private String TAG = "Liorrr";
     private int RC_SIGN_IN = 1;
@@ -59,7 +57,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private void setViews() {
         signInButton = findViewById(R.id.google_sign_in_button);
-        mail = findViewById(R.id.mail);
     }
 
     private void configureGoogleSignIn() {
@@ -125,7 +122,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private void goToMainScreen() {
         FirebaseUser user = firebaseAuth.getCurrentUser();
-        mail.setText(Objects.requireNonNull(user).getEmail());
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
     }
