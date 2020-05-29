@@ -22,6 +22,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <TextView
+        android:id="@+id/questionRate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/abeezee"
+        android:text=""
+        android:textAllCaps="true"
+        android:textColor="#000000"
+        android:textSize="10sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/questionImage"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.22"
+        app:layout_constraintStart_toEndOf="@+id/questionTitle" />
+
     <ImageView
         android:id="@+id/questionImage"
         android:layout_width="wrap_content"
@@ -66,7 +81,7 @@
         android:id="@+id/smileyRating"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="30dp"
         android:visibility="invisible"
         app:layout_constraintTop_toBottomOf="@+id/rateButton" />
 
@@ -80,5 +95,18 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/smileyRating"
         app:srcCompat="@drawable/question" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/studentAnimation"
+        android:layout_width="75dp"
+        android:layout_height="75dp"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/solutionImage"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="student.json"
+        app:lottie_loop="true" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

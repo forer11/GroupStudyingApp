@@ -41,5 +41,8 @@ dependencies {
     implementation 'com.google.android.material:material:1.1.0'
     implementation 'com.github.mejdi14:Flat-Dialog-Android:1.0.4'
     implementation 'com.github.sujithkanna:smileyrating:2.0.0'
+    implementation 'com.airbnb.android:lottie:3.3.1'
+    implementation 'com.dynamitechetan.flowinggradient:flowinggradient:1.1'
+
 
 }
