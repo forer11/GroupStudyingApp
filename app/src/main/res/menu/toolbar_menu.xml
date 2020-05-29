@@ -2,14 +2,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/search_bar"
-        android:icon="@drawable/ic_search"
+        android:icon="@drawable/ic_search_black_24dp"
         app:showAsAction="ifRoom"
         android:title="Search">
     </item>
     <item
         android:id="@+id/profile"
-        android:icon="@mipmap/ic_launcher"
-        app:showAsAction="ifRoom|withText"
+        android:icon="@drawable/profile_image2"
+        app:showAsAction="ifRoom"
         android:title="Profile">
     </item>
 </menu>

@@ -41,9 +41,8 @@ public class LoginActivity extends AppCompatActivity {
 
         getAppData();
         setViews();
-        configureGoogleSignIn();
-
         setSignInClickListener();
+        googleSignInClient = appData.googleSignInClient;
     }
 
     private void setSignInClickListener() {
@@ -57,14 +56,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private void setViews() {
         signInButton = findViewById(R.id.google_sign_in_button);
-    }
-
-    private void configureGoogleSignIn() {
-        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken("90698286473-jka6c86v9q58sk519gno7uqjc245tfa0.apps.googleusercontent.com")
-                .requestEmail()
-                .build();
-        googleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
     private void getAppData() {

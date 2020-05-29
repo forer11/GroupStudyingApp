@@ -10,7 +10,7 @@ import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseMenuActivity {
 
     private EditText editTextTile, editTextDescription;
     private Button saveButton, gotoButton;
@@ -33,14 +33,6 @@ public class MainActivity extends AppCompatActivity {
 
     interface OnItemCreated {
         void itemCreated(String title);
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.toolbar_menu, menu);
-        return true;
     }
 
     private void setToolbar() {
