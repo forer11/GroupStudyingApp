@@ -4,11 +4,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class OpeningScreenActivity extends AppCompatActivity {
+    private static int SPLASH_TIME_OUT = 4000;
     AppData appData;
     FirebaseAuth firebaseAuth;
 
@@ -23,9 +25,15 @@ public class OpeningScreenActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        // checks if user signed in, if so go to Main else go to login
-        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
-        checkLoginStatus(currentUser);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                // checks if user signed in, if so go to Main else go to login
+                FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+                checkLoginStatus(currentUser);
+                finish();
+            }
+        }, SPLASH_TIME_OUT);
     }
 
     private void checkLoginStatus(FirebaseUser currentUser) {

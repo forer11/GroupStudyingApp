@@ -18,7 +18,7 @@
             android:name=".CoursePageActivity"
             android:parentActivityName=".MainActivity">
         </activity>
-        <activity android:name=".OpeningScreenActivity">
+        <activity android:name=".OpeningScreenActivity" android:theme="@style/Theme.Transparent">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
