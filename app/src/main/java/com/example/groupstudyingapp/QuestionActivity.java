@@ -9,43 +9,56 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.hsalf.smileyrating.SmileyRating;
 
 public class QuestionActivity extends AppCompatActivity {
 
     private boolean hiddenSolution = true;
     private boolean hiddenRate = true;
-    private int rating = 0;
+    private String questionRate = "No rate yet";
     private SmileyRating.Type rateType = null;
     private SmileyRating smileyRating;
+    private TextView rateText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
         updateTitleText();
+        initializeUi();
+        userRateHandler();
+        if (rateType != null) {
+            updateRate(smileyRating);
+        }
+
+    }
+
+    private void initializeUi() {
         final Button solutionButton = findViewById(R.id.solutionButton);
         final ImageView solutionImage = findViewById(R.id.solutionImage);
         showSolutionHandler(solutionButton, solutionImage);
         smileyRating = findViewById(R.id.smileyRating);
+        rateText = findViewById(R.id.questionRate);
+        rateText.setText("Question Rate: "+questionRate);
         Button rateButton = findViewById(R.id.rateButton);
+        LottieAnimationView studentAnimation = findViewById(R.id.studentAnimation);
+        studentAnimation.setProgress(0);
+        studentAnimation.playAnimation();
+
+
         rateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (hiddenRate) {
                     smileyRating.setVisibility(View.VISIBLE);
                     hiddenRate = false;
-                }else {
+                } else {
                     smileyRating.setVisibility(View.INVISIBLE);
                     hiddenRate = true;
                 }
             }
         });
-        userRateHandler();
-        if (rateType != null) {
-            updateRate(smileyRating);
-        }
-
     }
 
     private void userRateHandler() {
@@ -54,7 +67,25 @@ public class QuestionActivity extends AppCompatActivity {
             public void onSmileySelected(SmileyRating.Type type) {
                 //TODO - save rate type and rate num to firestore
                 rateType = type;
-                rating = type.getRating();
+                switch (rateType) {
+                    case TERRIBLE:
+                        questionRate = "TERRIBLE";
+                        break;
+
+                    case BAD:
+                        questionRate = "BAD";
+                        break;
+                    case OKAY:
+                        questionRate = "OKAY";
+                        break;
+                    case GOOD:
+                        questionRate = "GOOD";
+                        break;
+                    case GREAT:
+                        questionRate = "GREAT";
+                        break;
+                }
+                rateText.setText("Question Rate: "+questionRate);
             }
         });
     }
