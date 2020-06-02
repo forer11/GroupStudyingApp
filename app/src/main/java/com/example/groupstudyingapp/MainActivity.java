@@ -2,12 +2,10 @@ package com.example.groupstudyingapp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 public class MainActivity extends BaseMenuActivity {
@@ -57,7 +55,7 @@ public class MainActivity extends BaseMenuActivity {
         gotoButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(),CoursePageActivity.class);
+                Intent intent = new Intent(getApplicationContext(), CoursePageActivity.class);
                 startActivity(intent);
             }
         });
