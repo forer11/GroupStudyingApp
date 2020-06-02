@@ -12,6 +12,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
 
@@ -22,6 +23,7 @@ public class FireStoreHandler {
     private CollectionReference coursesRef;
     private ArrayList<String> coursesIds = new ArrayList<String>();
     private Course currentCourse;
+    FirebaseStorage storage = FirebaseStorage.getInstance();
 
     private static String COURSES = "courses";
 
