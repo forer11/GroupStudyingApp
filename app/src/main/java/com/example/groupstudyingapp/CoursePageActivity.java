@@ -30,11 +30,11 @@ public class CoursePageActivity extends AppCompatActivity implements MyRecyclerV
 
         // data to populate the RecyclerView with
         questions = new ArrayList<>();
-        questions.add("Horse");
-        questions.add("Cow");
-        questions.add("Camel");
-        questions.add("Sheep");
-        questions.add("Goat");
+        questions.add("Q1");
+        questions.add("Q2");
+        questions.add("Q3");
+        questions.add("Q4");
+        questions.add("Q5");
         setRecyclerView();
         findViewById(R.id.addQuestionButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -42,6 +42,7 @@ public class CoursePageActivity extends AppCompatActivity implements MyRecyclerV
                 showInsertDialog();
             }
         });
+
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent
@@ -107,79 +108,24 @@ public class CoursePageActivity extends AppCompatActivity implements MyRecyclerV
     @Override
     public void onItemClick(View view, int position) {
         Intent intent = new Intent(getBaseContext(), QuestionActivity.class);
-        intent.putExtra("EXTRA_SESSION_ID", position);
+        intent.putExtra("EXTRA_SESSION_ID", questions.get(position));
         startActivity(intent);
     }
 
-    private void insertSingleItem() {
-        String item = "Pig";
-        int insertIndex = 2;
-        questions.add(insertIndex, item);
-        adapter.notifyItemInserted(insertIndex);
+    private void insertSingleItem(String newQuestion) {
+        questions.add(newQuestion);
+        adapter.notifyDataSetChanged();
     }
 
-    private void insertMultipleItems() {
-        ArrayList<String> items = new ArrayList<>();
-        items.add("Pig");
-        items.add("Chicken");
-        items.add("Dog");
-        int insertIndex = 2;
-        questions.addAll(insertIndex, items);
-        adapter.notifyItemRangeInserted(insertIndex, items.size());
-    }
 
-    private void removeSingleItem() {
-        int removeIndex = 2;
+    private void removeSingleItem(int removeIndex) {
         questions.remove(removeIndex);
         adapter.notifyItemRemoved(removeIndex);
-    }
-
-    private void removeMultipleItems() {
-        int startIndex = 2; // inclusive
-        int endIndex = 4;   // exclusive
-        int count = endIndex - startIndex; // 2 items will be removed
-        questions.subList(startIndex, endIndex).clear();
-        adapter.notifyItemRangeRemoved(startIndex, count);
     }
 
     private void removeAllItems() {
         questions.clear();
         adapter.notifyDataSetChanged();
-    }
-
-    private void replaceOldListWithNewList() {
-        // clear old list
-        questions.clear();
-
-        // add new list
-        ArrayList<String> newList = new ArrayList<>();
-        newList.add("Lion");
-        newList.add("Wolf");
-        newList.add("Bear");
-        questions.addAll(newList);
-
-        // notify adapter
-        adapter.notifyDataSetChanged();
-    }
-
-    private void updateSingleItem() {
-        String newValue = "I like sheep.";
-        int updateIndex = 3;
-        questions.set(updateIndex, newValue);
-        adapter.notifyItemChanged(updateIndex);
-    }
-
-    private void moveSingleItem() {
-        int fromPosition = 3;
-        int toPosition = 1;
-
-        // update data array
-        String item = questions.get(fromPosition);
-        questions.remove(fromPosition);
-        questions.add(toPosition, item);
-
-        // notify adapter
-        adapter.notifyItemMoved(fromPosition, toPosition);
     }
 }
 
