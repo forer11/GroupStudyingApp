@@ -20,14 +20,22 @@ public class QuestionActivity extends AppCompatActivity {
     private SmileyRating.Type rateType = null;
     private SmileyRating smileyRating;
     private TextView rateText;
+    private ImageView questionImage;
+    private ImageView solutionImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
-        updateTitleText();
         initializeUi();
+        //TODO - get title from firestore
+        updateTitleText();
+        //TODO - get image uri from firestore (question)
+//        questionImage.setImageURI("");
+        //TODO - get image uri from firestore (solution)
+//        solutionImage.setImageURI("");
         userRateHandler();
+        //TODO - get rate from firestore
         if (rateType != null) {
             updateRate(smileyRating);
         }
@@ -36,8 +44,6 @@ public class QuestionActivity extends AppCompatActivity {
 
     private void initializeUi() {
         final Button solutionButton = findViewById(R.id.solutionButton);
-        final ImageView solutionImage = findViewById(R.id.solutionImage);
-        showSolutionHandler(solutionButton, solutionImage);
         smileyRating = findViewById(R.id.smileyRating);
         rateText = findViewById(R.id.questionRate);
         rateText.setText("Question Rate: "+questionRate);
@@ -45,7 +51,6 @@ public class QuestionActivity extends AppCompatActivity {
         LottieAnimationView studentAnimation = findViewById(R.id.studentAnimation);
         studentAnimation.setProgress(0);
         studentAnimation.playAnimation();
-
 
         rateButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,6 +64,9 @@ public class QuestionActivity extends AppCompatActivity {
                 }
             }
         });
+        questionImage = findViewById(R.id.questionImage);
+        solutionImage = findViewById(R.id.solutionImage);
+        showSolutionHandler(solutionButton, solutionImage);
     }
 
     private void userRateHandler() {
@@ -71,7 +79,6 @@ public class QuestionActivity extends AppCompatActivity {
                     case TERRIBLE:
                         questionRate = "TERRIBLE";
                         break;
-
                     case BAD:
                         questionRate = "BAD";
                         break;
@@ -97,11 +104,11 @@ public class QuestionActivity extends AppCompatActivity {
             public void run() {
                 smileyRating.setRating(rateType, true);
             }
-        }, 500);
+        }, 500); // we need the delay so the rate will be updated
     }
 
     private void updateTitleText() {
-        String questionTitle = getIntent().getStringExtra("EXTRA_SESSION_ID"); //change to question id num in firestore
+        String questionTitle = getIntent().getStringExtra("EXTRA_SESSION_ID"); //TODO - change to question id num in firestore
         TextView questionTextView = findViewById(R.id.questionTitle);
         questionTextView.setText("Question " + questionTitle);
     }
