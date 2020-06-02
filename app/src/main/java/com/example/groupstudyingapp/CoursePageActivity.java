@@ -1,29 +1,35 @@
 package com.example.groupstudyingapp;
 
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.view.View;
-import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.diegodobelo.expandingview.ExpandingItem;
 import com.diegodobelo.expandingview.ExpandingList;
+import com.example.flatdialoglibrary.dialog.FlatDialog;
 
 import java.util.Objects;
 
 public class CoursePageActivity extends AppCompatActivity {
+    public static final int CAMERA_ACTION = 0;
+    public static final int GALLERY_ACTION = 1;
     private ExpandingList expandingList;
+    private ImageView questionImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_page);
         expandingList = findViewById(R.id.expanding_list_main);
+        questionImage = findViewById(R.id.questionImage);
         createItems();
         setToolbar();
 
@@ -48,20 +54,50 @@ public class CoursePageActivity extends AppCompatActivity {
         addItem("2016 MOED B", new String[]{"Q1", "Q2", "Q3"}, R.color.yellow, R.drawable.exam);
     }
 
+    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
+        super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
+        switch(requestCode) {
+            case CAMERA_ACTION:
+                if(resultCode == RESULT_OK){
+                    Uri selectedImage = imageReturnedIntent.getData();
+                    //TODO - update the image in firestore
+                    Toast.makeText(CoursePageActivity.this, "Image uploaded!", Toast.LENGTH_SHORT).show();
+//                    questionImage.setImageURI(selectedImage);
+                }
+
+                break;
+            case GALLERY_ACTION:
+                if(resultCode == RESULT_OK){
+                    Toast.makeText(CoursePageActivity.this, "Image uploaded!", Toast.LENGTH_SHORT).show();
+                    Uri selectedImage = imageReturnedIntent.getData();
+                    //TODO - update the image in firestore
+//                    questionImage.setImageURI(selectedImage);
+                }
+                break;
+        }
+    }
+
     private void showInsertDialog(final MainActivity.OnItemCreated positive) {
-        final EditText text = new EditText(this);
-        AlertDialog.Builder builder = new AlertDialog.Builder(CoursePageActivity.this);
-        builder.setView(text);
-        builder.setTitle("Add another question");
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                positive.itemCreated(text.getText().toString());
-            }
-        });
-        //TODO - add option to add a pic of the question from gallery or take a pic using camera
-        builder.setNegativeButton(android.R.string.cancel, null);
-        builder.show();
+        FlatDialog flatDialog = new FlatDialog(CoursePageActivity.this);
+        flatDialog.setTitle("Add a question")
+                .setFirstButtonText("Camera")
+                .setSecondButtonText("From Gallery")
+                .withFirstButtonListner(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        startActivityForResult(takePicture, 0);
+                    }
+                })
+                .withSecondButtonListner(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent pickPhoto = new Intent(Intent.ACTION_PICK,
+                                android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        startActivityForResult(pickPhoto , 1);
+                    }
+                })
+                .show();
     }
 
     private void addItem(String title, String[] subItems, int colorRes, int iconRes) {

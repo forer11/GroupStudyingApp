@@ -45,7 +45,9 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/questionTitle"
         android:layout_marginTop="5dp"
+        android:visibility="invisible"
         app:srcCompat="@drawable/question" />
+
 
 
     <Button
