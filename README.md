@@ -1,5 +1,6 @@
 # Group Studying App
 
+## As of now compatible with Android studio 3.6 and higher
 
 ## Project description:
 
@@ -27,7 +28,7 @@ Why should i use it?
 *	Clone the project via this github repository
 
 *	For those who want to login with google api, generate a SHA-1 Debug key using this
-	toturial - http://fabcoding.com/how-to-obtain-sha1-keys-for-debug-and-release-android-studio-mac/ and send it to ?add mail?
+	toturial - http://fabcoding.com/how-to-obtain-sha1-keys-for-debug-and-release-android-studio-mac/ and send it to lior.forer@mail.huji.ac.il
 
 *	start the app, login/signUp as you like and contribute to our Group Studying App!
 
