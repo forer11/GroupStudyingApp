@@ -5,6 +5,7 @@ public class Answer {
     private String id;
     private String link;
     private float rating;
+    private String imagePath;
 
     Answer(){}
 
@@ -21,6 +22,8 @@ public class Answer {
         return rating;
     }
 
+    public String getImagePath() { return imagePath; }
+
     /////////////////////////////////// Setters ////////////////////////////////////////////////////
     public void setId(String id) {
         this.id = id;
@@ -34,9 +37,6 @@ public class Answer {
         this.rating = rating;
     }
 
-
-
-
-
+    public void setImagePath(String imagePath) { this.imagePath = imagePath; }
 
 }
