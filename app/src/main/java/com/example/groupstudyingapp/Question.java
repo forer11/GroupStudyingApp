@@ -1,15 +1,20 @@
 package com.example.groupstudyingapp;
 
+import java.util.ArrayList;
+
 public class Question {
 
     private String title;
     private String id;
     private String link;
     private float rating;
-    private Answer[] answers;
+    private ArrayList<Answer> answers;
+    private String imagePath;
     //todo tags?
 
-    Question(){}
+    Question(){
+        answers = new ArrayList<>();
+    }
 
     /////////////////////////////////// Getters ////////////////////////////////////////////////////
     public String getTitle() {
@@ -28,9 +33,11 @@ public class Question {
         return rating;
     }
 
-    public Answer[] getAnswers() {
+    public ArrayList<Answer> getAnswers() {
         return answers;
     }
+
+    public String getImagePath() { return imagePath; }
 
     /////////////////////////////////// Setters ////////////////////////////////////////////////////
 
@@ -50,8 +57,16 @@ public class Question {
         this.rating = rating;
     }
 
-    public void setAnswers(Answer[] answers) {
+    public void setAnswers(ArrayList<Answer> answers) {
         this.answers = answers;
+    }
+
+    public void setImagePath(String imagePath) { this.imagePath = imagePath; }
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    public void addAnswer(Answer a) {
+        answers.add(a);
     }
 
 }

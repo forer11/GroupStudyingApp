@@ -44,16 +44,6 @@ public class MainActivity extends BaseMenuActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Course currentCourse =  new Course(); // todo - temp
-                currentCourse.setName("Intro");
-
-                Question question = new Question();
-                question.setTitle("title");
-                question.setLink("www.google.com");
-                question.setRating(5);
-                currentCourse.addQuestion(question);
-                appData.fireStoreHandler.addCourse(currentCourse);
-
 //                String title = editTextTile.getText().toString();
 //                String description = editTextDescription.getText().toString();
 //                Note note = new Note();
@@ -84,6 +74,5 @@ public class MainActivity extends BaseMenuActivity {
         appData = (AppData) getApplicationContext();
         fireStoreHandler = appData.fireStoreHandler;
     }
-
 
 }
