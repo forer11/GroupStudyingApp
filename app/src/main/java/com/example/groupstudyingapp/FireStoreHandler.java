@@ -20,6 +20,8 @@ import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -200,6 +202,10 @@ public class FireStoreHandler {
                 courses.put(cid, documentSnapshot.toObject(Course.class));
             }
         });
+    }
+
+    public ArrayList<Course> getCourses() {
+        return new ArrayList<Course>(courses.values());
     }
 
 }
