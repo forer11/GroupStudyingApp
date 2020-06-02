@@ -6,23 +6,30 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Objects;
 
 import static android.content.ContentValues.TAG;
 
 public class FireStoreHandler {
     private FirebaseFirestore db;
     private CollectionReference coursesRef;
-    private ArrayList<String> coursesIds = new ArrayList<String>();
-    private Course currentCourse;
+    private ArrayList<String> coursesIds;
+    private HashMap<String, Course> courses;
     FirebaseStorage storage = FirebaseStorage.getInstance();
 
     private static String COURSES = "courses";
@@ -30,11 +37,30 @@ public class FireStoreHandler {
     public FireStoreHandler() {
         db = FirebaseFirestore.getInstance();
         coursesRef = db.collection(COURSES);
+        coursesIds = new ArrayList<>();
+        courses = new HashMap<>();
+        loadData();
 
     }
 
     public void loadData(){
-        //todo
+
+        coursesRef
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                coursesIds.add(document.getId());
+                                loadCourse(document.getId());
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
     }
 
     public void updateData(){
@@ -72,7 +98,6 @@ public class FireStoreHandler {
                     }
                 });
     }
-
 
 
     public void saveNote(Note note, final Context context) {
@@ -161,7 +186,20 @@ public class FireStoreHandler {
         course2.addQuestion(q4);
 
         addCourse(course2);
+
     }
 
+
+
+    private void loadCourse(String courseId) {
+        final String cid = courseId;
+        DocumentReference docRef = coursesRef.document(courseId);
+        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                courses.put(cid, documentSnapshot.toObject(Course.class));
+            }
+        });
+    }
 
 }
