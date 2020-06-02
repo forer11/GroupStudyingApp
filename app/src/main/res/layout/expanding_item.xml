@@ -22,18 +22,10 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_centerVertical="true"
-        android:layout_marginEnd="8dp"
-        android:layout_toStartOf="@id/add_more_sub_items"
+        android:layout_marginEnd="20dp"
+        android:layout_alignParentEnd="true"
         android:scaleType="centerCrop"
         app:srcCompat="@drawable/x"/>
 
-    <ImageView
-        android:id="@+id/add_more_sub_items"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_centerVertical="true"
-        android:layout_alignParentEnd="true"
-        android:scaleType="centerCrop"
-        android:layout_marginEnd="12dp"
-        app:srcCompat="@drawable/plus" />
+
 </RelativeLayout>

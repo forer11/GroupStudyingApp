@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,16 +21,26 @@ public class CoursePageActivity extends AppCompatActivity {
     public static final int CAMERA_ACTION = 0;
     public static final int GALLERY_ACTION = 1;
     private ExpandingList expandingList;
-    private ImageView questionImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_page);
         expandingList = findViewById(R.id.expanding_list_main);
-        questionImage = findViewById(R.id.questionImage);
         createItems();
         setToolbar();
+        findViewById(R.id.addQuestionButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showInsertDialog(new MainActivity.OnItemCreated() {
+                    @Override
+                    public void itemCreated(String title) {
+//                            View newSubItem = item.createSubItem();
+//                            configureSubItem(item, newSubItem, title);
+                    }
+                });
+            }
+        });
 
     }
 
@@ -39,19 +48,20 @@ public class CoursePageActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
+        //TODO - update to course name from firestore
         getSupportActionBar().setTitle("Open source Workshop");
     }
 
     private void createItems() {
-        //TODO - add one for general questions
-        addItem("2019 MOED A", new String[]{"Q1", "Q2", "Q3", "Q4", "Q5", "Q6", "Q7"}, R.color.pink, R.drawable.exam);
-        addItem("2019 MOED B", new String[]{"Q1", "Q2", "Q3"}, R.color.blue, R.drawable.exam);
-        addItem("2018 MOED A", new String[]{"Q1"}, R.color.purple, R.drawable.exam);
-        addItem("2018 MOED B", new String[]{"Q1", "Q2", "Q3"}, R.color.yellow, R.drawable.exam);
-        addItem("2017 MOED A", new String[]{"Q1"}, R.color.orange, R.drawable.exam);
-        addItem("2017 MOED B", new String[]{"Q1", "Q2"}, R.color.green, R.drawable.exam);
-        addItem("2016 MOED A", new String[]{"Q1", "Q2", "Q3", "Q4", "Q5"}, R.color.blue, R.drawable.exam);
-        addItem("2016 MOED B", new String[]{"Q1", "Q2", "Q3"}, R.color.yellow, R.drawable.exam);
+        //Todo - take from firestore
+        addItem("2019 MOED A", new String[]{}, R.color.pink, R.drawable.exam);
+        addItem("2019 MOED B", new String[]{}, R.color.blue, R.drawable.exam);
+        addItem("2018 MOED A", new String[]{}, R.color.purple, R.drawable.exam);
+        addItem("2018 MOED B", new String[]{}, R.color.yellow, R.drawable.exam);
+        addItem("2017 MOED A", new String[]{}, R.color.orange, R.drawable.exam);
+        addItem("2017 MOED B", new String[]{}, R.color.green, R.drawable.exam);
+        addItem("2016 MOED A", new String[]{}, R.color.blue, R.drawable.exam);
+        addItem("2016 MOED B", new String[]{}, R.color.yellow, R.drawable.exam);
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
@@ -98,39 +108,31 @@ public class CoursePageActivity extends AppCompatActivity {
                     }
                 })
                 .show();
+        flatDialog.setCanceledOnTouchOutside(true);
     }
 
-    private void addItem(String title, String[] subItems, int colorRes, int iconRes) {
+    private void addItem(final String title, String[] subItems, int colorRes, int iconRes) {
         //Let's create an item with R.layout.expanding_layout
         final ExpandingItem item = expandingList.createNewItem(R.layout.expanding_layout);
+
         //If item creation is successful, let's configure it
         if (item != null) {
+
             item.setIndicatorColorRes(colorRes);
             item.setIndicatorIconRes(iconRes);
             //It is possible to get any view inside the inflated layout. Let's set the text in the item
             ((TextView) item.findViewById(R.id.title)).setText(title);
 
-            //We can create items in batch.
-            item.createSubItems(subItems.length);
-            for (int i = 0; i < item.getSubItemsCount(); i++) {
-                //Let's get the created sub item by its index
-                final View view = item.getSubItemView(i);
+//            //We can create items in batch.
+//            item.createSubItems(subItems.length);
+//            for (int i = 0; i < item.getSubItemsCount(); i++) {
+//                //Let's get the created sub item by its index
+//                final View view = item.getSubItemView(i);
+//
+//                //Let's set some values in
+//                configureSubItem(item, view, subItems[i]);
+//            }
 
-                //Let's set some values in
-                configureSubItem(item, view, subItems[i]);
-            }
-            item.findViewById(R.id.add_more_sub_items).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    showInsertDialog(new MainActivity.OnItemCreated() {
-                        @Override
-                        public void itemCreated(String title) {
-                            View newSubItem = item.createSubItem();
-                            configureSubItem(item, newSubItem, title);
-                        }
-                    });
-                }
-            });
 
             item.findViewById(R.id.remove_item).setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -141,45 +143,24 @@ public class CoursePageActivity extends AppCompatActivity {
         }
     }
 
-
-    private void configureSubItem(final ExpandingItem item, final View view, final String subTitle) {
-        ((TextView) view.findViewById(R.id.sub_title)).setText(subTitle);
-        view.findViewById(R.id.remove_sub_item).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                item.removeSubItem(view);
-            }
-        });
-        view.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getBaseContext(), QuestionActivity.class);
-                intent.putExtra("EXTRA_SESSION_ID", subTitle);
-                startActivity(intent);
-
-            }
-//                final FlatDialog flatDialog = new FlatDialog(CoursePageActivity.this);
-//                flatDialog.setTitle("Question " + subTitle)
-//                        .setFirstButtonText("OPEN QUESTION")
-//                        .setSecondButtonText("CANCEL")
-//                        .withFirstButtonListner(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View view) {
-//                                //TODO - open a dialog fragment with desired question
 //
-//                            }
-//                        })
-//                        .withSecondButtonListner(new View.OnClickListener() {
-//                            @Override
-//                            public void onClick(View view) {
-//                                flatDialog.dismiss();
-//                            }
-//                        })
-//                        .setBackgroundColor(Color.parseColor("#FFC0CB"))
-//                        .setIcon(R.drawable.nerd_bear)
-//                        .show();
+//    private void configureSubItem(final ExpandingItem item, final View view, final String subTitle) {
+//        ((TextView) view.findViewById(R.id.sub_title)).setText(subTitle);
+//        view.findViewById(R.id.remove_sub_item).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                item.removeSubItem(view);
 //            }
-        });
-    }
+//        });
+//        view.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Intent intent = new Intent(getBaseContext(), QuestionActivity.class);
+//                intent.putExtra("EXTRA_SESSION_ID", subTitle);
+//                startActivity(intent);
+//
+//            }
+//        });
+//    }
 
 }
