@@ -1,6 +1,8 @@
 package com.example.groupstudyingapp;
 
-public class Answer {
+import java.io.Serializable;
+
+public class Answer implements Serializable {
 
     private String id;
     private String link;

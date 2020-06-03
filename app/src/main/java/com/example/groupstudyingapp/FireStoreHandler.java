@@ -20,8 +20,6 @@ import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -85,14 +83,14 @@ public class FireStoreHandler {
         db.collection(COURSES)
                 .add(course)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-            @Override
-            public void onSuccess(DocumentReference documentReference) {
-                String id = documentReference.getId();
-                course.setId(id);
-                coursesRef.document(id).set(course, SetOptions.merge());
-                coursesIds.add(id);
-            }
-        })
+                    @Override
+                    public void onSuccess(DocumentReference documentReference) {
+                        String id = documentReference.getId();
+                        course.setId(id);
+                        coursesRef.document(id).set(course, SetOptions.merge());
+                        coursesIds.add(id);
+                    }
+                })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {

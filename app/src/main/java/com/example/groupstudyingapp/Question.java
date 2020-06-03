@@ -1,8 +1,9 @@
 package com.example.groupstudyingapp;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Question {
+public class Question implements Serializable {
 
     private String title;
     private String id;
@@ -12,8 +13,15 @@ public class Question {
     private String imagePath;
     //todo tags?
 
-    Question(){
+    Question() {
         answers = new ArrayList<>();
+    }
+
+    Question(String title, String imagePath) {
+        this.answers = new ArrayList<>();
+        this.rating = 0;
+        this.title = title;
+        this.imagePath = imagePath;
     }
 
     /////////////////////////////////// Getters ////////////////////////////////////////////////////
@@ -37,7 +45,9 @@ public class Question {
         return answers;
     }
 
-    public String getImagePath() { return imagePath; }
+    public String getImagePath() {
+        return imagePath;
+    }
 
     /////////////////////////////////// Setters ////////////////////////////////////////////////////
 
@@ -61,7 +71,9 @@ public class Question {
         this.answers = answers;
     }
 
-    public void setImagePath(String imagePath) { this.imagePath = imagePath; }
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
 

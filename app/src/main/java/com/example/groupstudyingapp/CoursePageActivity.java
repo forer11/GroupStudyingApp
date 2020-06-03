@@ -15,26 +15,25 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.flatdialoglibrary.dialog.FlatDialog;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class CoursePageActivity extends AppCompatActivity implements MyRecyclerViewAdapter.ItemClickListener {
+public class CoursePageActivity extends AppCompatActivity implements CoursePageAdapter.ItemClickListener {
     public static final int CAMERA_ACTION = 0;
     public static final int GALLERY_ACTION = 1;
 
-    MyRecyclerViewAdapter adapter;
-    private ArrayList<String> questions;
+    CoursePageAdapter adapter;
+    private ArrayList<Question> questions;
+    AppData appData;
+    FireStoreHandler fireStoreHandler;
+    private Course course;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_course_page);
-
+        getAppData();
         // data to populate the RecyclerView with
-        questions = new ArrayList<>();
-        questions.add("Q1");
-        questions.add("Q2");
-        questions.add("Q3");
-        questions.add("Q4");
-        questions.add("Q5");
+        questions = course.getQuestions();
         setRecyclerView();
         findViewById(R.id.addQuestionButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,7 +50,8 @@ public class CoursePageActivity extends AppCompatActivity implements MyRecyclerV
         switch (requestCode) {
             case CAMERA_ACTION:
                 if (resultCode == RESULT_OK) {
-                    Uri selectedImage = imageReturnedIntent.getData();
+                    Uri imagePath = imageReturnedIntent.getData();
+                    Question newQuestion = new Question("",imagePath.toString());
                     //TODO - update the image in firestore
                     Toast.makeText(CoursePageActivity.this, "Image uploaded!", Toast.LENGTH_SHORT).show();
 //                    questionImage.setImageURI(selectedImage);
@@ -72,6 +72,8 @@ public class CoursePageActivity extends AppCompatActivity implements MyRecyclerV
     private void showInsertDialog() {
         FlatDialog flatDialog = new FlatDialog(CoursePageActivity.this);
         flatDialog.setTitle("Add a question")
+                .setSubtitle("Write your question title here")
+                .setFirstTextFieldHint("Question title")
                 .setFirstButtonText("Camera")
                 .setSecondButtonText("From Gallery")
                 .withFirstButtonListner(new View.OnClickListener() {
@@ -97,7 +99,7 @@ public class CoursePageActivity extends AppCompatActivity implements MyRecyclerV
         // set up the RecyclerView
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new MyRecyclerViewAdapter(this, questions);
+        adapter = new CoursePageAdapter(this, questions);
         adapter.setClickListener(CoursePageActivity.this);
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(getBaseContext(),
@@ -108,11 +110,11 @@ public class CoursePageActivity extends AppCompatActivity implements MyRecyclerV
     @Override
     public void onItemClick(View view, int position) {
         Intent intent = new Intent(getBaseContext(), QuestionActivity.class);
-        intent.putExtra("EXTRA_SESSION_ID", questions.get(position));
+       intent.putExtra("EXTRA_SESSION_ID", questions.get(position));
         startActivity(intent);
     }
 
-    private void insertSingleItem(String newQuestion) {
+    private void insertSingleItem(Question newQuestion) {
         questions.add(newQuestion);
         adapter.notifyDataSetChanged();
     }
@@ -126,6 +128,14 @@ public class CoursePageActivity extends AppCompatActivity implements MyRecyclerV
     private void removeAllItems() {
         questions.clear();
         adapter.notifyDataSetChanged();
+    }
+
+    private void getAppData() {
+        //TODO - the data won't be loaded again like this, were gonna send only the relevant course from main activity
+        appData = (AppData) getApplicationContext();
+        fireStoreHandler = appData.fireStoreHandler;
+        List<Course> courses = fireStoreHandler.getCourses();
+        course = courses.get(0);
     }
 }
 

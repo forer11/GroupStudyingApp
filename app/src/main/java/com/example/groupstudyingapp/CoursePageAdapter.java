@@ -11,14 +11,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAdapter.ViewHolder> {
+public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.ViewHolder> {
 
-    private List<String> questions;
+    private List<Question> questions;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
 
     // data is passed into the constructor
-    MyRecyclerViewAdapter(Context context, List<String> questions) {
+    CoursePageAdapter(Context context, List<Question> questions) {
         this.mInflater = LayoutInflater.from(context);
         this.questions = questions;
     }
@@ -26,14 +26,14 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
     // inflates the row layout from xml when needed
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View view = mInflater.inflate(R.layout.custome_view, parent, false);
+        View view = mInflater.inflate(R.layout.question_view, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, final int position) {
-        final String question = questions.get(position);
-        holder.questionName.setText(question);
+        final Question question = questions.get(position);
+        holder.questionName.setText(question.getTitle());
         holder.removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,7 +67,7 @@ public class MyRecyclerViewAdapter extends RecyclerView.Adapter<MyRecyclerViewAd
         }
     }
 
-    String getItem(int id) {
+    Question getItem(int id) {
         return questions.get(id);
     }
 
