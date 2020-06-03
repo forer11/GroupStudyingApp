@@ -20,12 +20,13 @@ import java.util.List;
 public class CoursePageActivity extends AppCompatActivity implements CoursePageAdapter.ItemClickListener {
     public static final int CAMERA_ACTION = 0;
     public static final int GALLERY_ACTION = 1;
-
+    boolean isPhotoEntered = false;
     CoursePageAdapter adapter;
     private ArrayList<Question> questions;
     AppData appData;
     FireStoreHandler fireStoreHandler;
     private Course course;
+    private String questionTitleInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,31 +52,37 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
             case CAMERA_ACTION:
                 if (resultCode == RESULT_OK) {
                     Uri imagePath = imageReturnedIntent.getData();
-                    Question newQuestion = new Question("",imagePath.toString());
+                    addNewQuestion(imagePath);
                     //TODO - update the image in firestore
                     Toast.makeText(CoursePageActivity.this, "Image uploaded!", Toast.LENGTH_SHORT).show();
-//                    questionImage.setImageURI(selectedImage);
                 }
-
                 break;
             case GALLERY_ACTION:
+                isPhotoEntered=true;
                 if (resultCode == RESULT_OK) {
+                    Uri imagePath = imageReturnedIntent.getData();
+                    addNewQuestion(imagePath);
                     Toast.makeText(CoursePageActivity.this, "Image uploaded!", Toast.LENGTH_SHORT).show();
-                    Uri selectedImage = imageReturnedIntent.getData();
                     //TODO - update the image in firestore
-//                    questionImage.setImageURI(selectedImage);
                 }
                 break;
         }
     }
 
+    private void addNewQuestion(Uri imagePath) {
+        Question newQuestion = new Question(questionTitleInput,imagePath.toString());
+        questions.add(newQuestion);
+        adapter.notifyDataSetChanged();
+    }
+
     private void showInsertDialog() {
-        FlatDialog flatDialog = new FlatDialog(CoursePageActivity.this);
+        final FlatDialog flatDialog = new FlatDialog(CoursePageActivity.this);
         flatDialog.setTitle("Add a question")
                 .setSubtitle("Write your question title here")
                 .setFirstTextFieldHint("Question title")
                 .setFirstButtonText("Camera")
                 .setSecondButtonText("From Gallery")
+                .setThirdButtonText("Done")
                 .withFirstButtonListner(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -89,6 +96,19 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
                         Intent pickPhoto = new Intent(Intent.ACTION_PICK,
                                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
                         startActivityForResult(pickPhoto, 1);
+                    }
+                })
+                .withThirdButtonListner(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        questionTitleInput = flatDialog.getFirstTextField();
+                        if(!isPhotoEntered)
+                        {
+                            Toast.makeText(CoursePageActivity.this, "Please upload an image", Toast.LENGTH_SHORT).show();
+                        } else {
+
+                            flatDialog.dismiss();
+                        }
                     }
                 })
                 .show();

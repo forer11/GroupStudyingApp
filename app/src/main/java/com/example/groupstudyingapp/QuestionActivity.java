@@ -1,6 +1,7 @@
 package com.example.groupstudyingapp;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.bumptech.glide.Glide;
 import com.hsalf.smileyrating.SmileyRating;
 
 public class QuestionActivity extends AppCompatActivity {
@@ -21,7 +23,7 @@ public class QuestionActivity extends AppCompatActivity {
     private SmileyRating.Type rateType = null;
     private SmileyRating smileyRating;
     private TextView rateText;
-    private ImageView questionImage;
+    private ImageView questionImageView;
     private ImageView solutionImage;
     private Question question;
 
@@ -33,10 +35,12 @@ public class QuestionActivity extends AppCompatActivity {
         loadQuestion();
         TextView questionTextView = findViewById(R.id.questionTitle);
         questionTextView.setText("Question " + question.getTitle());
-        //TODO - get image uri from firestore (question)
-//        questionImage.setImageURI("");
+//        Uri questionImage = Uri.parse(question.getImagePath());
+        Glide.with(this).load(question.getImagePath()).into(questionImageView);
+
+//        questionImageView.setImageURI(questionImage);
         //TODO - get image uri from firestore (solution)
-//        solutionImage.setImageURI("");
+        solutionImage.setImageURI(Uri.parse(question.getAnswers().get(0).getImagePath()));
         userRateHandler();
         //TODO - get rate from firestore
         if (rateType != null) {
@@ -67,7 +71,7 @@ public class QuestionActivity extends AppCompatActivity {
                 }
             }
         });
-        questionImage = findViewById(R.id.questionImage);
+        questionImageView = findViewById(R.id.questionImage);
         solutionImage = findViewById(R.id.solutionImage);
         showSolutionHandler(solutionButton, solutionImage);
     }
