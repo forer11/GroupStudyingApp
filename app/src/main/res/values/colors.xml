@@ -157,5 +157,9 @@
     <color name="greenEnd">#11c612</color>
     <color name="colorBackground">#241445</color>
     <color name="separatorColor">#18102C</color>
+    <color name="light_font">#FBFBFB</color>
+    <color name="grey_font">#ff9e9e9e</color>
+    <color name="text_shadow">#7F000000</color>
+    <color name="text_shadow_white">#FFFFFF</color>
 
 </resources>

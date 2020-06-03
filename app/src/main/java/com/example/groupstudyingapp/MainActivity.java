@@ -7,10 +7,11 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class MainActivity extends BaseMenuActivity {
 
-    private EditText editTextTile, editTextDescription;
     private Button saveButton, gotoButton;
     AppData appData;
     FireStoreHandler fireStoreHandler;
@@ -25,6 +26,16 @@ public class MainActivity extends BaseMenuActivity {
         setViews();
 
         setButtonsClickListeners();
+
+        // Lookup the recyclerview in activity layout
+        RecyclerView rvCourses = (RecyclerView) findViewById(R.id.rvCourses);
+
+        // Create adapter passing in the sample user data
+        CoursesAdapter adapter = new CoursesAdapter(appData.fireStoreHandler.getCourses());
+        // Attach the adapter to the recyclerview to populate items
+        rvCourses.setAdapter(adapter);
+        // Set layout manager to position the items
+        rvCourses.setLayoutManager(new LinearLayoutManager(this));
     }
 
 
@@ -62,8 +73,6 @@ public class MainActivity extends BaseMenuActivity {
     }
 
     private void setViews() {
-        editTextTile = findViewById(R.id.edit_text_title);
-        editTextDescription = findViewById(R.id.edit_text_description);
         saveButton = findViewById(R.id.save_button);
         gotoButton = findViewById(R.id.goto_button);
     }
