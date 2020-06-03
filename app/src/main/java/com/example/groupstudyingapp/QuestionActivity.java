@@ -1,5 +1,6 @@
 package com.example.groupstudyingapp;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -22,14 +23,16 @@ public class QuestionActivity extends AppCompatActivity {
     private TextView rateText;
     private ImageView questionImage;
     private ImageView solutionImage;
+    private Question question;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
         initializeUi();
-        //TODO - get title from firestore
-        updateTitleText();
+        loadQuestion();
+        TextView questionTextView = findViewById(R.id.questionTitle);
+        questionTextView.setText("Question " + question.getTitle());
         //TODO - get image uri from firestore (question)
 //        questionImage.setImageURI("");
         //TODO - get image uri from firestore (solution)
@@ -107,10 +110,9 @@ public class QuestionActivity extends AppCompatActivity {
         }, 500); // we need the delay so the rate will be updated
     }
 
-    private void updateTitleText() {
-        String questionTitle = getIntent().getStringExtra("EXTRA_SESSION_ID"); //TODO - change to question id num in firestore
-        TextView questionTextView = findViewById(R.id.questionTitle);
-        questionTextView.setText("Question " + questionTitle);
+    private void loadQuestion() {
+        Intent intent = this.getIntent();
+        question = (Question) intent.getSerializableExtra("EXTRA_SESSION_ID");
     }
 
     private void showSolutionHandler(final Button solutionButton, final ImageView solutionImage) {
