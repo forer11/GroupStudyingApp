@@ -1,5 +1,7 @@
 package com.example.groupstudyingapp;
 
+import android.net.Uri;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -7,7 +9,7 @@ public class Question implements Serializable {
 
     private String title;
     private String id;
-    private String link;
+    private Uri link;
     private float rating;
     private ArrayList<Answer> answers;
     private String imagePath;
@@ -33,7 +35,7 @@ public class Question implements Serializable {
         return id;
     }
 
-    public String getLink() {
+    public Uri getLink() {
         return link;
     }
 
@@ -59,7 +61,7 @@ public class Question implements Serializable {
         this.id = id;
     }
 
-    public void setLink(String link) {
+    public void setLink(Uri link) {
         this.link = link;
     }
 

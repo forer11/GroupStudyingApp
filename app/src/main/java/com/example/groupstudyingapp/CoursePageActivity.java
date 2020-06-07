@@ -1,25 +1,39 @@
 package com.example.groupstudyingapp;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.flatdialoglibrary.dialog.FlatDialog;
 
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class CoursePageActivity extends AppCompatActivity implements CoursePageAdapter.ItemClickListener {
     public static final int CAMERA_ACTION = 0;
     public static final int GALLERY_ACTION = 1;
+    public static final String IMAGE_UPLOADED = "image_uploaded";
+    public static final String IMAGE_FILE_CREATION_FAILURE = "image_file_creation_failure";
+    public static final String PACKEGE_NAME = "com.example.android.fileprovider";
+    public static final String PLS_UPLOAD_IMG = "Please upload an image";
     boolean isPhotoEntered = false;
     CoursePageAdapter adapter;
     private ArrayList<Question> questions;
@@ -27,6 +41,12 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
     FireStoreHandler fireStoreHandler;
     private Course course;
     private String questionTitleInput;
+
+    /** The broadcast receiver of the activity **/
+    private BroadcastReceiver br;
+
+    /** The local path of the last image taken by the camera**/
+    private String currentPhotoPath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,36 +63,124 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
             }
         });
 
+        br = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if(intent.getAction().equals(IMAGE_UPLOADED)){
+                    Toast.makeText(CoursePageActivity.this, "Image uploaded!", Toast.LENGTH_SHORT).show();
+                }
+            }
+        };
+
+        IntentFilter filter = new IntentFilter(IMAGE_UPLOADED);
+        this.registerReceiver(br, filter);
+
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent
-            imageReturnedIntent) {
+    //////////////////////////// onActivityResult related methods //////////////////////////////////
+    protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-        switch (requestCode) {
-            case CAMERA_ACTION:
-                if (resultCode == RESULT_OK) {
-                    Uri imagePath = imageReturnedIntent.getData();
-                    addNewQuestion(imagePath);
-                    //TODO - update the image in firestore
-                    Toast.makeText(CoursePageActivity.this, "Image uploaded!", Toast.LENGTH_SHORT).show();
-                }
-                break;
-            case GALLERY_ACTION:
-                isPhotoEntered=true;
-                if (resultCode == RESULT_OK) {
-                    Uri imagePath = imageReturnedIntent.getData();
-                    addNewQuestion(imagePath);
-                    Toast.makeText(CoursePageActivity.this, "Image uploaded!", Toast.LENGTH_SHORT).show();
-                    //TODO - update the image in firestore
-                }
-                break;
+        FireStoreHandler fHandler = appData.fireStoreHandler;
+        if(resultCode == RESULT_OK){
+            switch (requestCode) {
+                case CAMERA_ACTION:
+                    handleCameraImageCase(fHandler);
+                    break;
+
+                case GALLERY_ACTION:
+                    handleGalleryImageCase(imageReturnedIntent, fHandler);
+                    break;
+            }
+        }
+        else{
+            Log.i("image_save_error", "image was'nt saved");
         }
     }
 
-    private void addNewQuestion(Uri imagePath) {
-        Question newQuestion = new Question(questionTitleInput,imagePath.toString());
+    /**
+     *
+     * @param imageReturnedIntent handle the GALLERY_ACTION case in onActivityResult
+     * @param fHandler a FireStoreHandler
+     */
+    private void handleGalleryImageCase(Intent imageReturnedIntent, FireStoreHandler fHandler) {
+        isPhotoEntered = true;
+        Uri imagePath = imageReturnedIntent.getData();
+        if(imagePath != null){
+            String storedImagePath = "questions/" + imagePath.getLastPathSegment();
+            addNewQuestion(imagePath, storedImagePath);
+            Question newQuestion = addNewQuestion(imagePath, storedImagePath);
+            fHandler.uploadQuestionImage(imagePath, storedImagePath, newQuestion);
+        }
+    }
+
+    /**
+     * handles the CAMERA_ACTION case in onActivityResult
+     * @param fHandler a FireStoreHandler
+     */
+    private void handleCameraImageCase(FireStoreHandler fHandler) {
+        File imgFile = new File(currentPhotoPath);
+        if(imgFile.exists()){
+            isPhotoEntered = true;
+            Uri file = Uri.fromFile(imgFile);
+            String storedImagePath = "questions/" + file.getLastPathSegment();
+            Question newQuestion = addNewQuestion(file, storedImagePath); // todo - needs to get id and not Question
+            fHandler.uploadQuestionImage(file, storedImagePath, newQuestion);
+        }
+    }
+    ////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /**
+     * Once you decide the directory for the file, you need to create a collision-resistant file name.
+     * You may wish also to save the path in a member variable for later use. Here's an example
+     * solution in a method that returns a unique file name for a new photo using a date-time stamp.
+     * @return
+     * @throws IOException
+     */
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        currentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    /**
+     * Sets everything that is needed for handling an image from the camera and calls the relevant
+     * activity
+     */
+    private void dispatchTakePictureIntent() {
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        // Ensure that there's a camera activity to handle the intent
+        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+            // Create the File where the photo should go
+            File photoFile = null;
+            try {
+                photoFile = createImageFile();
+            } catch (IOException ex) {
+                Log.i(IMAGE_FILE_CREATION_FAILURE, "Error occurred while creating the File");
+            }
+            // Continue only if the File was successfully created
+            if (photoFile != null) {
+                Uri photoURI = FileProvider.getUriForFile(this, PACKEGE_NAME, photoFile);
+                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                startActivityForResult(takePictureIntent, CAMERA_ACTION);
+            }
+        }
+    }
+
+    private Question addNewQuestion(Uri imagePath, String storedImagePath) { //todo should'nt return Question but id
+        Question newQuestion = new Question(questionTitleInput, storedImagePath);
         questions.add(newQuestion);
         adapter.notifyDataSetChanged();
+        return newQuestion;
     }
 
     private void showInsertDialog() {
@@ -86,8 +194,7 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
                 .withFirstButtonListner(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        startActivityForResult(takePicture, 0);
+                        dispatchTakePictureIntent();
                     }
                 })
                 .withSecondButtonListner(new View.OnClickListener() {
@@ -95,7 +202,7 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
                     public void onClick(View view) {
                         Intent pickPhoto = new Intent(Intent.ACTION_PICK,
                                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        startActivityForResult(pickPhoto, 1);
+                        startActivityForResult(pickPhoto, GALLERY_ACTION);
                     }
                 })
                 .withThirdButtonListner(new View.OnClickListener() {
@@ -104,7 +211,7 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
                         questionTitleInput = flatDialog.getFirstTextField();
                         if(!isPhotoEntered)
                         {
-                            Toast.makeText(CoursePageActivity.this, "Please upload an image", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(CoursePageActivity.this, PLS_UPLOAD_IMG, Toast.LENGTH_SHORT).show();
                         } else {
 
                             flatDialog.dismiss();
@@ -156,6 +263,12 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
         fireStoreHandler = appData.fireStoreHandler;
         List<Course> courses = fireStoreHandler.getCourses();
         course = courses.get(0);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        this.unregisterReceiver(br);
     }
 }
 

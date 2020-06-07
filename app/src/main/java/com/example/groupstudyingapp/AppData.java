@@ -17,7 +17,7 @@ public class AppData extends Application {
     public void onCreate() {
         super.onCreate();
 
-        fireStoreHandler = new FireStoreHandler();
+        fireStoreHandler = new FireStoreHandler(this.getApplicationContext());
         firebaseAuth = FirebaseAuth.getInstance();
         configureGoogleSignIn();
     }
@@ -29,4 +29,5 @@ public class AppData extends Application {
                 .build();
         googleSignInClient = GoogleSignIn.getClient(this, gso);
     }
+
 }
