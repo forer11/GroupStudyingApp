@@ -6,12 +6,70 @@
     android:layout_height="match_parent"
     tools:context=".LoginActivity">
 
-    <com.google.android.gms.common.SignInButton
+
+
+
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/team_animation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="centerCrop"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.07999998"
+        app:lottie_autoPlay="true"
+        app:lottie_fileName="teamwork.json"
+        app:lottie_loop="true" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/stroke"
+        android:fontFamily="cursive"
+        android:text="\nWelcome Back!"
+        android:shadowColor="@color/text_shadow"
+        android:shadowDx="-1"
+        android:shadowDy="-1"
+        android:shadowRadius="1"
+        android:textAlignment="center"
+        android:textColor="#FFFFFF"
+        android:textSize="35sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
+    <Button
+        android:id="@+id/anonymous_sign_in_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:drawablePadding="15dp"
+        android:textColor="@color/gray"
+        android:drawableStart="@drawable/anonymous_button"
+        android:text="@string/anonymous_button_text"
+        android:textAllCaps="false"
+        android:background="@drawable/sign_in_button_design"
+        app:layout_constraintBottom_toTopOf="@+id/google_sign_in_button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.97" />
+
+    <Button
         android:id="@+id/google_sign_in_button"
 
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
+        android:padding="10dp"
+        android:drawablePadding="15dp"
+        android:textColor="@color/gray"
+        android:drawableStart="@drawable/google_button_image"
+        android:text="@string/google_sign_in_text"
+        android:textAllCaps="false"
+        android:background="@drawable/sign_in_button_design"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

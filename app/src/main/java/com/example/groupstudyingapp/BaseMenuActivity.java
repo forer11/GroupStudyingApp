@@ -63,7 +63,7 @@ public class BaseMenuActivity extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(Void aVoid) {
                                     Toast.makeText(BaseMenuActivity.this,
-                                            "Signed out of google account",
+                                            "Signed out",
                                             Toast.LENGTH_SHORT).show();
                                 }
                             })

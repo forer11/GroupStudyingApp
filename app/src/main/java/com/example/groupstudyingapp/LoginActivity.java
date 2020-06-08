@@ -4,16 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
+import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.airbnb.lottie.LottieAnimationView;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -26,9 +26,9 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
-    private SignInButton signInButton;
+    private Button googleSignInButton, anonymousSignInButton;
     private GoogleSignInClient googleSignInClient;
-    private String TAG = "Liorrr";
+    private String TAG = "LoginActivity";
     private int RC_SIGN_IN = 1;
 
     AppData appData;
@@ -46,16 +46,44 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void setSignInClickListener() {
-        signInButton.setOnClickListener(new View.OnClickListener() {
+        googleSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 signIn();
             }
         });
+        anonymousSignInButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                firebaseAuth.signInAnonymously()
+                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                            @Override
+                            public void onComplete(@NonNull Task<AuthResult> task) {
+                                if (task.isSuccessful()) {
+                                    goToMainScreen();
+                                } else {
+                                    Log.w(TAG, "signInAnonymously:failure",
+                                            task.getException());
+                                    Toast.makeText(LoginActivity.this,
+                                            "Authentication failed.",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+            }
+        });
     }
 
     private void setViews() {
-        signInButton = findViewById(R.id.google_sign_in_button);
+        googleSignInButton = findViewById(R.id.google_sign_in_button);
+        anonymousSignInButton = findViewById(R.id.anonymous_sign_in_button);
+        setAnimation();
+    }
+
+    private void setAnimation() {
+        LottieAnimationView teamAnimation = findViewById(R.id.team_animation);
+        teamAnimation.setProgress(0);
+        teamAnimation.playAnimation();
     }
 
     private void getAppData() {
@@ -115,6 +143,7 @@ public class LoginActivity extends AppCompatActivity {
         FirebaseUser user = firebaseAuth.getCurrentUser();
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
+        finish();
     }
 
 }
