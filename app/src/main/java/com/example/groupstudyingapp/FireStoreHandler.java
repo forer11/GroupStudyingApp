@@ -1,11 +1,14 @@
 package com.example.groupstudyingapp;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -18,7 +21,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
@@ -26,15 +32,19 @@ import java.util.Objects;
 import static android.content.ContentValues.TAG;
 
 public class FireStoreHandler {
+    public static final String UNSUCCESSFUL_IMAGE_UPLOAD = "unsuccessful_image_upload";
     private FirebaseFirestore db;
     private CollectionReference coursesRef;
     private ArrayList<String> coursesIds;
     private HashMap<String, Course> courses;
+    private Context context;
     FirebaseStorage storage = FirebaseStorage.getInstance();
 
     private static String COURSES = "courses";
+    public static final String IMAGE_UPLOADED = "image_uploaded";
 
-    public FireStoreHandler() {
+    public FireStoreHandler(Context context) {
+        this.context = context;
         db = FirebaseFirestore.getInstance();
         coursesRef = db.collection(COURSES);
         coursesIds = new ArrayList<>();
@@ -100,21 +110,83 @@ public class FireStoreHandler {
     }
 
 
-    public void saveNote(Note note, final Context context) {
-        coursesRef.document("My First Note").set(note)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Toast.makeText(context, "Note Saved", Toast.LENGTH_SHORT).show();
-                    }
-                }).addOnFailureListener(new OnFailureListener() {
+//    public void saveNote(Note note, final Context context) {
+//        coursesRef.document("My First Note").set(note)
+//                .addOnSuccessListener(new OnSuccessListener<Void>() {
+//                    @Override
+//                    public void onSuccess(Void aVoid) {
+//                        Toast.makeText(context, "Note Saved", Toast.LENGTH_SHORT).show();
+//                    }
+//                }).addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception e) {
+//                Toast.makeText(context, "Error!", Toast.LENGTH_SHORT).show();
+//            }
+//        });
+//    }
+
+    /**
+     * Uploads the image in localImagePath to fireStore, updates the link of newQuestion to the URI
+     * of the uploaded image //todo - should set path and not link of newQuestion
+     * @param localImagePath - a URI of local file path of the image to be uploaded
+     * @param storedImagePath -the path in the fireStore storage to which the image will be uploaded
+     * @param newQuestion - the new question to which the new image belongs
+     */
+    public void uploadQuestionImage(final Uri localImagePath, String storedImagePath,
+                                    final Question newQuestion){
+        // Create a storage reference from our app
+        StorageReference storageRef = storage.getReference();
+        final StorageReference questionsRef = storageRef.child(storedImagePath);
+        UploadTask uploadTask = questionsRef.putFile(localImagePath);
+
+        // Register observers to listen for when the download is done or if it fails
+        uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(context, "Error!", Toast.LENGTH_SHORT).show();
+            public void onFailure(@NonNull Exception exception) {
+                Log.i(UNSUCCESSFUL_IMAGE_UPLOAD, "unsuccessful image upload");
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Intent intent = new Intent();
+                intent.setAction(IMAGE_UPLOADED);
+                context.sendBroadcast(intent);
+            }
+        });
+        updateNewQuestionUri(newQuestion, questionsRef, uploadTask);
+    }
+
+    /**
+     * Gets the URI of the recently uploaded image of the newQuestion
+     * @param newQuestion the newQuestion //todo - needs to be id and not object?
+     * @param questionsRef a reference to the questions images storage on firebase
+     * @param uploadTask the upload task that uploads the image
+     */
+    private void updateNewQuestionUri(final Question newQuestion,
+                                      final StorageReference questionsRef, UploadTask uploadTask) {
+        Task<Uri> urlTask = uploadTask.continueWithTask(new Continuation<UploadTask.TaskSnapshot,
+                Task<Uri>>() {
+            @Override
+            public Task<Uri> then(@NonNull Task<UploadTask.TaskSnapshot> task) throws Exception {
+                if (!task.isSuccessful()) {
+                    throw task.getException();
+                }
+                // Continue with the task to get the download URL
+                return questionsRef.getDownloadUrl();
+            }
+        }).addOnCompleteListener(new OnCompleteListener<Uri>() {
+            @Override
+            public void onComplete(@NonNull Task<Uri> task) {
+                if (task.isSuccessful()) {
+                    newQuestion.setLink(task.getResult());
+                    updateData(); // todo - empty method
+                    Log.i("URI", newQuestion.getLink().toString()); //todo delete
+                } else {
+                    // todo - handle failure
+                }
             }
         });
     }
-
 
     public void buildDB() { // call once
         Course course1 =  new Course(); // todo - temp
@@ -123,7 +195,7 @@ public class FireStoreHandler {
         Question q1 = new Question();
         q1.setId("q1");
         q1.setTitle("question 1");
-        q1.setLink("www.google.com");
+        q1.setLink(Uri.parse("www.google.com"));
         q1.setRating(5);
         q1.setImagePath("gs://groupstudyingapp.appspot.com/questions/q1.PNG");
 
@@ -138,7 +210,7 @@ public class FireStoreHandler {
         Question q2 = new Question();
         q2.setId("q2");
         q2.setTitle("question 2");
-        q2.setLink("www.google.com");
+        q2.setLink(Uri.parse("www.google.com"));
         q2.setRating(3);
         q2.setImagePath("gs://groupstudyingapp.appspot.com/questions/q2.PNG");
 
@@ -158,7 +230,7 @@ public class FireStoreHandler {
         Question q3 = new Question();
         q3.setId("q3");
         q3.setTitle("question 3");
-        q3.setLink("www.google.com");
+        q3.setLink(Uri.parse("www.google.com"));
         q3.setRating(2);
         q3.setImagePath("gs://groupstudyingapp.appspot.com/questions/q3.PNG");
 
@@ -173,7 +245,7 @@ public class FireStoreHandler {
         Question q4 = new Question();
         q4.setId("q4");
         q4.setTitle("question 4");
-        q4.setLink("www.google.com");
+        q4.setLink(Uri.parse("www.google.com"));
         q4.setRating(5);
         q4.setImagePath("gs://groupstudyingapp.appspot.com/questions/q5.PNG");
 
@@ -188,8 +260,6 @@ public class FireStoreHandler {
         addCourse(course2);
 
     }
-
-
 
     private void loadCourse(String courseId) {
         final String cid = courseId;
