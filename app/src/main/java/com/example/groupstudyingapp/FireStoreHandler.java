@@ -1,5 +1,6 @@
 package com.example.groupstudyingapp;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -21,6 +22,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -74,10 +76,12 @@ public class FireStoreHandler {
     }
 
     public void updateData(){
-        //todo
+        for (Course c : courses.values()) {
+            updateCourse(c);
+        }
     }
 
-    private void updateCourse(Course c, final Context context){
+    private void updateCourse(Course c){
         coursesRef.document(c.getId()).set(c, SetOptions.merge())
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -133,7 +137,12 @@ public class FireStoreHandler {
      * @param newQuestion - the new question to which the new image belongs
      */
     public void uploadQuestionImage(final Uri localImagePath, String storedImagePath,
-                                    final Question newQuestion){
+                                    final Question newQuestion, final Context ctx){
+
+        final ProgressDialog progressDialog = new ProgressDialog(ctx);
+        progressDialog.setTitle("Uploading...");
+        progressDialog.show();
+
         // Create a storage reference from our app
         StorageReference storageRef = storage.getReference();
         final StorageReference questionsRef = storageRef.child(storedImagePath);
@@ -143,14 +152,25 @@ public class FireStoreHandler {
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
+                progressDialog.dismiss();
+                Toast.makeText(ctx, "Failed Uploading", Toast.LENGTH_SHORT).show();
                 Log.i(UNSUCCESSFUL_IMAGE_UPLOAD, "unsuccessful image upload");
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                progressDialog.dismiss();
+                Toast.makeText(ctx, "Uploaded", Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent();
                 intent.setAction(IMAGE_UPLOADED);
                 context.sendBroadcast(intent);
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                double progress = (100.0*taskSnapshot.getBytesTransferred()/taskSnapshot
+                        .getTotalByteCount());
+                progressDialog.setMessage("Uploaded "+(int)progress+"%");
             }
         });
         updateNewQuestionUri(newQuestion, questionsRef, uploadTask);
@@ -275,5 +295,4 @@ public class FireStoreHandler {
     public ArrayList<Course> getCourses() {
         return new ArrayList<Course>(courses.values());
     }
-
 }

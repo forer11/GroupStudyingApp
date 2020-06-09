@@ -1,5 +1,6 @@
 package com.example.groupstudyingapp;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -19,6 +21,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.flatdialoglibrary.dialog.FlatDialog;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,6 +48,8 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
     FireStoreHandler fireStoreHandler;
     private Course course;
     private String questionTitleInput;
+    private String newQuestionImagePath;
+    private Uri newImageUri;
 
     /** The broadcast receiver of the activity **/
     private BroadcastReceiver br;
@@ -68,6 +77,7 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
             public void onReceive(Context context, Intent intent) {
                 if(intent.getAction().equals(IMAGE_UPLOADED)){
                     Toast.makeText(CoursePageActivity.this, "Image uploaded!", Toast.LENGTH_SHORT).show();
+                    fireStoreHandler.updateData();
                 }
             }
         };
@@ -80,15 +90,14 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
     //////////////////////////// onActivityResult related methods //////////////////////////////////
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-        FireStoreHandler fHandler = appData.fireStoreHandler;
         if(resultCode == RESULT_OK){
             switch (requestCode) {
                 case CAMERA_ACTION:
-                    handleCameraImageCase(fHandler);
+                    handleCameraImageCase();
                     break;
 
                 case GALLERY_ACTION:
-                    handleGalleryImageCase(imageReturnedIntent, fHandler);
+                    handleGalleryImageCase(imageReturnedIntent);
                     break;
             }
         }
@@ -100,31 +109,24 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
     /**
      *
      * @param imageReturnedIntent handle the GALLERY_ACTION case in onActivityResult
-     * @param fHandler a FireStoreHandler
      */
-    private void handleGalleryImageCase(Intent imageReturnedIntent, FireStoreHandler fHandler) {
+    private void handleGalleryImageCase(Intent imageReturnedIntent) {
         isPhotoEntered = true;
-        Uri imagePath = imageReturnedIntent.getData();
-        if(imagePath != null){
-            String storedImagePath = "questions/" + imagePath.getLastPathSegment();
-            addNewQuestion(imagePath, storedImagePath);
-            Question newQuestion = addNewQuestion(imagePath, storedImagePath);
-            fHandler.uploadQuestionImage(imagePath, storedImagePath, newQuestion);
+        newImageUri = imageReturnedIntent.getData();
+        if(newImageUri != null){
+            newQuestionImagePath = "questions/" + newImageUri.getLastPathSegment();
         }
     }
 
     /**
      * handles the CAMERA_ACTION case in onActivityResult
-     * @param fHandler a FireStoreHandler
      */
-    private void handleCameraImageCase(FireStoreHandler fHandler) {
+    private void handleCameraImageCase() {
         File imgFile = new File(currentPhotoPath);
-        if(imgFile.exists()){
+        if (imgFile.exists()) {
             isPhotoEntered = true;
-            Uri file = Uri.fromFile(imgFile);
-            String storedImagePath = "questions/" + file.getLastPathSegment();
-            Question newQuestion = addNewQuestion(file, storedImagePath); // todo - needs to get id and not Question
-            fHandler.uploadQuestionImage(file, storedImagePath, newQuestion);
+            newImageUri = Uri.fromFile(imgFile);
+            newQuestionImagePath = "questions/" + newImageUri.getLastPathSegment();
         }
     }
     ////////////////////////////////////////////////////////////////////////////////////////////////
@@ -213,7 +215,8 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
                         {
                             Toast.makeText(CoursePageActivity.this, PLS_UPLOAD_IMG, Toast.LENGTH_SHORT).show();
                         } else {
-
+                            Question newQuestion = addNewQuestion(newImageUri, newQuestionImagePath); // todo - needs to get id and not Question
+                            fireStoreHandler.uploadQuestionImage(newImageUri, newQuestionImagePath, newQuestion, CoursePageActivity.this);
                             flatDialog.dismiss();
                         }
                     }
