@@ -40,7 +40,10 @@ public class QuestionActivity extends AppCompatActivity {
 
 //        questionImageView.setImageURI(questionImage);
         //TODO - get image uri from firestore (solution)
-        solutionImage.setImageURI(Uri.parse(question.getAnswers().get(0).getImagePath()));
+        if (question.getAnswers().size() > 0) {
+            solutionImage.setImageURI(Uri.parse(question.getAnswers().get(0).getImagePath()));
+            // todo show all answers
+        }
         userRateHandler();
         //TODO - get rate from firestore
         if (rateType != null) {
