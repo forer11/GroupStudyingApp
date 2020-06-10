@@ -57,14 +57,7 @@
                 android:background="@drawable/costume_button_1"
                 android:text="Save"
                 android:textAllCaps="false" />
-            <Button
-                android:id="@+id/goto_button"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:background="@drawable/costume_button_4"
-                android:text="Course"
-                android:textAllCaps="false" />
+
         </LinearLayout>
 
 
