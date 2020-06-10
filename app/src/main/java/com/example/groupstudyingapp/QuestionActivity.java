@@ -34,7 +34,7 @@ public class QuestionActivity extends AppCompatActivity {
         initializeUi();
         loadQuestion();
         TextView questionTextView = findViewById(R.id.questionTitle);
-        questionTextView.setText("Question " + question.getTitle());
+        questionTextView.setText(question.getTitle());
 //        Uri questionImage = Uri.parse(question.getImagePath());
         Glide.with(this).load(question.getImagePath()).into(questionImageView);
 
