@@ -39,7 +39,6 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
     AppData appData;
     FireStoreHandler fireStoreHandler;
     private Course course;
-    private String questionTitleInput;
     private String newQuestionImagePath;
     private Uri newImageUri;
 
@@ -170,7 +169,8 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
         }
     }
 
-    private Question addNewQuestion(Uri imagePath, String storedImagePath) { //todo should'nt return Question but id
+    //TODO - Ido - is imagePath needed here?
+    private Question addNewQuestion(Uri imagePath, String questionTitleInput,String storedImagePath) { //todo should'nt return Question but id
         Question newQuestion = new Question(questionTitleInput, storedImagePath);
         questions.add(newQuestion);
         adapter.notifyDataSetChanged();
@@ -207,16 +207,17 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
                             Toast.makeText(CoursePageActivity.this, "Please write title", Toast.LENGTH_SHORT).show();
                         }
                         else{
-                            questionTitleInput = flatDialog.getFirstTextField();
+                            String questionTitleInput = flatDialog.getFirstTextField();
+                            if(!isPhotoEntered)
+                            {
+                                Toast.makeText(CoursePageActivity.this, PLS_UPLOAD_IMG, Toast.LENGTH_SHORT).show();
+                            } else {
+                                Question newQuestion = addNewQuestion(newImageUri, questionTitleInput,newQuestionImagePath); // todo - needs to get id and not Question
+                                fireStoreHandler.uploadQuestionImage(newImageUri, newQuestionImagePath, newQuestion, CoursePageActivity.this);
+                                flatDialog.dismiss();
+                            }
                         }
-                        if(!isPhotoEntered)
-                        {
-                            Toast.makeText(CoursePageActivity.this, PLS_UPLOAD_IMG, Toast.LENGTH_SHORT).show();
-                        } else {
-                            Question newQuestion = addNewQuestion(newImageUri, newQuestionImagePath); // todo - needs to get id and not Question
-                            fireStoreHandler.uploadQuestionImage(newImageUri, newQuestionImagePath, newQuestion, CoursePageActivity.this);
-                            flatDialog.dismiss();
-                        }
+
                     }
                 })
                 .show();
