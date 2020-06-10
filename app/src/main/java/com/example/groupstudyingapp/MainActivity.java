@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class MainActivity extends BaseMenuActivity implements CoursesAdapter.ItemClickListener{
 
-    private Button saveButton, gotoButton;
+    private Button saveButton;
     AppData appData;
     FireStoreHandler fireStoreHandler;
 
@@ -26,12 +26,6 @@ public class MainActivity extends BaseMenuActivity implements CoursesAdapter.Ite
 
         setButtonsClickListeners();
         setRecyclerViews();
-    }
-
-
-
-    interface OnItemCreated {
-        void itemCreated(String title);
     }
 
     private void setToolbar() {
@@ -55,14 +49,6 @@ public class MainActivity extends BaseMenuActivity implements CoursesAdapter.Ite
 
             }
         });
-
-        gotoButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getApplicationContext(), CoursePageActivity.class);
-                startActivity(intent);
-            }
-        });
     }
 
     @Override
@@ -74,7 +60,6 @@ public class MainActivity extends BaseMenuActivity implements CoursesAdapter.Ite
 
     private void setViews() {
         saveButton = findViewById(R.id.save_button);
-        gotoButton = findViewById(R.id.goto_button);
     }
 
     private void getAppData() {
