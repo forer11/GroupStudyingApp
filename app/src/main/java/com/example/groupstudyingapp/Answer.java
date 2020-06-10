@@ -1,11 +1,13 @@
 package com.example.groupstudyingapp;
 
+import android.net.Uri;
+
 import java.io.Serializable;
 
 public class Answer implements Serializable {
 
     private String id;
-    private String link;
+    private Uri link;
     private float rating;
     private String imagePath;
 
@@ -16,7 +18,7 @@ public class Answer implements Serializable {
         return id;
     }
 
-    public String getLink() {
+    public Uri getLink() {
         return link;
     }
 
@@ -31,7 +33,7 @@ public class Answer implements Serializable {
         this.id = id;
     }
 
-    public void setLink(String link) {
+    public void setLink(Uri link) {
         this.link = link;
     }
 

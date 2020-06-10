@@ -4,13 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class MainActivity extends BaseMenuActivity {
+public class MainActivity extends BaseMenuActivity implements CoursesAdapter.ItemClickListener{
 
     private Button saveButton, gotoButton;
     AppData appData;
@@ -26,16 +25,7 @@ public class MainActivity extends BaseMenuActivity {
         setViews();
 
         setButtonsClickListeners();
-
-        // Lookup the recyclerview in activity layout
-        RecyclerView rvCourses = (RecyclerView) findViewById(R.id.rvCourses);
-
-        // Create adapter passing in the sample user data
-        CoursesAdapter adapter = new CoursesAdapter(appData.fireStoreHandler.getCourses());
-        // Attach the adapter to the recyclerview to populate items
-        rvCourses.setAdapter(adapter);
-        // Set layout manager to position the items
-        rvCourses.setLayoutManager(new LinearLayoutManager(this));
+        setRecyclerViews();
     }
 
 
@@ -49,17 +39,20 @@ public class MainActivity extends BaseMenuActivity {
         setSupportActionBar(toolbar);
     }
 
-    private void setButtonsClickListeners() {
+    private void setRecyclerViews() {
+        RecyclerView rvCourses = (RecyclerView) findViewById(R.id.rvCourses);
+        CoursesAdapter adapter = new CoursesAdapter(appData.fireStoreHandler);
+        adapter.setClickListener(MainActivity.this);
+        rvCourses.setAdapter(adapter);
+        rvCourses.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    private void setButtonsClickListeners() {  // todo delete this function
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                String title = editTextTile.getText().toString();
-//                String description = editTextDescription.getText().toString();
-//                Note note = new Note();
-//                note.setTitle(title);
-//                note.setDescription(description);
-//
-//                fireStoreHandler.saveNote(note, getBaseContext());
+
+
             }
         });
 
@@ -70,6 +63,13 @@ public class MainActivity extends BaseMenuActivity {
                 startActivity(intent);
             }
         });
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        Intent intent = new Intent(getBaseContext(), CoursePageActivity.class);
+        fireStoreHandler.setCurrentCourseId(position);
+        startActivity(intent);
     }
 
     private void setViews() {

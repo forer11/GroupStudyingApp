@@ -10,7 +10,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class OpeningScreenActivity extends AppCompatActivity {
-    private static int SPLASH_TIME_OUT = 1000;
+    private static int SPLASH_TIME_OUT = 4000;
     AppData appData;
     FirebaseAuth firebaseAuth;
 

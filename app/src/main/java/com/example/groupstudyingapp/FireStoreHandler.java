@@ -27,6 +27,7 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
@@ -40,6 +41,8 @@ public class FireStoreHandler {
     private ArrayList<String> coursesIds;
     private HashMap<String, Course> courses;
     private Context context;
+    private String currentCourseId;
+
     FirebaseStorage storage = FirebaseStorage.getInstance();
 
     private static String COURSES = "courses";
@@ -94,8 +97,7 @@ public class FireStoreHandler {
 
     public void addCourse(Course c){ // todo needed?
         final Course course = c;
-        db.collection(COURSES)
-                .add(course)
+        coursesRef.add(course)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
@@ -113,21 +115,6 @@ public class FireStoreHandler {
                 });
     }
 
-
-//    public void saveNote(Note note, final Context context) {
-//        coursesRef.document("My First Note").set(note)
-//                .addOnSuccessListener(new OnSuccessListener<Void>() {
-//                    @Override
-//                    public void onSuccess(Void aVoid) {
-//                        Toast.makeText(context, "Note Saved", Toast.LENGTH_SHORT).show();
-//                    }
-//                }).addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception e) {
-//                Toast.makeText(context, "Error!", Toast.LENGTH_SHORT).show();
-//            }
-//        });
-//    }
 
     /**
      * Uploads the image in localImagePath to fireStore, updates the link of newQuestion to the URI
@@ -210,18 +197,20 @@ public class FireStoreHandler {
 
     public void buildDB() { // call once
         Course course1 =  new Course(); // todo - temp
-        course1.setName("Data Structures");
+        course1.setName("Databases");
 
         Question q1 = new Question();
         q1.setId("q1");
         q1.setTitle("question 1");
-        q1.setLink(Uri.parse("www.google.com"));
+        q1.setLink(Uri.parse("gs://groupstudyingapp.appspot.com/questions/q1.PNG"));
         q1.setRating(5);
         q1.setImagePath("gs://groupstudyingapp.appspot.com/questions/q1.PNG");
 
         Answer a1 = new Answer();
         a1.setId("a1");
         a1.setRating(5);
+        a1.setLink(Uri.parse("gs://groupstudyingapp.appspot.com/answers/a1.PNG"));
+        q1.setTitle("question 1");
         a1.setImagePath("gs://groupstudyingapp.appspot.com/answers/a1.PNG");
         q1.addAnswer(a1);
 
@@ -230,13 +219,14 @@ public class FireStoreHandler {
         Question q2 = new Question();
         q2.setId("q2");
         q2.setTitle("question 2");
-        q2.setLink(Uri.parse("www.google.com"));
+        q2.setLink(Uri.parse("gs://groupstudyingapp.appspot.com/questions/q2.PNG"));
         q2.setRating(3);
         q2.setImagePath("gs://groupstudyingapp.appspot.com/questions/q2.PNG");
 
         Answer a2 = new Answer();
         a2.setId("a2");
         a2.setRating(4);
+        a2.setLink(Uri.parse("gs://groupstudyingapp.appspot.com/answers/a2.PNG"));
         a2.setImagePath("gs://groupstudyingapp.appspot.com/answers/a2.PNG");
         q2.addAnswer(a2);
 
@@ -245,18 +235,19 @@ public class FireStoreHandler {
         addCourse(course1);
 
         Course course2 =  new Course(); // todo - temp
-        course2.setName("Intro");
+        course2.setName("Image Processing");
 
         Question q3 = new Question();
         q3.setId("q3");
         q3.setTitle("question 3");
-        q3.setLink(Uri.parse("www.google.com"));
+        q3.setLink(Uri.parse("gs://groupstudyingapp.appspot.com/questions/q3.PNG"));
         q3.setRating(2);
         q3.setImagePath("gs://groupstudyingapp.appspot.com/questions/q3.PNG");
 
         Answer a3 = new Answer();
         a3.setId("a3");
         a3.setRating(4);
+        a3.setLink(Uri.parse("gs://groupstudyingapp.appspot.com/answers/a3.PNG"));
         a3.setImagePath("gs://groupstudyingapp.appspot.com/answers/a3.PNG");
         q3.addAnswer(a3);
 
@@ -265,13 +256,14 @@ public class FireStoreHandler {
         Question q4 = new Question();
         q4.setId("q4");
         q4.setTitle("question 4");
-        q4.setLink(Uri.parse("www.google.com"));
+        q4.setLink(Uri.parse("gs://groupstudyingapp.appspot.com/questions/q5.PNG"));
         q4.setRating(5);
         q4.setImagePath("gs://groupstudyingapp.appspot.com/questions/q5.PNG");
 
         Answer a4 = new Answer();
         a4.setId("a4");
         a4.setRating(4);
+        a4.setLink(Uri.parse("gs://groupstudyingapp.appspot.com/answers/a4.PNG"));
         a4.setImagePath("gs://groupstudyingapp.appspot.com/answers/a4.PNG");
         q4.addAnswer(a4);
 
@@ -292,7 +284,19 @@ public class FireStoreHandler {
         });
     }
 
-    public ArrayList<Course> getCourses() {
-        return new ArrayList<Course>(courses.values());
+
+    public void setCurrentCourseId(int position) {
+        currentCourseId = coursesIds.get(position);
+    }
+
+
+    public Course getCurrentCourse() {
+        return courses.get(currentCourseId);
+    }
+
+    public ArrayList<String> getCoursesIds() { return coursesIds; }
+
+    public Course getCourseById(String id) {
+        return courses.get(id);
     }
 }
