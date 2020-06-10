@@ -1,6 +1,5 @@
 package com.example.groupstudyingapp;
 
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -13,7 +12,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -21,18 +19,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.flatdialoglibrary.dialog.FlatDialog;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.OnProgressListener;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class CoursePageActivity extends AppCompatActivity implements CoursePageAdapter.ItemClickListener {
     public static final int CAMERA_ACTION = 0;
@@ -187,6 +179,7 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
 
     private void showInsertDialog() {
         final FlatDialog flatDialog = new FlatDialog(CoursePageActivity.this);
+        flatDialog.setFirstTextField("");
         flatDialog.setTitle("Add a question")
                 .setSubtitle("Write your question title here")
                 .setFirstTextFieldHint("Question title")
@@ -210,7 +203,12 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
                 .withThirdButtonListner(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        questionTitleInput = flatDialog.getFirstTextField();
+                        if(flatDialog.getFirstTextField().equals("")){
+                            Toast.makeText(CoursePageActivity.this, "Please write title", Toast.LENGTH_SHORT).show();
+                        }
+                        else{
+                            questionTitleInput = flatDialog.getFirstTextField();
+                        }
                         if(!isPhotoEntered)
                         {
                             Toast.makeText(CoursePageActivity.this, PLS_UPLOAD_IMG, Toast.LENGTH_SHORT).show();
