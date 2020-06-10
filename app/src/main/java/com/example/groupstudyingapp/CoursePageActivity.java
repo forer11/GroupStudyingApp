@@ -264,8 +264,7 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
         //TODO - the data won't be loaded again like this, were gonna send only the relevant course from main activity
         appData = (AppData) getApplicationContext();
         fireStoreHandler = appData.fireStoreHandler;
-        List<Course> courses = fireStoreHandler.getCourses();
-        course = courses.get(0);
+        course = fireStoreHandler.getCurrentCourse();
     }
 
     @Override
