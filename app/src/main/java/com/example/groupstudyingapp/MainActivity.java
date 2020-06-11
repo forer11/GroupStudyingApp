@@ -22,8 +22,6 @@ public class MainActivity extends BaseMenuActivity implements CoursesAdapter.Ite
 
         setToolbar();
         getAppData();
-
-        setButtonsClickListeners();
         setRecyclerViews();
     }
 
@@ -38,16 +36,6 @@ public class MainActivity extends BaseMenuActivity implements CoursesAdapter.Ite
         adapter.setClickListener(MainActivity.this);
         rvCourses.setAdapter(adapter);
         rvCourses.setLayoutManager(new LinearLayoutManager(this));
-    }
-
-    private void setButtonsClickListeners() {  // todo delete this function
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-            }
-        });
     }
 
     @Override
