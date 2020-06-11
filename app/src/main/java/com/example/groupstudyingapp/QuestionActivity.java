@@ -36,12 +36,12 @@ public class QuestionActivity extends AppCompatActivity {
         TextView questionTextView = findViewById(R.id.questionTitle);
         questionTextView.setText(question.getTitle());
 //        Uri questionImage = Uri.parse(question.getImagePath());
-        Glide.with(this).load(question.getImagePath()).into(questionImageView);
+        Glide.with(this).load(Uri.parse(question.getLink())).into(questionImageView);
 
 //        questionImageView.setImageURI(questionImage);
         //TODO - get image uri from firestore (solution)
         if (question.getAnswers().size() > 0) {
-            solutionImage.setImageURI(Uri.parse(question.getAnswers().get(0).getImagePath()));
+            solutionImage.setImageURI(Uri.parse(question.getAnswers().get(0).getLink()));
             // todo show all answers
         }
         userRateHandler();

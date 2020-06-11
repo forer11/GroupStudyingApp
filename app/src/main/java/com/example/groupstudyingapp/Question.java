@@ -9,7 +9,7 @@ public class Question implements Serializable {
 
     private String title;
     private String id;
-    private Uri link;
+    private String link;
     private float rating;
     private ArrayList<Answer> answers;
     private String imagePath;
@@ -35,7 +35,7 @@ public class Question implements Serializable {
         return id;
     }
 
-    public Uri getLink() {
+    public String getLink() {
         return link;
     }
 
@@ -61,7 +61,7 @@ public class Question implements Serializable {
         this.id = id;
     }
 
-    public void setLink(Uri link) {
+    public void setLink(String link) {
         this.link = link;
     }
 

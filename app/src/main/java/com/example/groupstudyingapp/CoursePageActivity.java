@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 
 public class CoursePageActivity extends AppCompatActivity implements CoursePageAdapter.ItemClickListener {
     public static final int CAMERA_ACTION = 0;
@@ -42,10 +43,14 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
     private String newQuestionImagePath;
     private Uri newImageUri;
 
-    /** The broadcast receiver of the activity **/
+    /**
+     * The broadcast receiver of the activity
+     **/
     private BroadcastReceiver br;
 
-    /** The local path of the last image taken by the camera**/
+    /**
+     * The local path of the last image taken by the camera
+     **/
     private String currentPhotoPath;
 
     @Override
@@ -66,8 +71,12 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
         br = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if(intent.getAction().equals(IMAGE_UPLOADED)){
-                    Toast.makeText(CoursePageActivity.this, "Image uploaded!", Toast.LENGTH_SHORT).show();
+                if (intent.getAction().equals(IMAGE_UPLOADED)) {
+                    Toast.makeText(CoursePageActivity.this, "Image uploaded!",
+                            Toast.LENGTH_SHORT).show();
+                    String questionUrl = intent.getStringExtra("UPDATED URL");
+                    Question question = (Question)intent.getSerializableExtra("UPDATED QUESTION");
+                    addNewQuestion(Objects.requireNonNull(question),questionUrl);
                     fireStoreHandler.updateData();
                 }
             }
@@ -81,7 +90,7 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
     //////////////////////////// onActivityResult related methods //////////////////////////////////
     protected void onActivityResult(int requestCode, int resultCode, Intent imageReturnedIntent) {
         super.onActivityResult(requestCode, resultCode, imageReturnedIntent);
-        if(resultCode == RESULT_OK){
+        if (resultCode == RESULT_OK) {
             switch (requestCode) {
                 case CAMERA_ACTION:
                     handleCameraImageCase();
@@ -91,20 +100,18 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
                     handleGalleryImageCase(imageReturnedIntent);
                     break;
             }
-        }
-        else{
+        } else {
             Log.i("image_save_error", "image was'nt saved");
         }
     }
 
     /**
-     *
      * @param imageReturnedIntent handle the GALLERY_ACTION case in onActivityResult
      */
     private void handleGalleryImageCase(Intent imageReturnedIntent) {
         isPhotoEntered = true;
         newImageUri = imageReturnedIntent.getData();
-        if(newImageUri != null){
+        if (newImageUri != null) {
             newQuestionImagePath = "questions/" + newImageUri.getLastPathSegment();
         }
     }
@@ -126,6 +133,7 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
      * Once you decide the directory for the file, you need to create a collision-resistant file name.
      * You may wish also to save the path in a member variable for later use. Here's an example
      * solution in a method that returns a unique file name for a new photo using a date-time stamp.
+     *
      * @return
      * @throws IOException
      */
@@ -170,11 +178,10 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
     }
 
     //TODO - Ido - is imagePath needed here?
-    private Question addNewQuestion(Uri imagePath, String questionTitleInput,String storedImagePath) { //todo should'nt return Question but id
-        Question newQuestion = new Question(questionTitleInput, storedImagePath);
+    private void addNewQuestion(Question newQuestion,String questionLink) { //todo should'nt return Question but id
+        newQuestion.setLink(questionLink);
         questions.add(newQuestion);
         adapter.notifyDataSetChanged();
-        return newQuestion;
     }
 
     private void showInsertDialog() {
@@ -203,17 +210,19 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
                 .withThirdButtonListner(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if(flatDialog.getFirstTextField().equals("")){
+                        if (flatDialog.getFirstTextField().equals("")) {
                             Toast.makeText(CoursePageActivity.this, "Please write title", Toast.LENGTH_SHORT).show();
-                        }
-                        else{
+                        } else {
                             String questionTitleInput = flatDialog.getFirstTextField();
-                            if(!isPhotoEntered)
-                            {
+                            if (!isPhotoEntered) {
                                 Toast.makeText(CoursePageActivity.this, PLS_UPLOAD_IMG, Toast.LENGTH_SHORT).show();
                             } else {
-                                Question newQuestion = addNewQuestion(newImageUri, questionTitleInput,newQuestionImagePath); // todo - needs to get id and not Question
-                                fireStoreHandler.uploadQuestionImage(newImageUri, newQuestionImagePath, newQuestion, CoursePageActivity.this);
+                                Question newQuestion = new Question(questionTitleInput,
+                                        newQuestionImagePath);
+                                fireStoreHandler.uploadQuestionImage(newImageUri,
+                                        newQuestionImagePath,
+                                        newQuestion,
+                                        CoursePageActivity.this);
                                 flatDialog.dismiss();
                             }
                         }
@@ -239,7 +248,7 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
     @Override
     public void onItemClick(View view, int position) {
         Intent intent = new Intent(getBaseContext(), QuestionActivity.class);
-       intent.putExtra("EXTRA_SESSION_ID", questions.get(position));
+        intent.putExtra("EXTRA_SESSION_ID", questions.get(position));
         startActivity(intent);
     }
 

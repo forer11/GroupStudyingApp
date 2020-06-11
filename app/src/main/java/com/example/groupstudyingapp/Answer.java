@@ -7,7 +7,7 @@ import java.io.Serializable;
 public class Answer implements Serializable {
 
     private String id;
-    private Uri link;
+    private String link;
     private float rating;
     private String imagePath;
 
@@ -18,7 +18,7 @@ public class Answer implements Serializable {
         return id;
     }
 
-    public Uri getLink() {
+    public String getLink() {
         return link;
     }
 
@@ -33,7 +33,7 @@ public class Answer implements Serializable {
         this.id = id;
     }
 
-    public void setLink(Uri link) {
+    public void setLink(String link) {
         this.link = link;
     }
 
