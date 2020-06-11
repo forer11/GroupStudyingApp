@@ -22,7 +22,6 @@ public class MainActivity extends BaseMenuActivity implements CoursesAdapter.Ite
 
         setToolbar();
         getAppData();
-        setViews();
 
         setButtonsClickListeners();
         setRecyclerViews();
@@ -34,7 +33,7 @@ public class MainActivity extends BaseMenuActivity implements CoursesAdapter.Ite
     }
 
     private void setRecyclerViews() {
-        RecyclerView rvCourses = (RecyclerView) findViewById(R.id.rvCourses);
+        RecyclerView rvCourses = findViewById(R.id.rvCourses);
         CoursesAdapter adapter = new CoursesAdapter(appData.fireStoreHandler);
         adapter.setClickListener(MainActivity.this);
         rvCourses.setAdapter(adapter);
@@ -56,10 +55,6 @@ public class MainActivity extends BaseMenuActivity implements CoursesAdapter.Ite
         Intent intent = new Intent(getBaseContext(), CoursePageActivity.class);
         fireStoreHandler.setCurrentCourseId(position);
         startActivity(intent);
-    }
-
-    private void setViews() {
-        saveButton = findViewById(R.id.save_button);
     }
 
     private void getAppData() {
