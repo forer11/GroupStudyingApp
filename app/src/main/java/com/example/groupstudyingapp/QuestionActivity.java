@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
@@ -36,7 +37,14 @@ public class QuestionActivity extends AppCompatActivity {
         TextView questionTextView = findViewById(R.id.questionTitle);
         questionTextView.setText(question.getTitle());
 //        Uri questionImage = Uri.parse(question.getImagePath());
-        Glide.with(this).load(Uri.parse(question.getLink())).into(questionImageView);
+
+        CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(this);
+        circularProgressDrawable.setStrokeWidth(10f);
+        circularProgressDrawable.setCenterRadius(60f);
+        circularProgressDrawable.start();
+
+        Glide.with(this).load(Uri.parse(question.getLink())).placeholder(circularProgressDrawable).into(questionImageView);
+        findViewById(R.id.loadingPanel).setVisibility(View.GONE);
 
 //        questionImageView.setImageURI(questionImage);
         //TODO - get image uri from firestore (solution)
