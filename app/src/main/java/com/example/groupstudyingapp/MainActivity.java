@@ -2,6 +2,7 @@ package com.example.groupstudyingapp;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 
@@ -23,6 +24,13 @@ public class MainActivity extends BaseMenuActivity implements CoursesAdapter.Ite
         setToolbar();
         getAppData();
         setRecyclerViews();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        setProfileImageWithUrl();
+        return true;
     }
 
     private void setToolbar() {

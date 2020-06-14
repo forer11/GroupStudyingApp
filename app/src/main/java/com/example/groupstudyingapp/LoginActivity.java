@@ -140,7 +140,6 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void goToMainScreen() {
-        FirebaseUser user = firebaseAuth.getCurrentUser();
         Intent intent = new Intent(getApplicationContext(), MainActivity.class);
         startActivity(intent);
         finish();

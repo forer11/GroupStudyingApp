@@ -1,17 +1,26 @@
 package com.example.groupstudyingapp;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.MenuItemCompat;
 
+import com.bumptech.glide.Glide;
 import com.example.flatdialoglibrary.dialog.FlatDialog;
 import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -21,15 +30,53 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class BaseMenuActivity extends AppCompatActivity {
+    CircleImageView profileImage;
+    private FrameLayout profileLayout;
 
-
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.toolbar_menu, menu);
+
+        MenuItem menuItem = menu.findItem(R.id.profile);
+        View view = menuItem.getActionView();
+        profileImage = view.findViewById(R.id.toolbar_profile_image);
+        profileLayout = view.findViewById(R.id.profile_image_layout);
+        setProfileImageListener();
+
         return true;
     }
+
+    private void setProfileImageListener() {
+        profileLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+                final FlatDialog flatDialog = new FlatDialog(BaseMenuActivity.this);
+                setDialogData(flatDialog);
+                setDialogListeners(firebaseAuth, flatDialog);
+                flatDialog.show();
+            }
+        });
+    }
+
+    protected void setProfileImageWithUrl() {
+        AppData appData = (AppData) getApplicationContext();
+        if (appData.user != null && appData.user.getEmail() != null) {
+            Uri uri = appData.user.getPhotoUrl();
+            if (uri != null) {
+                Glide
+                        .with(profileImage)
+                        .load(uri.toString())
+                        .into(profileImage);
+            }
+        }
+    }
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -39,11 +86,6 @@ public class BaseMenuActivity extends AppCompatActivity {
                 return true;
 
             case R.id.profile:
-                final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-                final FlatDialog flatDialog = new FlatDialog(BaseMenuActivity.this);
-                setDialogData(flatDialog);
-                setDialogListeners(firebaseAuth, flatDialog);
-                flatDialog.show();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
