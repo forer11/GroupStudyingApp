@@ -1,15 +1,20 @@
 package com.example.groupstudyingapp;
 
 import android.app.Application;
+import android.content.pm.SigningInfo;
+
+import androidx.annotation.NonNull;
 
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class AppData extends Application {
     FireStoreHandler fireStoreHandler;
     FirebaseAuth firebaseAuth;
+    FirebaseUser user = null;
     GoogleSignInClient googleSignInClient;
 
 
@@ -20,6 +25,7 @@ public class AppData extends Application {
         fireStoreHandler = new FireStoreHandler(this.getApplicationContext());
         firebaseAuth = FirebaseAuth.getInstance();
         configureGoogleSignIn();
+        userStateListener();
     }
 
     private void configureGoogleSignIn() {
@@ -30,4 +36,19 @@ public class AppData extends Application {
         googleSignInClient = GoogleSignIn.getClient(this, gso);
     }
 
+    private void userStateListener() {
+        final FirebaseAuth.IdTokenListener userListener = new FirebaseAuth.IdTokenListener() {
+            @Override
+            public void onIdTokenChanged(@NonNull FirebaseAuth firebaseAuth) {
+                user = FirebaseAuth.getInstance().getCurrentUser();
+                if (user != null) {
+                    if(user.getEmail()!=null){
+
+                    }
+
+                }
+            }
+        };
+        firebaseAuth.addIdTokenListener(userListener);
+    }
 }
