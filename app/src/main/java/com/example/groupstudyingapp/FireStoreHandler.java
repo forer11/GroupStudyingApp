@@ -9,7 +9,6 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.tasks.Continuation;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -26,8 +25,6 @@ import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.File;
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
@@ -133,9 +130,9 @@ public class FireStoreHandler {
 
         // Create a storage reference from our app
         StorageReference storageRef = storage.getReference();
-        final StorageReference questionsRef = storageRef.child(storedImagePath+".jpg");
+        final StorageReference questionsRef = storageRef.child(storedImagePath + ".jpg");
         UploadTask uploadTask = questionsRef.putFile(localImagePath);
-
+        final Intent intent = new Intent();
         // Register observers to listen for when the download is done or if it fails
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
@@ -143,6 +140,9 @@ public class FireStoreHandler {
                 progressDialog.dismiss();
                 Toast.makeText(ctx, "Failed Uploading", Toast.LENGTH_SHORT).show();
                 Log.i(UNSUCCESSFUL_IMAGE_UPLOAD, "unsuccessful image upload");
+                intent.setAction(AddQuestionActivity.FAILED_TO_UPLOAD);
+                context.sendBroadcast(intent);
+                //TODO - add a broadcast of failure
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -150,6 +150,9 @@ public class FireStoreHandler {
                 progressDialog.dismiss();
                 Toast.makeText(ctx, "Uploaded", Toast.LENGTH_SHORT).show();
                 updateNewQuestionUri(newQuestion, questionsRef, taskSnapshot);
+                intent.setAction(AddQuestionActivity.FINISHED_UPLOAD);
+                context.sendBroadcast(intent);
+                //TODO - add a broadcast of success
             }
         }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
             @Override
