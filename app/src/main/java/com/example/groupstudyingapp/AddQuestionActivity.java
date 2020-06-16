@@ -1,7 +1,9 @@
 package com.example.groupstudyingapp;
 
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -15,6 +17,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
+
+import com.bumptech.glide.Glide;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,6 +34,8 @@ public class AddQuestionActivity extends AppCompatActivity {
     public static final String IMAGE_FILE_CREATION_FAILURE = "image_file_creation_failure";
     public static final String PACKEGE_NAME = "com.example.android.fileprovider";
     public static final String PLS_UPLOAD_IMG = "Please upload an image";
+    public static final String FINISHED_UPLOAD = "finished upload";
+    public static final String FAILED_TO_UPLOAD = "failed to upload";
 
     private EditText titleInput;
     private Button cameraButton;
@@ -38,8 +45,11 @@ public class AddQuestionActivity extends AppCompatActivity {
 
 
     boolean isPhotoEntered = false;
+    CoursePageAdapter adapter;
+    private ArrayList<Question> questions;
     AppData appData;
     FireStoreHandler fireStoreHandler;
+    private Course course;
     private String newQuestionImagePath;
     private Uri newImageUri;
 
@@ -52,6 +62,7 @@ public class AddQuestionActivity extends AppCompatActivity {
      * The local path of the last image taken by the camera
      **/
     private String currentPhotoPath;
+    private CircularProgressDrawable circularProgressDrawable;
 
 
     @Override
@@ -60,6 +71,24 @@ public class AddQuestionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_question);
         getAppData();
         initializeUi();
+
+        br = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getAction().equals(FINISHED_UPLOAD)) {
+                    Toast.makeText(context, "finished uploading photo", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+                if (intent.getAction().equals(FAILED_TO_UPLOAD)) {
+                    Toast.makeText(context, "failed uploading photo", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
+            }
+        };
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(FINISHED_UPLOAD);
+        filter.addAction(FAILED_TO_UPLOAD);
+        this.registerReceiver(br, filter);
     }
 
     private void getAppData() {
@@ -70,10 +99,10 @@ public class AddQuestionActivity extends AppCompatActivity {
     }
 
 
-
     private void initializeUi() {
         titleInput = findViewById(R.id.userTitle);
         titleInput.setText("");
+        questionImage = findViewById(R.id.questionImage);
         cameraButton = findViewById(R.id.cameraButton);
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -91,6 +120,14 @@ public class AddQuestionActivity extends AppCompatActivity {
             }
         });
         saveButton = findViewById(R.id.saveButton);
+        circularProgressDrawable = new CircularProgressDrawable(this);
+        circularProgressDrawable.setStrokeWidth(10f);
+        circularProgressDrawable.setCenterRadius(60f);
+        circularProgressDrawable.start();
+        saveQuestion();
+    }
+
+    private void saveQuestion() {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -107,13 +144,10 @@ public class AddQuestionActivity extends AppCompatActivity {
                                 newQuestionImagePath,
                                 newQuestion,
                                 AddQuestionActivity.this);
-                        finish();
                     }
                 }
-
             }
         });
-        questionImage = findViewById(R.id.questionImage);
     }
 
     //////////////////////////// onActivityResult related methods //////////////////////////////////
@@ -191,6 +225,8 @@ public class AddQuestionActivity extends AppCompatActivity {
         newImageUri = imageReturnedIntent.getData();
         if (newImageUri != null) {
             newQuestionImagePath = "questions/" + newImageUri.getLastPathSegment();
+            Glide.with(AddQuestionActivity.this).load(newImageUri).placeholder(circularProgressDrawable).into(questionImage);
+
         }
     }
 
@@ -203,6 +239,7 @@ public class AddQuestionActivity extends AppCompatActivity {
             isPhotoEntered = true;
             newImageUri = Uri.fromFile(imgFile);
             newQuestionImagePath = "questions/" + newImageUri.getLastPathSegment();
+            Glide.with(AddQuestionActivity.this).load(newImageUri).placeholder(circularProgressDrawable).into(questionImage);
         }
     }
 
