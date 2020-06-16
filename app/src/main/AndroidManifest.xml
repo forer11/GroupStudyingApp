@@ -5,7 +5,6 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
-
     <application
         android:name=".AppData"
         android:allowBackup="true"
@@ -14,12 +13,13 @@
         android:roundIcon="@mipmap/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CoursePageActivity"></activity>
+        <activity android:name=".AddQuestionActivity"></activity>
+        <activity android:name=".CoursePageActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".QuestionActivity" />
         <activity
             android:name=".PrevCoursePageActivity"
-            android:parentActivityName=".MainActivity"></activity>
+            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".OpeningScreenActivity"
             android:theme="@style/Theme.Transparent">
@@ -29,7 +29,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"></activity>
+        <activity android:name=".MainActivity" />
         <activity android:name=".BaseMenuActivity" />
 
         <provider
@@ -41,8 +41,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
-
 
         <meta-data
             android:name="preloaded_fonts"
