@@ -27,15 +27,24 @@ public class QuestionActivity extends AppCompatActivity {
     private ImageView questionImageView;
     private ImageView solutionImage;
     private Question question;
+    AppData appData;
+    FireStoreHandler fireStoreHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
-        initializeUi();
         loadQuestion();
+        if (question.getRating() > 0) {
+            questionRate = Float.toString(question.getRating());
+        }
+        initializeUi();
         TextView questionTextView = findViewById(R.id.questionTitle);
         questionTextView.setText(question.getTitle());
+
+        getAppData();
+        fireStoreHandler.setCurrentImagePath(question.getImagePath());
+
 //        Uri questionImage = Uri.parse(question.getImagePath());
 
         CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(this);
@@ -132,6 +141,7 @@ public class QuestionActivity extends AppCompatActivity {
                         break;
                 }
                 rateText.setText("Question Rate: "+ question.getRating());
+                fireStoreHandler.updateQuestion(question);
             }
         });
     }
@@ -166,5 +176,10 @@ public class QuestionActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void getAppData() {
+        appData = (AppData) getApplicationContext();
+        fireStoreHandler = appData.fireStoreHandler;
     }
 }

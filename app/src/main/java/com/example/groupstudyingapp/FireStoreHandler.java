@@ -39,6 +39,7 @@ public class FireStoreHandler {
     private HashMap<String, Course> courses;
     private Context context;
     private String currentCourseId;
+    private String currentImagePath;
 
     FirebaseStorage storage = FirebaseStorage.getInstance();
 
@@ -110,6 +111,17 @@ public class FireStoreHandler {
                         Log.w(TAG, "Error adding document", e);
                     }
                 });
+    }
+
+
+    public void updateQuestion(Question question) {
+        ArrayList<Question> questions = Objects.requireNonNull(courses.get(currentCourseId)).getQuestions();
+        for (int i = 0; i < questions.size(); ++i) {
+            if (questions.get(i).getImagePath().compareTo(currentImagePath) == 0) {
+                questions.set(i, question);
+            }
+        }
+        updateCourse(Objects.requireNonNull(courses.get(currentCourseId)));
     }
 
 
@@ -216,9 +228,6 @@ public class FireStoreHandler {
 //        });
     }
 
-    public void updateQuestionRating(Question question) {
-
-    }
 
     public void buildDB() { // call once
         Course course1 = new Course(); // todo - temp
@@ -313,6 +322,8 @@ public class FireStoreHandler {
     public void setCurrentCourseId(int position) {
         currentCourseId = coursesIds.get(position);
     }
+
+    public void setCurrentImagePath(String path) { currentImagePath = path; }
 
 
     public Course getCurrentCourse() {
