@@ -7,6 +7,7 @@
     android:paddingTop="10dp"
     android:paddingBottom="10dp"
     android:background="@drawable/course_layout"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     >
 
     <TextView
@@ -16,9 +17,10 @@
         android:paddingLeft="15dp"
         android:paddingTop="10dp"
         android:layout_weight="1"
-        android:textSize="18sp"
-        android:textColor="@color/light_font"
-        android:shadowColor="@color/text_shadow"
+        app:fontFamily="sans-serif-condensed"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/dim_gray"
+        android:shadowColor="@color/text_shadow_white"
         android:shadowDx="2"
         android:shadowDy="2"
         android:shadowRadius="3"
