@@ -93,24 +93,45 @@ public class QuestionActivity extends AppCompatActivity {
             public void onSmileySelected(SmileyRating.Type type) {
                 //TODO - save rate type and rate num to firestore
                 rateType = type;
+                int numOfRates;
                 switch (rateType) {
                     case TERRIBLE:
                         questionRate = "TERRIBLE";
+                        numOfRates = question.getNumOfRates();
+                        question.setRating((numOfRates * question.getRating() + 1) /
+                                            (numOfRates + 1));
+                        question.setNumOfRates(numOfRates + 1);
                         break;
                     case BAD:
                         questionRate = "BAD";
+                        numOfRates = question.getNumOfRates();
+                        question.setRating((numOfRates * question.getRating() + 2) /
+                                (numOfRates + 1));
+                        question.setNumOfRates(numOfRates + 1);
                         break;
                     case OKAY:
                         questionRate = "OKAY";
+                        numOfRates = question.getNumOfRates();
+                        question.setRating((numOfRates * question.getRating() + 3) /
+                                (numOfRates + 1));
+                        question.setNumOfRates(numOfRates + 1);
                         break;
                     case GOOD:
                         questionRate = "GOOD";
+                        numOfRates = question.getNumOfRates();
+                        question.setRating((numOfRates * question.getRating() + 4) /
+                                (numOfRates + 1));
+                        question.setNumOfRates(numOfRates + 1);
                         break;
                     case GREAT:
                         questionRate = "GREAT";
+                        numOfRates = question.getNumOfRates();
+                        question.setRating((numOfRates * question.getRating() + 5) /
+                                (numOfRates + 1));
+                        question.setNumOfRates(numOfRates + 1);
                         break;
                 }
-                rateText.setText("Question Rate: "+questionRate);
+                rateText.setText("Question Rate: "+ question.getRating());
             }
         });
     }

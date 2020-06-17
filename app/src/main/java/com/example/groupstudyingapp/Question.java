@@ -10,6 +10,7 @@ public class Question implements Serializable {
     private String title;
     private String id;
     private String link;
+    private int numOfRates;
     private float rating;
     private ArrayList<Answer> answers;
     private String imagePath;
@@ -22,6 +23,7 @@ public class Question implements Serializable {
     Question(String title, String imagePath) {
         this.answers = new ArrayList<>();
         this.rating = 0;
+        this.numOfRates = 0;
         this.title = title;
         this.imagePath = imagePath;
     }
@@ -42,6 +44,8 @@ public class Question implements Serializable {
     public float getRating() {
         return rating;
     }
+
+    public int getNumOfRates() { return numOfRates; }
 
     public ArrayList<Answer> getAnswers() {
         return answers;
@@ -68,6 +72,8 @@ public class Question implements Serializable {
     public void setRating(float rating) {
         this.rating = rating;
     }
+
+    public void setNumOfRates(int numOfRates) { this.numOfRates = numOfRates; }
 
     public void setAnswers(ArrayList<Answer> answers) {
         this.answers = answers;

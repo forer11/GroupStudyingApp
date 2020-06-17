@@ -216,6 +216,10 @@ public class FireStoreHandler {
 //        });
     }
 
+    public void updateQuestionRating(Question question) {
+
+    }
+
     public void buildDB() { // call once
         Course course1 = new Course(); // todo - temp
         course1.setName("Databases");
