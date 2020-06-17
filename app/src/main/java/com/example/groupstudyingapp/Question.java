@@ -4,6 +4,7 @@ import android.net.Uri;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Question implements Serializable {
 
@@ -83,10 +84,29 @@ public class Question implements Serializable {
         this.imagePath = imagePath;
     }
 
+    public static questionComparator getQuestionComparator() {
+        return new questionComparator();
+    }
+
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
     public void addAnswer(Answer a) {
         answers.add(a);
+    }
+
+
+    public static class questionComparator implements Comparator<Question> {
+
+        @Override
+        public int compare(Question q1, Question q2) {
+            if (q1.getRating() > q2.getRating()) {
+                return -1;
+            }
+            else  if (q2.getRating() > q1.getRating()) {
+                return  1;
+            }
+            return 0;
+        }
     }
 
 }

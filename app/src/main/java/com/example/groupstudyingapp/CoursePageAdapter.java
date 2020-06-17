@@ -34,6 +34,7 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
     public void onBindViewHolder(ViewHolder holder, final int position) {
         final Question question = questions.get(position);
         holder.questionName.setText(question.getTitle());
+        holder.rateText.setText(String.format("%.1f", question.getRating()));
         holder.removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,10 +54,12 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
     // stores and recycles views as they are scrolled off screen
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView questionName;
+        TextView rateText;
         ImageView removeButton;
         ViewHolder(View itemView) {
             super(itemView);
             questionName = itemView.findViewById(R.id.questionName);
+            rateText = itemView.findViewById(R.id.rateText);
             removeButton = itemView.findViewById(R.id.removeQuestionButton);
             itemView.setOnClickListener(this);
         }
