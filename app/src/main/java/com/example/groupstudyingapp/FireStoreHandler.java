@@ -82,7 +82,7 @@ public class FireStoreHandler {
         }
     }
 
-    private void updateCourse(Course c) {
+    public void updateCourse(Course c) { //TODO - should receive id and not Course object
         coursesRef.document(c.getId()).set(c, SetOptions.merge())
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
