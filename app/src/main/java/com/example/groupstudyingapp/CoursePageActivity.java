@@ -41,7 +41,9 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
         setContentView(R.layout.activity_course_page);
         getAppData();
         // data to populate the RecyclerView with
+        Question.questionComparator qCompare = Question.getQuestionComparator();
         questions = course.getQuestions();
+        questions.sort(qCompare);
         setRecyclerView();
         findViewById(R.id.addQuestionButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,6 +167,11 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
         course = fireStoreHandler.getCurrentCourse();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        adapter.notifyDataSetChanged();
+    }
 
     @Override
     protected void onDestroy() {
