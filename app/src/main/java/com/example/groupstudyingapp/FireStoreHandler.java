@@ -145,6 +145,7 @@ public class FireStoreHandler {
 
         final ProgressDialog progressDialog = new ProgressDialog(ctx);
         progressDialog.setTitle("Uploading...");
+        progressDialog.setCancelable(false);
         progressDialog.show();
 
         // Create a storage reference from our app
