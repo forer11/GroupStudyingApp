@@ -243,5 +243,10 @@ public class AddQuestionActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
 
+        unregisterReceiver(br);
+    }
 }
