@@ -1,5 +1,6 @@
 package com.example.groupstudyingapp;
 
+import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.pm.SigningInfo;
 
@@ -10,6 +11,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.Random;
 
 public class AppData extends Application {
     FireStoreHandler fireStoreHandler;
@@ -50,5 +53,17 @@ public class AppData extends Application {
             }
         };
         firebaseAuth.addIdTokenListener(userListener);
+    }
+
+    //TODO:Lior find suitable location for this function
+    @SuppressLint("DefaultLocale")
+    public static String getRandomId() {
+        // It will generate 6 digit random Number.
+        // from 0 to 999999
+        Random rnd = new Random();
+        int number = rnd.nextInt(999999);
+
+        // this will convert any number sequence into 6 character.
+        return String.format("%06d", number);
     }
 }
