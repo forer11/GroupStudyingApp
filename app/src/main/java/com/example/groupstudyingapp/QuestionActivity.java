@@ -18,6 +18,7 @@ import com.hsalf.smileyrating.SmileyRating;
 
 public class QuestionActivity extends AppCompatActivity {
 
+    private static final String QUESTION_ID = "question_id";
     private boolean hiddenSolution = true;
     private boolean hiddenRate = true;
     private String questionRate = "No rate yet";
@@ -71,6 +72,7 @@ public class QuestionActivity extends AppCompatActivity {
 
     private void initializeUi() {
         final Button solutionButton = findViewById(R.id.solutionButton);
+        final Button addAnswerButton = findViewById(R.id.addAnswerButton);
         smileyRating = findViewById(R.id.smileyRating);
         rateText = findViewById(R.id.questionRate);
         rateText.setText("Question Rate: "+questionRate);
@@ -89,6 +91,14 @@ public class QuestionActivity extends AppCompatActivity {
                     smileyRating.setVisibility(View.INVISIBLE);
                     hiddenRate = true;
                 }
+            }
+        });
+        addAnswerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getBaseContext(), AddAnswerActivity.class);
+                intent.putExtra(QUESTION_ID, question.getId());
+                startActivity(intent);
             }
         });
         questionImageView = findViewById(R.id.questionImage);
