@@ -36,14 +36,20 @@ public class OpeningScreenActivity extends AppCompatActivity {
         }, SPLASH_TIME_OUT);
     }
 
+    /**
+     * Tune and start the activity according to cls.
+     * @param cls
+     */
+    private void tuneActivity(Class<?> cls){
+        Intent intent = new Intent(getApplicationContext(), cls);
+        startActivity(intent);
+    }
+
     private void checkLoginStatus(FirebaseUser currentUser) {
-        Intent intent;
         if (currentUser != null) {
-            intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
+            tuneActivity(MainActivity.class);
         } else {
-            intent = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivity(intent);
+            tuneActivity(LoginActivity.class);
         }
     }
 
