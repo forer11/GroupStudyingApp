@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -43,7 +44,11 @@ public class MainActivity extends BaseMenuActivity implements CoursesAdapter.Ite
         CoursesAdapter adapter = new CoursesAdapter(appData.fireStoreHandler);
         adapter.setClickListener(MainActivity.this);
         rvCourses.setAdapter(adapter);
-        rvCourses.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        rvCourses.setLayoutManager(layoutManager);
+        DividerItemDecoration mDividerItemDecoration = new DividerItemDecoration(rvCourses.getContext(),
+                layoutManager.getOrientation());
+        rvCourses.addItemDecoration(mDividerItemDecoration);
     }
 
     @Override
