@@ -75,12 +75,8 @@ public class AddQuestionActivity extends AppCompatActivity {
         br = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (intent.getAction().equals(FINISHED_UPLOAD)) {
-                    Toast.makeText(context, "finished uploading photo", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-                if (intent.getAction().equals(FAILED_TO_UPLOAD)) {
-                    Toast.makeText(context, "failed uploading photo", Toast.LENGTH_SHORT).show();
+                if (intent.getAction().equals(FINISHED_UPLOAD) ||
+                        intent.getAction().equals(FAILED_TO_UPLOAD)) {
                     finish();
                 }
             }
