@@ -15,7 +15,8 @@
         android:supportsRtl="false"
         android:theme="@style/AppTheme"
         tools:replace="android:supportsRtl">
-        <activity android:name=".AddQuestionActivity"></activity>
+        <activity android:name=".AddAnswerActivity"></activity>
+        <activity android:name=".AddQuestionActivity" />
         <activity android:name=".CoursePageActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".QuestionActivity" />

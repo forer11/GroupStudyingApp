@@ -96,6 +96,16 @@
             android:visibility="invisible"
             app:layout_constraintTop_toBottomOf="@+id/rateButton" />
 
+        <Button
+            android:id="@+id/addAnswerButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add answer"
+            app:layout_constraintBottom_toBottomOf="@+id/smileyRating"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/smileyRating"
+            app:layout_constraintTop_toTopOf="@+id/smileyRating" />
+
         <ImageView
             android:id="@+id/solutionImage"
             android:layout_width="wrap_content"
