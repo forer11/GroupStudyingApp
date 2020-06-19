@@ -18,7 +18,7 @@ import com.hsalf.smileyrating.SmileyRating;
 
 public class QuestionActivity extends AppCompatActivity {
 
-    private static final String QUESTION_ID = "question_id";
+    private static final String QUESTION = "question";
     private boolean hiddenSolution = true;
     private boolean hiddenRate = true;
     private String questionRate = "No rate yet";
@@ -97,7 +97,7 @@ public class QuestionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getBaseContext(), AddAnswerActivity.class);
-                intent.putExtra(QUESTION_ID, question.getId());
+                intent.putExtra(QUESTION, question);
                 startActivity(intent);
             }
         });
