@@ -1,18 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
         <shape>
-        <corners android:radius="10dp"/>
-        <padding android:left="0dp" android:top="0dp" android:right="0dp" android:bottom="0dp" />
+            <corners android:radius="2dp" />
+            <gradient android:angle="-90" android:endColor="#EAF6F1" android:startColor="#CAE1DB" />
+            <padding android:bottom="0dp" android:left="0dp" android:right="0dp" android:top="0dp" />
         </shape>
     </item>
-    <item android:top="3dp" android:right="3dp" android:bottom="3dp"
-        android:left="3dp">
+    <item android:state_focused="true">
         <shape>
-            <solid android:color="@color/white_smoke"></solid>
-<!--            <stroke android:width="1dp" android:color="#B1BCBE" />-->
-            <corners android:radius="10dp"/>
-            <padding android:left="0dp" android:top="0dp" android:right="0dp" android:bottom="0dp" />
+            <corners android:radius="2dp" />
+            <solid android:color="#BBE4E8" />
+            <padding android:bottom="0dp" android:left="0dp" android:right="0dp" android:top="0dp" />
         </shape>
     </item>
-</layer-list>
+    <item android:bottom="3dp" android:left="3dp" android:right="3dp" android:top="3dp">
+        <shape>
+            <corners android:radius="2dp" />
+            <solid android:color="@color/white_smoke" />
+            <padding android:bottom="0dp" android:left="0dp" android:right="0dp" android:top="0dp" />
+        </shape>
+    </item>
+
+
+</selector>

@@ -24,7 +24,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.ViewHold
 
             super(itemView);
 
-            nameTextView = (TextView) itemView.findViewById(R.id.course_name);
+            nameTextView = itemView.findViewById(R.id.course_name);
             itemView.setOnClickListener(this);
         }
 
