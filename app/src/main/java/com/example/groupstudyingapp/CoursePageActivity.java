@@ -59,7 +59,7 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
                     String questionUrl = intent.getStringExtra("UPDATED URL");
                     Question question = (Question) intent.getSerializableExtra("UPDATED QUESTION");
                     addNewQuestion(Objects.requireNonNull(question), questionUrl);
-                    fireStoreHandler.updateCourse(course);
+                    fireStoreHandler.updateCourse(course.getId());
                 }
             }
         };

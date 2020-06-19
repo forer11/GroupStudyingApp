@@ -78,20 +78,27 @@ public class FireStoreHandler {
 
     public void updateData() {
         for (Course c : courses.values()) {
-            updateCourse(c);
+            updateCourse(c.getId());
         }
     }
 
-    public void updateCourse(Course c) { //TODO - should receive id and not Course object
-        coursesRef.document(c.getId()).set(c, SetOptions.merge())
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(context, "failed to get data", Toast
-                                .LENGTH_SHORT).show();
-                    }
-                });
+    public void updateCourse(String id) { //TODO - should receive id and not Course object
+        Course c = courses.get(id);
+        if( c == null){
+            Log.e("update_fail", "could'nt update the requested course, it does'nt exist");
+        }
+        else {
+            coursesRef.document(id).set(c, SetOptions.merge())
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(context, "failed to get data", Toast
+                                    .LENGTH_SHORT).show();
+                        }
+                    });
+        }
     }
+
 
     public void addCourse(Course c) { // todo needed?
         final Course course = c;
@@ -121,7 +128,7 @@ public class FireStoreHandler {
                 questions.set(i, question);
             }
         }
-        updateCourse(Objects.requireNonNull(courses.get(currentCourseId)));
+        updateCourse(Objects.requireNonNull(currentCourseId));
     }
 
 
