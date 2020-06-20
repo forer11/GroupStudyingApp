@@ -5,16 +5,18 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.view.Menu;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
 
-public class CoursePageActivity extends AppCompatActivity implements CoursePageAdapter.ItemClickListener {
+public class CoursePageActivity extends BaseMenuActivity implements CoursePageAdapter.ItemClickListener {
     public static final String IMAGE_UPLOADED = "image_uploaded";
     public static final String ANSWER_IMAGE_UPLOADED = "answer_image_uploaded";
     public static final String TITLE = "title";
@@ -48,6 +50,20 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
         setRecyclerView();
         setAddQuestionButtonListener();
         setBroadcastReceiver();
+        setToolbar();
+    }
+
+    private void setToolbar() {
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle(course.getName());
+        setSupportActionBar(toolbar);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        setProfileImageWithUrl();
+        return true;
     }
 
     private void setBroadcastReceiver() {
