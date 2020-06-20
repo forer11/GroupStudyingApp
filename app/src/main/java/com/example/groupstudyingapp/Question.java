@@ -27,6 +27,7 @@ public class Question implements Serializable {
         this.numOfRates = 0;
         this.title = title;
         this.imagePath = imagePath;
+        this.id = null;
     }
 
     /////////////////////////////////// Getters ////////////////////////////////////////////////////

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/blue_gradient"
+    android:background="@drawable/light_background"
     tools:context=".QuestionActivity">
 
 
@@ -12,38 +12,51 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <TextView
-            android:id="@+id/questionTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:paddingEnd="10dp"
-            android:paddingStart="10dp"
-            android:fontFamily="@font/abeezee"
-            android:text=""
-            android:textAllCaps="true"
-            android:textColor="#FFFFFF"
-            android:textSize="25sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.11"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <LinearLayout
+            android:id="@+id/textViewsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/title_background"
+            >
+            <TextView
+                android:id="@+id/questionTitle"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:fontFamily="@font/abeezee"
+                android:layout_marginTop="20dp"
+                android:gravity="center"
+                android:layout_marginBottom="5dp"
+                android:text=""
+                android:textAllCaps="true"
+                android:textColor="#FFFFFF"
+                android:textSize="25sp"
+                android:shadowColor="@color/text_shadow"
+                android:shadowDx="-1"
+                android:shadowDy="-1"
+                android:shadowRadius="1"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </LinearLayout>
+
 
         <TextView
             android:id="@+id/questionRate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="20dp"
             android:fontFamily="@font/abeezee"
             android:text=""
             android:textAllCaps="true"
-            android:textColor="#FFFFFF"
+            android:textColor="#000000"
             android:textSize="10sp"
+            android:layout_marginTop="15dp"
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.22"
-            app:layout_constraintTop_toBottomOf="@id/questionTitle"
+            app:layout_constraintTop_toBottomOf="@id/textViewsLayout"
             app:layout_constraintBottom_toTopOf="@+id/questionImage" />
 
         <ImageView
@@ -63,8 +76,8 @@
             android:id="@+id/solutionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/costume_button_1"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/sign_in_button_design_blue"
             android:padding="10dp"
             android:text="Show solution"
             android:textAllCaps="false"
@@ -78,8 +91,8 @@
             android:id="@+id/rateButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/costume_button_2"
+            android:layout_marginTop="25dp"
+            android:background="@drawable/sign_in_button_design_blue"
             android:padding="10dp"
             android:text="Rate"
             android:textAllCaps="false"
@@ -101,8 +114,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Add answer"
+            android:padding="10dp"
+            android:textAllCaps="false"
+            android:background="@drawable/sign_in_button_design_blue"
             app:layout_constraintBottom_toBottomOf="@+id/smileyRating"
             app:layout_constraintEnd_toEndOf="parent"
+            android:textColor="@color/white"
             app:layout_constraintStart_toStartOf="@+id/smileyRating"
             app:layout_constraintTop_toTopOf="@+id/smileyRating" />
 

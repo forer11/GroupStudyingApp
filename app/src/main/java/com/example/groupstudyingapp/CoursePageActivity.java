@@ -67,9 +67,26 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
         this.registerReceiver(br, filter);
     }
 
+    private String getNewCourseId() {
+        String id = "";
+        boolean idIsUnique = false;
+        while (!idIsUnique) {
+            id = AppData.getRandomId();
+            idIsUnique = true;
+            for (Question question : questions) {
+                if (question.getId() != null && question.getId().equals(id)) {
+                    idIsUnique = false;
+                    break;
+                }
+            }
+        }
+        return id;
+    }
+
     //TODO - Ido - is imagePath needed here?
     private void addNewQuestion(Question newQuestion, String questionLink) { //todo should'nt return Question but id
         newQuestion.setLink(questionLink);
+        newQuestion.setId(getNewCourseId());
         questions.add(newQuestion);
         adapter.notifyDataSetChanged();
     }
