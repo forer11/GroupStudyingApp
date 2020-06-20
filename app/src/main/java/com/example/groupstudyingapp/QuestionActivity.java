@@ -11,6 +11,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
@@ -25,6 +26,7 @@ public class QuestionActivity extends AppCompatActivity {
     public static final String FINISHED_UPLOAD_ANSWER_IMG = "finished upload answers' image";
     public static final String FAILED_TO_UPLOAD_ANSWER_IMG = "failed to upload answers' image";
     public static final String UPLOAD_ANSWER = "start uploading answer";
+    public static final String NO_ANSWER_MSG = "No answer yet";
 
     public static final String QUESTION_ID = "question_id";
     public static final String TITLE = "title";
@@ -32,8 +34,10 @@ public class QuestionActivity extends AppCompatActivity {
     public static final String UPDATED_URL = "UPDATED URL";
     private String questionRate = "No rate yet";
 
+
     private boolean hiddenSolution = true;
     private boolean hiddenRate = true;
+    private boolean hasAnswer = false;
     private SmileyRating.Type rateType = null;
     private SmileyRating smileyRating;
     private TextView rateText;
@@ -136,7 +140,20 @@ public class QuestionActivity extends AppCompatActivity {
             }
         });
         questionImageView = findViewById(R.id.questionImage);
+        setAnswerAndShow(solutionButton);
+
+    }
+
+    private void setAnswerAndShow(final Button solutionButton) {
         solutionImage = findViewById(R.id.solutionImage);
+        if (question.getAnswers().size() > 0) {
+            CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(this);
+            circularProgressDrawable.setStrokeWidth(10f);
+            circularProgressDrawable.setCenterRadius(60f);
+            circularProgressDrawable.start();
+            Glide.with(this).load(Uri.parse(question.getAnswers().get(0).getImagePath())).placeholder(circularProgressDrawable).into(solutionImage);
+            hasAnswer = true;
+        }
         showSolutionHandler(solutionButton, solutionImage);
     }
 
@@ -213,11 +230,18 @@ public class QuestionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (hiddenSolution) {
-                    solutionImage.setVisibility(View.VISIBLE);
+                    if (hasAnswer) {
+                        solutionImage.setVisibility(View.VISIBLE);
+                    } else {
+                        Toast.makeText(QuestionActivity.this, NO_ANSWER_MSG,
+                                Toast.LENGTH_LONG).show();
+                    }
                     solutionButton.setText("Hide solution");
                     hiddenSolution = false;
                 } else {
-                    solutionImage.setVisibility(View.INVISIBLE);
+                    if (hasAnswer) {
+                        solutionImage.setVisibility(View.INVISIBLE);
+                    }
                     solutionButton.setText("Show solution");
                     hiddenSolution = true;
                 }
