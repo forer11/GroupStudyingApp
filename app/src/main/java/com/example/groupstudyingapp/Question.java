@@ -91,8 +91,9 @@ public class Question implements Serializable {
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
-    public void addAnswer(Answer a) {
-        answers.add(a);
+    public void addAnswer(String title, String answersUrl) {
+        Answer newAnswer = new Answer(title, answersUrl);
+        answers.add(newAnswer);
     }
 
 

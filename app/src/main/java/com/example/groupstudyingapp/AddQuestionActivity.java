@@ -36,6 +36,8 @@ public class AddQuestionActivity extends AppCompatActivity {
     public static final String PLS_UPLOAD_IMG = "Please upload an image";
     public static final String FINISHED_UPLOAD = "finished upload";
     public static final String FAILED_TO_UPLOAD = "failed to upload";
+    public static final String IMAGE_SAVE_ERROR_MSG = "image was'nt saved";
+    public static final String IMAGE_SAVE_ERROR = "image_save_error";
 
     private EditText titleInput;
     private Button cameraButton;
@@ -128,18 +130,16 @@ public class AddQuestionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (titleInput.getText().toString().equals("")) {
-                    Toast.makeText(AddQuestionActivity.this, "Please write a title!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddQuestionActivity.this, "Please write a title!",
+                                                                        Toast.LENGTH_SHORT).show();
                 } else {
                     String questionTitleInput = titleInput.getText().toString();
                     if (!isPhotoEntered) {
-                        Toast.makeText(AddQuestionActivity.this, PLS_UPLOAD_IMG, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddQuestionActivity.this, PLS_UPLOAD_IMG,
+                                                                        Toast.LENGTH_SHORT).show();
                     } else {
-                        Question newQuestion = new Question(questionTitleInput,
-                                newQuestionImagePath);
-                        fireStoreHandler.uploadQuestionImage(newImageUri,
-                                newQuestionImagePath,
-                                newQuestion,
-                                AddQuestionActivity.this);
+                        fireStoreHandler.uploadQuestionImage(newImageUri, newQuestionImagePath,
+                                questionTitleInput,AddQuestionActivity.this);
                     }
                 }
             }
@@ -160,7 +160,7 @@ public class AddQuestionActivity extends AppCompatActivity {
                     break;
             }
         } else {
-            Log.i("image_save_error", "image was'nt saved");
+            Log.i(IMAGE_SAVE_ERROR, IMAGE_SAVE_ERROR_MSG);
         }
     }
 
@@ -171,16 +171,13 @@ public class AddQuestionActivity extends AppCompatActivity {
      */
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
         if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
             File photoFile = null;
             try {
                 photoFile = createImageFile();
             } catch (IOException ex) {
                 Log.i(IMAGE_FILE_CREATION_FAILURE, "Error occurred while creating the File");
             }
-            // Continue only if the File was successfully created
             if (photoFile != null) {
                 Uri photoURI = FileProvider.getUriForFile(this, PACKEGE_NAME, photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
@@ -221,7 +218,10 @@ public class AddQuestionActivity extends AppCompatActivity {
         newImageUri = imageReturnedIntent.getData();
         if (newImageUri != null) {
             newQuestionImagePath = "questions/" + newImageUri.getLastPathSegment();
-            Glide.with(AddQuestionActivity.this).load(newImageUri).placeholder(circularProgressDrawable).into(questionImage);
+            Glide.with(AddQuestionActivity.this)
+                                                        .load(newImageUri)
+                                                        .placeholder(circularProgressDrawable)
+                                                        .into(questionImage);
 
         }
     }
@@ -235,7 +235,10 @@ public class AddQuestionActivity extends AppCompatActivity {
             isPhotoEntered = true;
             newImageUri = Uri.fromFile(imgFile);
             newQuestionImagePath = "questions/" + newImageUri.getLastPathSegment();
-            Glide.with(AddQuestionActivity.this).load(newImageUri).placeholder(circularProgressDrawable).into(questionImage);
+            Glide.with(AddQuestionActivity.this)
+                                                        .load(newImageUri)
+                                                        .placeholder(circularProgressDrawable)
+                                                        .into(questionImage);
         }
     }
 

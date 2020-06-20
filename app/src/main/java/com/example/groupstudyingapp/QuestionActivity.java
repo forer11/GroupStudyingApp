@@ -1,6 +1,9 @@
 package com.example.groupstudyingapp;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -18,24 +21,38 @@ import com.hsalf.smileyrating.SmileyRating;
 
 public class QuestionActivity extends AppCompatActivity {
 
-    private static final String QUESTION_ID = "question_id";
+
+    public static final String FINISHED_UPLOAD_ANSWER_IMG = "finished upload answers' image";
+    public static final String FAILED_TO_UPLOAD_ANSWER_IMG = "failed to upload answers' image";
+    public static final String UPLOAD_ANSWER = "start uploading answer";
+
+    public static final String QUESTION_ID = "question_id";
+    public static final String TITLE = "title";
+    public static final String COURSE_ID = "courseId";
+    public static final String UPDATED_URL = "UPDATED URL";
+    private String questionRate = "No rate yet";
+
     private boolean hiddenSolution = true;
     private boolean hiddenRate = true;
-    private String questionRate = "No rate yet";
     private SmileyRating.Type rateType = null;
     private SmileyRating smileyRating;
     private TextView rateText;
     private ImageView questionImageView;
     private ImageView solutionImage;
     private Question question;
+    private Course course;
     AppData appData;
     FireStoreHandler fireStoreHandler;
+
+    /** The broadcast receiver of the activity **/
+    private BroadcastReceiver br;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
-        loadQuestion();
+        getAppData();
+        loadQuestionAndCourse();
         if (question.getRating() > 0) {
             questionRate = Float.toString(question.getRating());
         }
@@ -43,10 +60,8 @@ public class QuestionActivity extends AppCompatActivity {
         TextView questionTextView = findViewById(R.id.questionTitle);
         questionTextView.setText(question.getTitle());
 
-        getAppData();
-        fireStoreHandler.setCurrentImagePath(question.getImagePath());
-
-//        Uri questionImage = Uri.parse(question.getImagePath());
+//        getAppData();
+        fireStoreHandler.setCurrentImagePath(question.getImagePath()); //todo needed?
 
         CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(this);
         circularProgressDrawable.setStrokeWidth(10f);
@@ -56,10 +71,9 @@ public class QuestionActivity extends AppCompatActivity {
         Glide.with(this).load(Uri.parse(question.getLink())).placeholder(circularProgressDrawable).into(questionImageView);
         findViewById(R.id.loadingPanel).setVisibility(View.GONE);
 
-//        questionImageView.setImageURI(questionImage);
-        //TODO - get image uri from firestore (solution)
+
         if (question.getAnswers().size() > 0) {
-            solutionImage.setImageURI(Uri.parse(question.getAnswers().get(0).getLink()));
+            solutionImage.setImageURI(Uri.parse(question.getAnswers().get(0).getImagePath()));
             // todo show all answers
         }
         userRateHandler();
@@ -68,6 +82,25 @@ public class QuestionActivity extends AppCompatActivity {
             updateRate(smileyRating);
         }
 
+        setupBroadcastReceiver();
+
+    }
+
+    private void setupBroadcastReceiver() {
+        br = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (intent.getAction().equals(FINISHED_UPLOAD_ANSWER_IMG)) {
+                    String answerUrl = intent.getStringExtra(UPDATED_URL);
+                    String title = intent.getStringExtra(TITLE);
+                    fireStoreHandler.addNewAnswer(question.getId(), title, answerUrl);
+//                    addNewQuestion(title, questionUrl);
+//                    fireStoreHandler.updateCourse(course.getId());
+                }
+            }
+        };
+        IntentFilter filter = new IntentFilter(FINISHED_UPLOAD_ANSWER_IMG);
+        this.registerReceiver(br, filter);
     }
 
     private void initializeUi() {
@@ -98,6 +131,7 @@ public class QuestionActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getBaseContext(), AddAnswerActivity.class);
                 intent.putExtra(QUESTION_ID, question.getId());
+                intent.putExtra(COURSE_ID, course.getId());
                 startActivity(intent);
             }
         });
@@ -166,9 +200,12 @@ public class QuestionActivity extends AppCompatActivity {
         }, 500); // we need the delay so the rate will be updated
     }
 
-    private void loadQuestion() {
+    private void loadQuestionAndCourse() {
         Intent intent = this.getIntent();
-        question = (Question) intent.getSerializableExtra("EXTRA_SESSION_ID");
+        String questionId =  intent.getStringExtra(QUESTION_ID);
+        question = fireStoreHandler.getQuestionById(questionId);
+        String courseId = intent.getStringExtra(COURSE_ID);
+        course = fireStoreHandler.getCourseById(courseId);
     }
 
     private void showSolutionHandler(final Button solutionButton, final ImageView solutionImage) {
@@ -191,5 +228,12 @@ public class QuestionActivity extends AppCompatActivity {
     private void getAppData() {
         appData = (AppData) getApplicationContext();
         fireStoreHandler = appData.fireStoreHandler;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        unregisterReceiver(br);
     }
 }

@@ -3,15 +3,26 @@ package com.example.groupstudyingapp;
 import android.net.Uri;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Answer implements Serializable {
 
+    private String title;
     private String id;
     private String link;
+    private int numOfRates;
     private float rating;
     private String imagePath;
 
     Answer(){}
+
+    Answer(String title, String imagePath) {
+        this.rating = 0;
+        this.numOfRates = 0;
+        this.title = title;
+        this.imagePath = imagePath;
+        this.id = null;
+    }
 
     /////////////////////////////////// Getters ////////////////////////////////////////////////////
     public String getId() {

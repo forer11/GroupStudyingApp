@@ -17,6 +17,8 @@ import java.util.Objects;
 
 public class CoursePageActivity extends AppCompatActivity implements CoursePageAdapter.ItemClickListener {
     public static final String IMAGE_UPLOADED = "image_uploaded";
+    public static final String ANSWER_IMAGE_UPLOADED = "answer_image_uploaded";
+    public static final String TITLE = "title";
 
     CoursePageAdapter adapter;
     private ArrayList<Question> questions;
@@ -33,7 +35,7 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
     /**
      * The local path of the last image taken by the camera
      **/
-    private String currentPhotoPath;
+    private String currentPhotoPath; //todo - needed?
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +59,8 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
             public void onReceive(Context context, Intent intent) {
                 if (intent.getAction().equals(IMAGE_UPLOADED)) {
                     String questionUrl = intent.getStringExtra("UPDATED URL");
-                    Question question = (Question) intent.getSerializableExtra("UPDATED QUESTION");
-                    addNewQuestion(Objects.requireNonNull(question), questionUrl);
+                    String title = intent.getStringExtra(TITLE);
+                    addNewQuestion(title, questionUrl);
                     fireStoreHandler.updateCourse(course.getId());
                 }
             }
@@ -84,7 +86,8 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
     }
 
     //TODO - Ido - is imagePath needed here?
-    private void addNewQuestion(Question newQuestion, String questionLink) { //todo should'nt return Question but id
+    private void addNewQuestion(String title, String questionLink) { //todo should'nt return Question but id
+        Question newQuestion = new Question(title, questionLink);
         newQuestion.setLink(questionLink);
         newQuestion.setId(getNewCourseId());
         questions.add(newQuestion);
@@ -156,7 +159,8 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
     @Override
     public void onItemClick(View view, int position) {
         Intent intent = new Intent(getBaseContext(), QuestionActivity.class);
-        intent.putExtra("EXTRA_SESSION_ID", questions.get(position));
+        intent.putExtra(QuestionActivity.QUESTION_ID, questions.get(position).getId());
+        intent.putExtra(QuestionActivity.COURSE_ID, course.getId());
         startActivity(intent);
     }
 
