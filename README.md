@@ -2,6 +2,11 @@
 
 
 ## Project description:
+This project is an extension of GroupStudyingApp: 
+https://github.com/forer11/GroupStudyingApp
+
+## Extentions:
+*	REST API capabilities was added - find more info inside REST-API folder.
 
 A group studying program, whose main functions are uploading and grading questions 
 and answers.
