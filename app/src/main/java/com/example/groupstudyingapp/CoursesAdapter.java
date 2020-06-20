@@ -4,19 +4,59 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
-public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.ViewHolder> {
+public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.ViewHolder> implements Filterable {
 
     private ItemClickListener mClickListener;
     private ArrayList<String> coursesIds;
+    private ArrayList<Course> coursesList;
+    private ArrayList<Course> coursesListFull;
     private FireStoreHandler fireStoreHandler;
 
-    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    @Override
+    public Filter getFilter() {
+        return courseFilter;
+    }
+
+    private Filter courseFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            ArrayList<Course> filteredList = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredList.addAll(coursesListFull);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+                for (Course course : coursesListFull) {
+                    if (course.getName().toLowerCase().contains(filterPattern)) {
+                        filteredList.add(course);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filteredList;
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            coursesList.clear();
+            coursesList.addAll((ArrayList) results.values);
+            notifyDataSetChanged();
+        }
+    };
+
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public TextView nameTextView;
 
@@ -36,9 +76,28 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.ViewHold
     }
 
 
-    public CoursesAdapter(FireStoreHandler fsh) {
+    public CoursesAdapter(FireStoreHandler fsh, ArrayList<Course> coursesList) {
         fireStoreHandler = fsh;
         coursesIds = fsh.getCoursesIds();
+        this.coursesList = coursesList;
+        updatedCoursesList();
+        coursesListFull = new ArrayList<>(coursesList);
+    }
+
+    private void updatedCoursesList() {
+        for (String id : coursesIds) {
+            Course course = fireStoreHandler.getCourseById(id);
+            coursesList.add(course);
+        }
+        sortCoursesAlphabetically(coursesList);
+    }
+
+    private void sortCoursesAlphabetically(ArrayList<Course> coursesArrayList) {
+        Collections.sort(coursesArrayList, new Comparator<Course>() {
+            public int compare(Course c1, Course c2) {
+                return c1.getName().compareTo(c2.getName());
+            }
+        });
     }
 
     @Override
@@ -54,8 +113,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.ViewHold
 
     @Override
     public void onBindViewHolder(CoursesAdapter.ViewHolder viewHolder, int position) {
-        String courseId = coursesIds.get(position);
-        final Course course = fireStoreHandler.getCourseById(courseId);
+        final Course course = coursesList.get(position);
 
         TextView textView = viewHolder.nameTextView;
         textView.setText(course.getName());
@@ -64,7 +122,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.ViewHold
 
     @Override
     public int getItemCount() {
-        return coursesIds.size();
+        return coursesList.size();
     }
 
     void setClickListener(ItemClickListener itemClickListener) {
