@@ -32,11 +32,13 @@ import java.util.Objects;
 import static android.content.ContentValues.TAG;
 
 public class FireStoreHandler {
+
+    public static final String IMAGE_UPLOADED = "image_uploaded";
+    public static final String ANSWER_IMG_UPLOADED = "answer_image_uploaded";
     private static final String UNSUCCESSFUL_IMAGE_UPLOAD = "unsuccessful_image_upload";
-    private static final String COURSE_UPDATE_FAILURE_MESSAGE =
-                                    "could'nt update the requested course, it does'nt exist";
-    public static final String UPDATED_QUESTION_ID = "UPDATED QUESTION";
+    private static final String COURSE_UPDATE_FAILURE_MESSAGE = "could'nt update the requested course, it does'nt exist";
     public static final String TITLE = "title";
+
     private FirebaseFirestore db;
     private CollectionReference coursesRef;
     private ArrayList<String> coursesIds;
@@ -48,8 +50,7 @@ public class FireStoreHandler {
     FirebaseStorage storage = FirebaseStorage.getInstance();
 
     private static String COURSES = "courses";
-    public static final String IMAGE_UPLOADED = "image_uploaded";
-    public static final String ANSWER_IMAGE_UPLOADED = "answer_image_uploaded";
+
 
     public FireStoreHandler(Context context) {
         this.context = context;
@@ -63,21 +64,21 @@ public class FireStoreHandler {
 
     public void loadData() {
         coursesRef
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                coursesIds.add(document.getId());
-                                loadCourse(document.getId());
-                            }
-                        } else {
-                            Log.d(TAG, "Error getting documents: ", task.getException());
+            .get()
+            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                    if (task.isSuccessful()) {
+                        for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                            Log.d(TAG, document.getId() + " => " + document.getData());
+                            coursesIds.add(document.getId());
+                            loadCourse(document.getId());
                         }
+                    } else {
+                        Log.d(TAG, "Error getting documents: ", task.getException());
                     }
-                });
+                }
+            });
     }
 
     public void updateData() {
@@ -102,7 +103,6 @@ public class FireStoreHandler {
                     });
         }
     }
-
 
     public void addCourse(Course c) { // todo needed?
         final Course course = c;
@@ -148,25 +148,16 @@ public class FireStoreHandler {
     public void uploadQuestionImage(final Uri localImagePath, String storedImagePath,
                                     final String title, final Context ctx) {
 
-        final ProgressDialog progressDialog = new ProgressDialog(ctx);
-        progressDialog.setTitle("Uploading...");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
-
-        // Create a storage reference from our app
+        final ProgressDialog progressDialog = getProgressDialog(ctx);
         StorageReference storageRef = storage.getReference();
         final StorageReference questionsRef = storageRef.child(storedImagePath + ".jpg");
         UploadTask uploadTask = questionsRef.putFile(localImagePath);
         final Intent intent = new Intent();
-        // Register observers to listen for when the download is done or if it fails
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
-                progressDialog.dismiss();
-                Toast.makeText(ctx, "Failed Uploading", Toast.LENGTH_SHORT).show();
-                Log.i(UNSUCCESSFUL_IMAGE_UPLOAD, "unsuccessful image upload");
-                intent.setAction(AddQuestionActivity.FAILED_TO_UPLOAD);
-                context.sendBroadcast(intent);
+                setUploadOnFailure(progressDialog, ctx, intent,
+                                                    QuestionActivity.FAILED_TO_UPLOAD_ANSWER_IMG);
                 //TODO - add a broadcast of failure
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -174,7 +165,7 @@ public class FireStoreHandler {
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 progressDialog.dismiss();
                 Toast.makeText(ctx, "Uploaded", Toast.LENGTH_SHORT).show();
-                updateNewQuestionUri(title, questionsRef, taskSnapshot);
+                updateNewQuestionUri(title, questionsRef, taskSnapshot, IMAGE_UPLOADED);
                 intent.setAction(AddQuestionActivity.FINISHED_UPLOAD);
                 context.sendBroadcast(intent);
                 //TODO - add a broadcast of success
@@ -189,77 +180,83 @@ public class FireStoreHandler {
         });
     }
 
+    private void setUploadOnFailure(ProgressDialog progressDialog, Context ctx, Intent intent,
+                                                                String failedToUploadAnswerImg) {
+        progressDialog.dismiss();
+        Toast.makeText(ctx, "Failed Uploading", Toast.LENGTH_SHORT).show();
+        Log.i(UNSUCCESSFUL_IMAGE_UPLOAD, "unsuccessful image upload");
+        intent.setAction(failedToUploadAnswerImg);
+        context.sendBroadcast(intent);
+    }
+
     /**
      * Uploads the image in localImagePath to fireStore, updates the link of newQuestion to the URI
      * of the uploaded image
      *
      * @param localImagePath  - a URI of local file path of the image to be uploaded
      * @param storedImagePath -the path in the fireStore storage to which the image will be uploaded
-     * @param newQuestion     - the new question to which the new image belongs
+     * @param title     - the title of the new question, to which the new image belongs
      */
     public void uploadAnswerImage(final Uri localImagePath, String storedImagePath,
-                                    final Answer newQuestion, final Context ctx) { //todo oooooooo
+                                    final String title, final Context ctx) { //todo oooooooo
 
-//        final ProgressDialog progressDialog = new ProgressDialog(ctx);
-//        progressDialog.setTitle("Uploading...");
-//        progressDialog.setCancelable(false);
-//        progressDialog.show();
-//
-//        // Create a storage reference from our app
-//        StorageReference storageRef = storage.getReference();
-//        final StorageReference questionsRef = storageRef.child(storedImagePath + ".jpg");
-//        UploadTask uploadTask = questionsRef.putFile(localImagePath);
-//        final Intent intent = new Intent();
-//        // Register observers to listen for when the download is done or if it fails
-//        uploadTask.addOnFailureListener(new OnFailureListener() {
-//            @Override
-//            public void onFailure(@NonNull Exception exception) {
-//                progressDialog.dismiss();
-//                Toast.makeText(ctx, "Failed Uploading", Toast.LENGTH_SHORT).show();
-//                Log.i(UNSUCCESSFUL_IMAGE_UPLOAD, "unsuccessful image upload");
-//                intent.setAction(AddQuestionActivity.FAILED_TO_UPLOAD);
-//                context.sendBroadcast(intent);
-//                //TODO - add a broadcast of failure
-//            }
-//        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-//            @Override
-//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-//                progressDialog.dismiss();
-//                Toast.makeText(ctx, "Uploaded", Toast.LENGTH_SHORT).show();
-//                updateNewQuestionUri(newQuestion, questionsRef, taskSnapshot);
-//                intent.setAction(AddQuestionActivity.FINISHED_UPLOAD);
-//                context.sendBroadcast(intent);
-//                //TODO - add a broadcast of success
-//            }
-//        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-//            @Override
-//            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
-//                double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
-//                        .getTotalByteCount());
-//                progressDialog.setMessage("Uploaded " + (int) progress + "%");
-//            }
-//        });
+        final ProgressDialog progressDialog = getProgressDialog(ctx);
+        StorageReference storageRef = storage.getReference();
+        final StorageReference answersRef = storageRef.child(storedImagePath + ".jpg");
+        UploadTask uploadTask = answersRef.putFile(localImagePath);
+        final Intent intent = new Intent();
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                setUploadOnFailure(progressDialog, ctx, intent, AddQuestionActivity.FAILED_TO_UPLOAD);
+                //TODO - add a broadcast of failure
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                progressDialog.dismiss();
+                Toast.makeText(ctx, "Uploaded", Toast.LENGTH_SHORT).show();
+                updateNewQuestionUri(title, answersRef, taskSnapshot,
+                                        QuestionActivity.FINISHED_UPLOAD_ANSWER_IMG);
+                //TODO - add a broadcast of success
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+                double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
+                        .getTotalByteCount());
+                progressDialog.setMessage("Uploaded " + (int) progress + "%");
+            }
+        });
+    }
+
+    private ProgressDialog getProgressDialog(Context ctx) {
+        final ProgressDialog progressDialog = new ProgressDialog(ctx);
+        progressDialog.setTitle("Uploading...");
+        progressDialog.setCancelable(false);
+        progressDialog.show();
+        return progressDialog;
     }
 
     /**
      * Gets the URI of the recently uploaded image of the newQuestion
      *
-     * @param newQuestionId  the new Question's id //todo - needs to be id and not object?
+     * @param title  the new Question's title
      * @param questionsRef a reference to the questions images storage on firebase
      * @param uploadTask   the upload task that uploads the image
      */
     private void updateNewQuestionUri(final String title,
-//            final String newQuestionId,
                                       final StorageReference questionsRef,
-                                      final UploadTask.TaskSnapshot uploadTask) {
+                                      final UploadTask.TaskSnapshot uploadTask,
+                                      final String action) {
         questionsRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 String photoUrl = uri.toString();
                 Intent intent = new Intent();
-                intent.setAction(IMAGE_UPLOADED);
+                intent.setAction(action);
                 intent.putExtra("UPDATED URL", photoUrl);
-                intent.putExtra(TITLE, title);
+                intent.putExtra(QuestionActivity.TITLE, title);
                 context.sendBroadcast(intent);
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -296,83 +293,83 @@ public class FireStoreHandler {
     }
 
 
-    public void buildDB() { // call once
-        Course course1 = new Course(); // todo - temp
-        course1.setName("Databases");
-
-        Question q1 = new Question();
-        q1.setId("q1");
-        q1.setTitle("question 1");
-        q1.setLink("gs://groupstudyingapp.appspot.com/questions/q1.PNG");
-        q1.setRating(5);
-        q1.setImagePath("gs://groupstudyingapp.appspot.com/questions/q1.PNG");
-
-        Answer a1 = new Answer();
-        a1.setId("a1");
-        a1.setRating(5);
-        a1.setLink("gs://groupstudyingapp.appspot.com/answers/a1.PNG");
-        q1.setTitle("question 1");
-        a1.setImagePath("gs://groupstudyingapp.appspot.com/answers/a1.PNG");
-        q1.addAnswer(a1);
-
-        course1.addQuestion(q1);
-
-        Question q2 = new Question();
-        q2.setId("q2");
-        q2.setTitle("question 2");
-        q2.setLink("gs://groupstudyingapp.appspot.com/questions/q2.PNG");
-        q2.setRating(3);
-        q2.setImagePath("gs://groupstudyingapp.appspot.com/questions/q2.PNG");
-
-        Answer a2 = new Answer();
-        a2.setId("a2");
-        a2.setRating(4);
-        a2.setLink("gs://groupstudyingapp.appspot.com/answers/a2.PNG");
-        a2.setImagePath("gs://groupstudyingapp.appspot.com/answers/a2.PNG");
-        q2.addAnswer(a2);
-
-        course1.addQuestion(q2);
-
-        addCourse(course1);
-
-        Course course2 = new Course(); // todo - temp
-        course2.setName("Image Processing");
-
-        Question q3 = new Question();
-        q3.setId("q3");
-        q3.setTitle("question 3");
-        q3.setLink("gs://groupstudyingapp.appspot.com/questions/q3.PNG");
-        q3.setRating(2);
-        q3.setImagePath("gs://groupstudyingapp.appspot.com/questions/q3.PNG");
-
-        Answer a3 = new Answer();
-        a3.setId("a3");
-        a3.setRating(4);
-        a3.setLink("gs://groupstudyingapp.appspot.com/answers/a3.PNG");
-        a3.setImagePath("gs://groupstudyingapp.appspot.com/answers/a3.PNG");
-        q3.addAnswer(a3);
-
-        course2.addQuestion(q3);
-
-        Question q4 = new Question();
-        q4.setId("q4");
-        q4.setTitle("question 4");
-        q4.setLink("gs://groupstudyingapp.appspot.com/questions/q5.PNG");
-        q4.setRating(5);
-        q4.setImagePath("gs://groupstudyingapp.appspot.com/questions/q5.PNG");
-
-        Answer a4 = new Answer();
-        a4.setId("a4");
-        a4.setRating(4);
-        a4.setLink("gs://groupstudyingapp.appspot.com/answers/a4.PNG");
-        a4.setImagePath("gs://groupstudyingapp.appspot.com/answers/a4.PNG");
-        q4.addAnswer(a4);
-
-        course2.addQuestion(q4);
-
-        addCourse(course2);
-
-    }
+//    public void buildDB() { // call once
+//        Course course1 = new Course(); // todo - temp
+//        course1.setName("Databases");
+//
+//        Question q1 = new Question();
+//        q1.setId("q1");
+//        q1.setTitle("question 1");
+//        q1.setLink("gs://groupstudyingapp.appspot.com/questions/q1.PNG");
+//        q1.setRating(5);
+//        q1.setImagePath("gs://groupstudyingapp.appspot.com/questions/q1.PNG");
+//
+//        Answer a1 = new Answer();
+//        a1.setId("a1");
+//        a1.setRating(5);
+//        a1.setLink("gs://groupstudyingapp.appspot.com/answers/a1.PNG");
+//        q1.setTitle("question 1");
+//        a1.setImagePath("gs://groupstudyingapp.appspot.com/answers/a1.PNG");
+//        q1.addAnswer(a1);
+//
+//        course1.addQuestion(q1);
+//
+//        Question q2 = new Question();
+//        q2.setId("q2");
+//        q2.setTitle("question 2");
+//        q2.setLink("gs://groupstudyingapp.appspot.com/questions/q2.PNG");
+//        q2.setRating(3);
+//        q2.setImagePath("gs://groupstudyingapp.appspot.com/questions/q2.PNG");
+//
+//        Answer a2 = new Answer();
+//        a2.setId("a2");
+//        a2.setRating(4);
+//        a2.setLink("gs://groupstudyingapp.appspot.com/answers/a2.PNG");
+//        a2.setImagePath("gs://groupstudyingapp.appspot.com/answers/a2.PNG");
+//        q2.addAnswer(a2);
+//
+//        course1.addQuestion(q2);
+//
+//        addCourse(course1);
+//
+//        Course course2 = new Course(); // todo - temp
+//        course2.setName("Image Processing");
+//
+//        Question q3 = new Question();
+//        q3.setId("q3");
+//        q3.setTitle("question 3");
+//        q3.setLink("gs://groupstudyingapp.appspot.com/questions/q3.PNG");
+//        q3.setRating(2);
+//        q3.setImagePath("gs://groupstudyingapp.appspot.com/questions/q3.PNG");
+//
+//        Answer a3 = new Answer();
+//        a3.setId("a3");
+//        a3.setRating(4);
+//        a3.setLink("gs://groupstudyingapp.appspot.com/answers/a3.PNG");
+//        a3.setImagePath("gs://groupstudyingapp.appspot.com/answers/a3.PNG");
+//        q3.addAnswer(a3);
+//
+//        course2.addQuestion(q3);
+//
+//        Question q4 = new Question();
+//        q4.setId("q4");
+//        q4.setTitle("question 4");
+//        q4.setLink("gs://groupstudyingapp.appspot.com/questions/q5.PNG");
+//        q4.setRating(5);
+//        q4.setImagePath("gs://groupstudyingapp.appspot.com/questions/q5.PNG");
+//
+//        Answer a4 = new Answer();
+//        a4.setId("a4");
+//        a4.setRating(4);
+//        a4.setLink("gs://groupstudyingapp.appspot.com/answers/a4.PNG");
+//        a4.setImagePath("gs://groupstudyingapp.appspot.com/answers/a4.PNG");
+//        q4.addAnswer(a4);
+//
+//        course2.addQuestion(q4);
+//
+//        addCourse(course2);
+//
+//    }
 
     private void loadCourse(String courseId) {
         final String cid = courseId;
@@ -383,6 +380,12 @@ public class FireStoreHandler {
                 courses.put(cid, documentSnapshot.toObject(Course.class));
             }
         });
+    }
+
+    public void addNewAnswer(String questionId, String title, String answerUrl){
+        Question question = getQuestionById(questionId);
+        question.addAnswer(title, answerUrl);
+        updateCourse(currentCourseId);
     }
 
 

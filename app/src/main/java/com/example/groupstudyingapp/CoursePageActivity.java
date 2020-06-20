@@ -159,7 +159,8 @@ public class CoursePageActivity extends AppCompatActivity implements CoursePageA
     @Override
     public void onItemClick(View view, int position) {
         Intent intent = new Intent(getBaseContext(), QuestionActivity.class);
-        intent.putExtra("EXTRA_SESSION_ID", questions.get(position));
+        intent.putExtra(QuestionActivity.QUESTION_ID, questions.get(position).getId());
+        intent.putExtra(QuestionActivity.COURSE_ID, course.getId());
         startActivity(intent);
     }
 

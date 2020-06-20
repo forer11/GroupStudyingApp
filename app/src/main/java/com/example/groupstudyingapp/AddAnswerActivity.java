@@ -78,7 +78,7 @@ public class AddAnswerActivity extends AppCompatActivity {
         br = new BroadcastReceiver() {
             @Override
             public void onReceive(Context context, Intent intent) {
-                if (intent.getAction().equals(FINISHED_UPLOAD)) {
+                if (intent.getAction().equals(QuestionActivity.FINISHED_UPLOAD_ANSWER_IMG)) {
                     Toast.makeText(context, "finished uploading photo", Toast.LENGTH_SHORT).show();
                     finish();
                 }
@@ -89,7 +89,7 @@ public class AddAnswerActivity extends AppCompatActivity {
             }
         };
         IntentFilter filter = new IntentFilter();
-        filter.addAction(FINISHED_UPLOAD);
+        filter.addAction(QuestionActivity.FINISHED_UPLOAD_ANSWER_IMG);
         filter.addAction(FAILED_TO_UPLOAD);
         this.registerReceiver(br, filter);
 
@@ -146,11 +146,8 @@ public class AddAnswerActivity extends AppCompatActivity {
                         Toast.makeText(AddAnswerActivity.this, PLS_UPLOAD_IMG,
                                                                         Toast.LENGTH_SHORT).show();
                     } else {
-                        Answer newAnswer = new Answer(answerTitleInput, newQuestionImagePath);
-                        fireStoreHandler.uploadAnswerImage(newImageUri,
-                                newQuestionImagePath,
-                                newAnswer,
-                                AddAnswerActivity.this);
+                        fireStoreHandler.uploadAnswerImage(newImageUri, newQuestionImagePath,
+                                                    answerTitleInput, AddAnswerActivity.this);
                     }
                 }
             }
@@ -231,8 +228,9 @@ public class AddAnswerActivity extends AppCompatActivity {
         isPhotoEntered = true;
         newImageUri = imageReturnedIntent.getData();
         if (newImageUri != null) {
-            newQuestionImagePath = "questions/" + newImageUri.getLastPathSegment();
-            Glide.with(AddAnswerActivity.this).load(newImageUri).placeholder(circularProgressDrawable).into(answerImage);
+            newQuestionImagePath = "answers/" + newImageUri.getLastPathSegment();
+            Glide.with(AddAnswerActivity.this).load(newImageUri)
+                                        .placeholder(circularProgressDrawable).into(answerImage);
 
         }
     }
@@ -245,8 +243,9 @@ public class AddAnswerActivity extends AppCompatActivity {
         if (imgFile.exists()) {
             isPhotoEntered = true;
             newImageUri = Uri.fromFile(imgFile);
-            newQuestionImagePath = "questions/" + newImageUri.getLastPathSegment();
-            Glide.with(AddAnswerActivity.this).load(newImageUri).placeholder(circularProgressDrawable).into(answerImage);
+            newQuestionImagePath = "answers/" + newImageUri.getLastPathSegment();
+            Glide.with(AddAnswerActivity.this).load(newImageUri)
+                                        .placeholder(circularProgressDrawable).into(answerImage);
         }
     }
 
