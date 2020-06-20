@@ -1,7 +1,5 @@
 # Group Studying App
 
-## As of now compatible with Android studio 3.6 and higher
-
 ## Project description:
 
 A group studying program, whose main functions are uploading and grading questions 
