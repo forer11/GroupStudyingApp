@@ -37,7 +37,7 @@ public class AddAnswerActivity extends AppCompatActivity {
     public static final String PLS_UPLOAD_IMG = "Please upload an image";
     public static final String FINISHED_UPLOAD = "finished upload";
     public static final String FAILED_TO_UPLOAD = "failed to upload";
-    private static final String QUESTION = "question";
+    private static final String QUESTION_ID = "question_id";
 
     private EditText titleInput;
     private Button cameraButton;
@@ -93,8 +93,8 @@ public class AddAnswerActivity extends AppCompatActivity {
         filter.addAction(FAILED_TO_UPLOAD);
         this.registerReceiver(br, filter);
 
-        question = getIntent().getParcelableExtra(QUESTION);
-        int a = 5;
+        String questionId = getIntent().getStringExtra(QUESTION_ID);
+        question = fireStoreHandler.getQuestionById(questionId);
     }
 
     private void getAppData() {
@@ -138,17 +138,18 @@ public class AddAnswerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (titleInput.getText().toString().equals("")) {
-                    Toast.makeText(AddAnswerActivity.this, "Please write a title!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddAnswerActivity.this, "Please write a title!",
+                                                                        Toast.LENGTH_SHORT).show();
                 } else {
-                    String questionTitleInput = titleInput.getText().toString();
+                    String answerTitleInput = titleInput.getText().toString();
                     if (!isPhotoEntered) {
-                        Toast.makeText(AddAnswerActivity.this, PLS_UPLOAD_IMG, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(AddAnswerActivity.this, PLS_UPLOAD_IMG,
+                                                                        Toast.LENGTH_SHORT).show();
                     } else {
-                        Question newQuestion = new Question(questionTitleInput,
-                                newQuestionImagePath);
-                        fireStoreHandler.uploadQuestionImage(newImageUri,
+                        Answer newAnswer = new Answer(answerTitleInput, newQuestionImagePath);
+                        fireStoreHandler.uploadAnswerImage(newImageUri,
                                 newQuestionImagePath,
-                                newQuestion,
+                                newAnswer,
                                 AddAnswerActivity.this);
                     }
                 }

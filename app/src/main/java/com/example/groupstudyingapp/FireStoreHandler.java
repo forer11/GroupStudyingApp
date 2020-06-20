@@ -32,7 +32,11 @@ import java.util.Objects;
 import static android.content.ContentValues.TAG;
 
 public class FireStoreHandler {
-    public static final String UNSUCCESSFUL_IMAGE_UPLOAD = "unsuccessful_image_upload";
+    private static final String UNSUCCESSFUL_IMAGE_UPLOAD = "unsuccessful_image_upload";
+    private static final String COURSE_UPDATE_FAILURE_MESSAGE =
+                                    "could'nt update the requested course, it does'nt exist";
+    public static final String UPDATED_QUESTION_ID = "UPDATED QUESTION";
+    public static final String TITLE = "title";
     private FirebaseFirestore db;
     private CollectionReference coursesRef;
     private ArrayList<String> coursesIds;
@@ -45,6 +49,7 @@ public class FireStoreHandler {
 
     private static String COURSES = "courses";
     public static final String IMAGE_UPLOADED = "image_uploaded";
+    public static final String ANSWER_IMAGE_UPLOADED = "answer_image_uploaded";
 
     public FireStoreHandler(Context context) {
         this.context = context;
@@ -57,7 +62,6 @@ public class FireStoreHandler {
     }
 
     public void loadData() {
-
         coursesRef
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -85,7 +89,7 @@ public class FireStoreHandler {
     public void updateCourse(String id) { //TODO - should receive id and not Course object
         Course c = courses.get(id);
         if( c == null){
-            Log.e("update_fail", "could'nt update the requested course, it does'nt exist");
+            Log.e("update_fail", COURSE_UPDATE_FAILURE_MESSAGE);
         }
         else {
             coursesRef.document(id).set(c, SetOptions.merge())
@@ -122,7 +126,8 @@ public class FireStoreHandler {
 
 
     public void updateQuestion(Question question) {
-        ArrayList<Question> questions = Objects.requireNonNull(courses.get(currentCourseId)).getQuestions();
+        ArrayList<Question> questions = Objects.requireNonNull(courses.get(currentCourseId))
+                                                                                    .getQuestions();
         for (int i = 0; i < questions.size(); ++i) {
             if (questions.get(i).getImagePath().compareTo(currentImagePath) == 0) {
                 questions.set(i, question);
@@ -131,17 +136,17 @@ public class FireStoreHandler {
         updateCourse(Objects.requireNonNull(currentCourseId));
     }
 
-
     /**
      * Uploads the image in localImagePath to fireStore, updates the link of newQuestion to the URI
-     * of the uploaded image //todo - should set path and not link of newQuestion
+     * of the uploaded image
      *
      * @param localImagePath  - a URI of local file path of the image to be uploaded
      * @param storedImagePath -the path in the fireStore storage to which the image will be uploaded
-     * @param newQuestion     - the new question to which the new image belongs
+     * @param title - the title of the new question
+     * @param ctx - context
      */
     public void uploadQuestionImage(final Uri localImagePath, String storedImagePath,
-                                    final Question newQuestion, final Context ctx) {
+                                    final String title, final Context ctx) {
 
         final ProgressDialog progressDialog = new ProgressDialog(ctx);
         progressDialog.setTitle("Uploading...");
@@ -169,7 +174,7 @@ public class FireStoreHandler {
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 progressDialog.dismiss();
                 Toast.makeText(ctx, "Uploaded", Toast.LENGTH_SHORT).show();
-                updateNewQuestionUri(newQuestion, questionsRef, taskSnapshot);
+                updateNewQuestionUri(title, questionsRef, taskSnapshot);
                 intent.setAction(AddQuestionActivity.FINISHED_UPLOAD);
                 context.sendBroadcast(intent);
                 //TODO - add a broadcast of success
@@ -185,14 +190,68 @@ public class FireStoreHandler {
     }
 
     /**
+     * Uploads the image in localImagePath to fireStore, updates the link of newQuestion to the URI
+     * of the uploaded image
+     *
+     * @param localImagePath  - a URI of local file path of the image to be uploaded
+     * @param storedImagePath -the path in the fireStore storage to which the image will be uploaded
+     * @param newQuestion     - the new question to which the new image belongs
+     */
+    public void uploadAnswerImage(final Uri localImagePath, String storedImagePath,
+                                    final Answer newQuestion, final Context ctx) { //todo oooooooo
+
+//        final ProgressDialog progressDialog = new ProgressDialog(ctx);
+//        progressDialog.setTitle("Uploading...");
+//        progressDialog.setCancelable(false);
+//        progressDialog.show();
+//
+//        // Create a storage reference from our app
+//        StorageReference storageRef = storage.getReference();
+//        final StorageReference questionsRef = storageRef.child(storedImagePath + ".jpg");
+//        UploadTask uploadTask = questionsRef.putFile(localImagePath);
+//        final Intent intent = new Intent();
+//        // Register observers to listen for when the download is done or if it fails
+//        uploadTask.addOnFailureListener(new OnFailureListener() {
+//            @Override
+//            public void onFailure(@NonNull Exception exception) {
+//                progressDialog.dismiss();
+//                Toast.makeText(ctx, "Failed Uploading", Toast.LENGTH_SHORT).show();
+//                Log.i(UNSUCCESSFUL_IMAGE_UPLOAD, "unsuccessful image upload");
+//                intent.setAction(AddQuestionActivity.FAILED_TO_UPLOAD);
+//                context.sendBroadcast(intent);
+//                //TODO - add a broadcast of failure
+//            }
+//        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+//            @Override
+//            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+//                progressDialog.dismiss();
+//                Toast.makeText(ctx, "Uploaded", Toast.LENGTH_SHORT).show();
+//                updateNewQuestionUri(newQuestion, questionsRef, taskSnapshot);
+//                intent.setAction(AddQuestionActivity.FINISHED_UPLOAD);
+//                context.sendBroadcast(intent);
+//                //TODO - add a broadcast of success
+//            }
+//        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+//            @Override
+//            public void onProgress(UploadTask.TaskSnapshot taskSnapshot) {
+//                double progress = (100.0 * taskSnapshot.getBytesTransferred() / taskSnapshot
+//                        .getTotalByteCount());
+//                progressDialog.setMessage("Uploaded " + (int) progress + "%");
+//            }
+//        });
+    }
+
+    /**
      * Gets the URI of the recently uploaded image of the newQuestion
      *
-     * @param newQuestion  the newQuestion //todo - needs to be id and not object?
+     * @param newQuestionId  the new Question's id //todo - needs to be id and not object?
      * @param questionsRef a reference to the questions images storage on firebase
      * @param uploadTask   the upload task that uploads the image
      */
-    private void updateNewQuestionUri(final Question newQuestion,
-                                      final StorageReference questionsRef, final UploadTask.TaskSnapshot uploadTask) {
+    private void updateNewQuestionUri(final String title,
+//            final String newQuestionId,
+                                      final StorageReference questionsRef,
+                                      final UploadTask.TaskSnapshot uploadTask) {
         questionsRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
@@ -200,7 +259,7 @@ public class FireStoreHandler {
                 Intent intent = new Intent();
                 intent.setAction(IMAGE_UPLOADED);
                 intent.putExtra("UPDATED URL", photoUrl);
-                intent.putExtra("UPDATED QUESTION", newQuestion);
+                intent.putExtra(TITLE, title);
                 context.sendBroadcast(intent);
             }
         }).addOnFailureListener(new OnFailureListener() {
@@ -344,5 +403,15 @@ public class FireStoreHandler {
 
     public Course getCourseById(String id) {
         return courses.get(id);
+    }
+
+    public Question getQuestionById(String id){
+        Course currentCourse = getCurrentCourse();
+        for(Question q : currentCourse.getQuestions()){
+            if(q.getId().equals(id)){
+                return q;
+            }
+        }
+        return null;
     }
 }
