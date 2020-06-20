@@ -27,6 +27,26 @@ public class MainActivity extends BaseMenuActivity implements CoursesAdapter.Ite
         setRecyclerViews();
     }
 
+    // TODO: lior , delete before submission
+    private void addCoursesTemp() {
+        //change the names before uploading more courses
+        String[] names = {"Image Processing", "Communication Networks", "Algorithms", "OOP", "IML",
+                "Logic", "Nand To Tetris", "Probability and Statistics",
+                "Cryptography And Software Security","Infi 1", "Infi 2", "Programming Workshop in C","Programming Workshop in CPP"};
+
+        for (String name : names)
+        {
+            addCourseTemp(name);
+
+        }
+    }
+    // TODO: lior , delete before submission
+    private void addCourseTemp(String name) {
+        Course course = new Course();
+        course.setName(name);
+        fireStoreHandler.addCourse(course);
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
