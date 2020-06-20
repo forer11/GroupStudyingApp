@@ -102,7 +102,7 @@ public class MainActivity extends BaseMenuActivity implements CoursesAdapter.Ite
     @Override
     public void onItemClick(View view, int position) {
         Intent intent = new Intent(getBaseContext(), CoursePageActivity.class);
-        fireStoreHandler.setCurrentCourseId(position);
+        fireStoreHandler.setCurrentCourseId(coursesList.get(position).getId());
         startActivity(intent);
     }
 
