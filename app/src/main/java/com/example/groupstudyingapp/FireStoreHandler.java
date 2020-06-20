@@ -388,9 +388,13 @@ public class FireStoreHandler {
         updateCourse(currentCourseId);
     }
 
-
+    //TODO Ido/Mor check if we need it
     public void setCurrentCourseId(int position) {
         currentCourseId = coursesIds.get(position);
+    }
+
+    public void setCurrentCourseId(String id) {
+        currentCourseId = id;
     }
 
     public void setCurrentImagePath(String path) { currentImagePath = path; }
