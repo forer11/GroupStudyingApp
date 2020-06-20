@@ -1,26 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="true">
-        <shape>
-            <corners android:radius="2dp" />
-            <gradient android:angle="-90" android:endColor="#EAF6F1" android:startColor="#CAE1DB" />
-            <padding android:bottom="0dp" android:left="0dp" android:right="0dp" android:top="0dp" />
-        </shape>
+        <layer-list>
+            <item>
+                <shape>
+                    <corners android:radius="15dp"/>
+                    <padding android:left="0dp" android:top="0dp" android:right="0dp" android:bottom="0dp" />
+                </shape>
+            </item>
+            <item android:top="3dp" android:right="3dp" android:bottom="3dp" android:left="3dp">
+                <shape>
+                    <gradient android:angle="-90" android:endColor="#EAF6F1" android:startColor="#CAE1DB" />
+                    <corners android:radius="10dp"/>
+                    <padding android:left="0dp" android:top="0dp" android:right="0dp" android:bottom="0dp" />
+                </shape>
+            </item>
+        </layer-list>
     </item>
     <item android:state_focused="true">
-        <shape>
-            <corners android:radius="2dp" />
-            <solid android:color="#BBE4E8" />
-            <padding android:bottom="0dp" android:left="0dp" android:right="0dp" android:top="0dp" />
-        </shape>
+        <layer-list>
+            <item>
+                <shape>
+                    <corners android:radius="10dp"/>
+                    <padding android:left="0dp" android:top="0dp" android:right="0dp" android:bottom="0dp" />
+                </shape>
+            </item>
+            <item android:top="3dp" android:right="3dp" android:bottom="3dp" android:left="3dp">
+                <shape>
+                    <solid android:color="#BBE4E8" />
+                    <corners android:radius="10dp"/>
+                    <padding android:left="0dp" android:top="0dp" android:right="0dp" android:bottom="0dp" />
+                </shape>
+            </item>
+        </layer-list>
     </item>
-    <item android:bottom="3dp" android:left="3dp" android:right="3dp" android:top="3dp">
-        <shape>
-            <corners android:radius="2dp" />
-            <solid android:color="@color/white_smoke" />
-            <padding android:bottom="0dp" android:left="0dp" android:right="0dp" android:top="0dp" />
-        </shape>
+    <item>
+        <layer-list>
+            <item>
+                <shape>
+                    <corners android:radius="10dp"/>
+                    <padding android:left="0dp" android:top="0dp" android:right="0dp" android:bottom="0dp" />
+                </shape>
+            </item>
+            <item android:top="3dp" android:right="3dp" android:bottom="3dp"  android:left="3dp">
+                <shape>
+                    <solid android:color="@color/white_smoke" />
+                    <corners android:radius="10dp"/>
+                    <padding android:left="0dp" android:top="0dp" android:right="0dp" android:bottom="0dp" />
+                </shape>
+            </item>
+        </layer-list>
     </item>
-
-
 </selector>
