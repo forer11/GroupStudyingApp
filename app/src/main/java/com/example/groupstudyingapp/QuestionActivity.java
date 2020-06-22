@@ -10,6 +10,7 @@ import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,6 +39,7 @@ public class QuestionActivity extends AppCompatActivity {
     private boolean hiddenSolution = true;
     private boolean hiddenRate = true;
     private boolean hasAnswer = false;
+    private boolean answerRated = false;
     private SmileyRating.Type rateType = null;
     private SmileyRating smileyRating;
     private TextView rateText;
@@ -77,7 +79,10 @@ public class QuestionActivity extends AppCompatActivity {
 
 
         if (question.getAnswers().size() > 0) {
-            solutionImage.setImageURI(Uri.parse(question.getAnswers().get(0).getImagePath()));
+            Answer answer = question.getAnswers().get(0);
+            solutionImage.setImageURI(Uri.parse(answer.getImagePath()));
+            TextView answerRateText = findViewById(R.id.solutionRateText);
+            answerRateText.setText(Integer.toString((int)answer.getRating()));
             // todo show all answers
         }
         userRateHandler();
@@ -139,6 +144,7 @@ public class QuestionActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
         questionImageView = findViewById(R.id.questionImage);
         setAnswerAndShow(solutionButton);
 
@@ -226,12 +232,30 @@ public class QuestionActivity extends AppCompatActivity {
     }
 
     private void showSolutionHandler(final Button solutionButton, final ImageView solutionImage) {
+        final Button answerLikeButton = findViewById(R.id.solutionLikeButton);
+        final LinearLayout answerBox = findViewById(R.id.solutionRate);
+        final TextView answerRateText = findViewById(R.id.solutionRateText);
+
+        answerLikeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (question.getAnswers().size() > 0 && !answerRated) {
+                    Answer answer = question.getAnswers().get(0);
+                    answer.setRating(answer.getRating() + 1);
+                    answerRateText.setText(Integer.toString((int)answer.getRating()));
+                    answerLikeButton.setBackground(getResources().getDrawable(R.drawable.like2));
+                    fireStoreHandler.updateQuestion(question);
+                    answerRated = true;
+                }
+            }
+        });
         solutionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (hiddenSolution) {
                     if (hasAnswer) {
                         solutionImage.setVisibility(View.VISIBLE);
+                        answerBox.setVisibility(View.VISIBLE);
                     } else {
                         Toast.makeText(QuestionActivity.this, NO_ANSWER_MSG,
                                 Toast.LENGTH_LONG).show();
@@ -241,6 +265,7 @@ public class QuestionActivity extends AppCompatActivity {
                 } else {
                     if (hasAnswer) {
                         solutionImage.setVisibility(View.INVISIBLE);
+                        answerBox.setVisibility(View.INVISIBLE);
                     }
                     solutionButton.setText("Show solution");
                     hiddenSolution = true;
