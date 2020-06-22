@@ -57,7 +57,7 @@ public class MainActivity extends BaseMenuActivity implements CoursesAdapter.Ite
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
-        setProfileImageWithUrl();
+        setProfile();
 
         MenuItem searchItem = menu.findItem(R.id.search_bar);
         SearchView searchView = (SearchView) searchItem.getActionView();

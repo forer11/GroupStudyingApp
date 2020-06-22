@@ -44,12 +44,6 @@ public class AppData extends Application {
             @Override
             public void onIdTokenChanged(@NonNull FirebaseAuth firebaseAuth) {
                 user = FirebaseAuth.getInstance().getCurrentUser();
-                if (user != null) {
-                    if(user.getEmail()!=null){
-
-                    }
-
-                }
             }
         };
         firebaseAuth.addIdTokenListener(userListener);

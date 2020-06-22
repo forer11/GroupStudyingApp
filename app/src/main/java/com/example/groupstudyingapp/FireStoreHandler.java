@@ -13,6 +13,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -38,9 +39,11 @@ public class FireStoreHandler {
     private static final String UNSUCCESSFUL_IMAGE_UPLOAD = "unsuccessful_image_upload";
     private static final String COURSE_UPDATE_FAILURE_MESSAGE = "could'nt update the requested course, it does'nt exist";
     public static final String TITLE = "title";
+    private static final String USERS = "Users";
 
     private FirebaseFirestore db;
     private CollectionReference coursesRef;
+    private CollectionReference usersRef;
     private ArrayList<String> coursesIds;
     private HashMap<String, Course> courses;
     private Context context;
@@ -56,29 +59,51 @@ public class FireStoreHandler {
         this.context = context;
         db = FirebaseFirestore.getInstance();
         coursesRef = db.collection(COURSES);
+        usersRef = db.collection(USERS);
         coursesIds = new ArrayList<>();
         courses = new HashMap<>();
         loadData();
 
     }
 
+    public void createUserIfNotExists(FirebaseUser user) {
+        if (user != null && user.getEmail() != null) {
+            final DocumentReference userRef = usersRef.document(user.getEmail());
+            userRef.get()
+                    .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                        @Override
+                        public void onSuccess(DocumentSnapshot documentSnapshot) {
+                            if (documentSnapshot == null || !documentSnapshot.exists()) {
+                                userRef.set(new HashMap<String, Object>(), SetOptions.merge());
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.v(TAG, "error loading user");
+                        }
+                    });
+        }
+    }
+
     public void loadData() {
         coursesRef
-            .get()
-            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                    if (task.isSuccessful()) {
-                        for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
-                            Log.d(TAG, document.getId() + " => " + document.getData());
-                            coursesIds.add(document.getId());
-                            loadCourse(document.getId());
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                                Log.d(TAG, document.getId() + " => " + document.getData());
+                                coursesIds.add(document.getId());
+                                loadCourse(document.getId());
+                            }
+                        } else {
+                            Log.d(TAG, "Error getting documents: ", task.getException());
                         }
-                    } else {
-                        Log.d(TAG, "Error getting documents: ", task.getException());
                     }
-                }
-            });
+                });
     }
 
     public void updateData() {
@@ -89,10 +114,9 @@ public class FireStoreHandler {
 
     public void updateCourse(String id) { //TODO - should receive id and not Course object
         Course c = courses.get(id);
-        if( c == null){
+        if (c == null) {
             Log.e("update_fail", COURSE_UPDATE_FAILURE_MESSAGE);
-        }
-        else {
+        } else {
             coursesRef.document(id).set(c, SetOptions.merge())
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
@@ -127,7 +151,7 @@ public class FireStoreHandler {
 
     public void updateQuestion(Question question) {
         ArrayList<Question> questions = Objects.requireNonNull(courses.get(currentCourseId))
-                                                                                    .getQuestions();
+                .getQuestions();
         for (int i = 0; i < questions.size(); ++i) {
             if (questions.get(i).getImagePath().compareTo(currentImagePath) == 0) {
                 questions.set(i, question);
@@ -142,8 +166,8 @@ public class FireStoreHandler {
      *
      * @param localImagePath  - a URI of local file path of the image to be uploaded
      * @param storedImagePath -the path in the fireStore storage to which the image will be uploaded
-     * @param title - the title of the new question
-     * @param ctx - context
+     * @param title           - the title of the new question
+     * @param ctx             - context
      */
     public void uploadQuestionImage(final Uri localImagePath, String storedImagePath,
                                     final String title, final Context ctx) {
@@ -157,7 +181,7 @@ public class FireStoreHandler {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 setUploadOnFailure(progressDialog, ctx, intent,
-                                                    QuestionActivity.FAILED_TO_UPLOAD_ANSWER_IMG);
+                        QuestionActivity.FAILED_TO_UPLOAD_ANSWER_IMG);
                 //TODO - add a broadcast of failure
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
@@ -181,7 +205,7 @@ public class FireStoreHandler {
     }
 
     private void setUploadOnFailure(ProgressDialog progressDialog, Context ctx, Intent intent,
-                                                                String failedToUploadAnswerImg) {
+                                    String failedToUploadAnswerImg) {
         progressDialog.dismiss();
         Toast.makeText(ctx, "Failed Uploading", Toast.LENGTH_SHORT).show();
         Log.i(UNSUCCESSFUL_IMAGE_UPLOAD, "unsuccessful image upload");
@@ -195,10 +219,10 @@ public class FireStoreHandler {
      *
      * @param localImagePath  - a URI of local file path of the image to be uploaded
      * @param storedImagePath -the path in the fireStore storage to which the image will be uploaded
-     * @param title     - the title of the new question, to which the new image belongs
+     * @param title           - the title of the new question, to which the new image belongs
      */
     public void uploadAnswerImage(final Uri localImagePath, String storedImagePath,
-                                    final String title, final Context ctx) { //todo oooooooo
+                                  final String title, final Context ctx) { //todo oooooooo
 
         final ProgressDialog progressDialog = getProgressDialog(ctx);
         StorageReference storageRef = storage.getReference();
@@ -217,7 +241,7 @@ public class FireStoreHandler {
                 progressDialog.dismiss();
                 Toast.makeText(ctx, "Uploaded", Toast.LENGTH_SHORT).show();
                 updateNewQuestionUri(title, answersRef, taskSnapshot,
-                                        QuestionActivity.FINISHED_UPLOAD_ANSWER_IMG);
+                        QuestionActivity.FINISHED_UPLOAD_ANSWER_IMG);
                 //TODO - add a broadcast of success
             }
         }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -241,7 +265,7 @@ public class FireStoreHandler {
     /**
      * Gets the URI of the recently uploaded image of the newQuestion
      *
-     * @param title  the new Question's title
+     * @param title        the new Question's title
      * @param questionsRef a reference to the questions images storage on firebase
      * @param uploadTask   the upload task that uploads the image
      */
@@ -382,7 +406,7 @@ public class FireStoreHandler {
         });
     }
 
-    public void addNewAnswer(String questionId, String title, String answerUrl){
+    public void addNewAnswer(String questionId, String title, String answerUrl) {
         Question question = getQuestionById(questionId);
         question.addAnswer(title, answerUrl);
         updateCourse(currentCourseId);
@@ -397,7 +421,9 @@ public class FireStoreHandler {
         currentCourseId = id;
     }
 
-    public void setCurrentImagePath(String path) { currentImagePath = path; }
+    public void setCurrentImagePath(String path) {
+        currentImagePath = path;
+    }
 
 
     public Course getCurrentCourse() {
@@ -412,10 +438,10 @@ public class FireStoreHandler {
         return courses.get(id);
     }
 
-    public Question getQuestionById(String id){
+    public Question getQuestionById(String id) {
         Course currentCourse = getCurrentCourse();
-        for(Question q : currentCourse.getQuestions()){
-            if(q.getId().equals(id)){
+        for (Question q : currentCourse.getQuestions()) {
+            if (q.getId().equals(id)) {
                 return q;
             }
         }
