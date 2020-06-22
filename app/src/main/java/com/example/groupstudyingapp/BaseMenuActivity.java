@@ -64,16 +64,23 @@ public class BaseMenuActivity extends AppCompatActivity {
         });
     }
 
-    protected void setProfileImageWithUrl() {
+    protected void setProfile() {
         AppData appData = (AppData) getApplicationContext();
+        appData.isAnonymous = true;
         if (appData.user != null && appData.user.getEmail() != null) {
-            Uri uri = appData.user.getPhotoUrl();
-            if (uri != null) {
-                Glide
-                        .with(profileImage)
-                        .load(uri.toString())
-                        .into(profileImage);
-            }
+            appData.isAnonymous = false;
+            setProfileImageWithUrl(appData);
+            appData.fireStoreHandler.createUserIfNotExists(appData.user);
+        }
+    }
+
+    private void setProfileImageWithUrl(AppData appData) {
+        Uri uri = appData.user.getPhotoUrl();
+        if (uri != null) {
+            Glide
+                    .with(profileImage)
+                    .load(uri.toString())
+                    .into(profileImage);
         }
     }
 
