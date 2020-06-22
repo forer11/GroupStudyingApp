@@ -83,7 +83,7 @@
             android:textAllCaps="false"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/rateButton"
+            app:layout_constraintStart_toEndOf="@+id/addAnswerButton"
             app:layout_constraintTop_toBottomOf="@+id/questionImage" />
 
 
@@ -97,10 +97,22 @@
             android:text="Rate"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            app:layout_constraintEnd_toStartOf="@+id/solutionButton"
+            app:layout_constraintEnd_toStartOf="@+id/addAnswerButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/questionImage" />
-
+        <Button
+            android:id="@+id/addAnswerButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add answer"
+            android:layout_marginTop="25dp"
+            android:padding="10dp"
+            android:textAllCaps="false"
+            android:background="@drawable/sign_in_button_design_blue"
+            app:layout_constraintStart_toEndOf="@+id/rateButton"
+            app:layout_constraintEnd_toStartOf="@+id/solutionButton"
+            app:layout_constraintTop_toBottomOf="@+id/questionImage"
+            android:textColor="@color/white" />
         <com.hsalf.smileyrating.SmileyRating
             android:id="@+id/smileyRating"
             android:layout_width="match_parent"
@@ -109,19 +121,6 @@
             android:visibility="invisible"
             app:layout_constraintTop_toBottomOf="@+id/rateButton" />
 
-        <Button
-            android:id="@+id/addAnswerButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Add answer"
-            android:padding="10dp"
-            android:textAllCaps="false"
-            android:background="@drawable/sign_in_button_design_blue"
-            app:layout_constraintBottom_toBottomOf="@+id/smileyRating"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:textColor="@color/white"
-            app:layout_constraintStart_toStartOf="@+id/smileyRating"
-            app:layout_constraintTop_toTopOf="@+id/smileyRating" />
 
         <ImageView
             android:id="@+id/solutionImage"
