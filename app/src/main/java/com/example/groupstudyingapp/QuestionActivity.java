@@ -239,7 +239,7 @@ public class QuestionActivity extends AppCompatActivity {
         answerLikeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (question.getAnswers().size() > 0 && !answerRated) {
+                if (hasAnswer && !answerRated) {
                     Answer answer = question.getAnswers().get(0);
                     answer.setRating(answer.getRating() + 1);
                     answerRateText.setText(Integer.toString((int)answer.getRating()));
@@ -256,12 +256,12 @@ public class QuestionActivity extends AppCompatActivity {
                     if (hasAnswer) {
                         solutionImage.setVisibility(View.VISIBLE);
                         answerBox.setVisibility(View.VISIBLE);
+                        solutionButton.setText("Hide solution");
+                        hiddenSolution = false;
                     } else {
                         Toast.makeText(QuestionActivity.this, NO_ANSWER_MSG,
                                 Toast.LENGTH_LONG).show();
                     }
-                    solutionButton.setText("Hide solution");
-                    hiddenSolution = false;
                 } else {
                     if (hasAnswer) {
                         solutionImage.setVisibility(View.INVISIBLE);
