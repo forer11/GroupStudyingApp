@@ -18,6 +18,7 @@ public class AppData extends Application {
     FireStoreHandler fireStoreHandler;
     FirebaseAuth firebaseAuth;
     FirebaseUser user = null;
+    Boolean isAnonymous;
     GoogleSignInClient googleSignInClient;
 
 

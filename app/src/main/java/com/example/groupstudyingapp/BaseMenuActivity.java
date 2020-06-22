@@ -66,7 +66,9 @@ public class BaseMenuActivity extends AppCompatActivity {
 
     protected void setProfile() {
         AppData appData = (AppData) getApplicationContext();
+        appData.isAnonymous = true;
         if (appData.user != null && appData.user.getEmail() != null) {
+            appData.isAnonymous = false;
             setProfileImageWithUrl(appData);
             appData.fireStoreHandler.createUserIfNotExists(appData.user);
         }
