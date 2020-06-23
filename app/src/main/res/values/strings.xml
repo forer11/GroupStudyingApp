@@ -2,4 +2,13 @@
     <string name="app_name">GroupStudyingApp</string>
     <string name="anonymous_button_text">Sign in Anonymously</string>
     <string name="google_sign_in_text">Sign in with Google</string>
+
+    <string name="new_course_explanation">
+        Hey there!\nIf you\'d like to add a new course, please send\nus an email about it and we\'ll create it for you!
+    </string>
+    <string name="request_title">Request Title: </string>
+    <string name="request_body">Request message body: </string>
+    <string name="send_request">Send request</string>
+    <string name="Request_new_course_creation">Request New Course Creation</string>
+
 </resources>
