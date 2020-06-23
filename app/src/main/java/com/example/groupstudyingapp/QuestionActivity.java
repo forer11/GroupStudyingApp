@@ -4,9 +4,13 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -20,6 +24,10 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
 import com.hsalf.smileyrating.SmileyRating;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Target;
+
+import java.io.ByteArrayOutputStream;
 
 public class QuestionActivity extends AppCompatActivity {
 
@@ -50,7 +58,9 @@ public class QuestionActivity extends AppCompatActivity {
     AppData appData;
     FireStoreHandler fireStoreHandler;
 
-    /** The broadcast receiver of the activity **/
+    /**
+     * The broadcast receiver of the activity
+     **/
     private BroadcastReceiver br;
 
     @Override
@@ -82,7 +92,7 @@ public class QuestionActivity extends AppCompatActivity {
             Answer answer = question.getAnswers().get(0);
             solutionImage.setImageURI(Uri.parse(answer.getImagePath()));
             TextView answerRateText = findViewById(R.id.solutionRateText);
-            answerRateText.setText(Integer.toString((int)answer.getRating()));
+            answerRateText.setText(Integer.toString((int) answer.getRating()));
             // todo show all answers
         }
         userRateHandler();
@@ -117,12 +127,26 @@ public class QuestionActivity extends AppCompatActivity {
         final Button addAnswerButton = findViewById(R.id.addAnswerButton);
         smileyRating = findViewById(R.id.smileyRating);
         rateText = findViewById(R.id.questionRate);
-        rateText.setText("Question Rate: "+questionRate);
+        rateText.setText("Question Rate: " + questionRate);
         Button rateButton = findViewById(R.id.rateButton);
+
+        setStudentAnimation();
+        setRateButtonListener(rateButton);
+
+        setAnswerButtonListener(addAnswerButton);
+        questionImageView = findViewById(R.id.questionImage);
+        setAnswerAndShow(solutionButton);
+        Button shareButton = findViewById(R.id.shareButton);
+        setShareButtonListener(shareButton);
+    }
+
+    private void setStudentAnimation() {
         LottieAnimationView studentAnimation = findViewById(R.id.studentAnimation);
         studentAnimation.setProgress(0);
         studentAnimation.playAnimation();
+    }
 
+    private void setRateButtonListener(Button rateButton) {
         rateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -135,6 +159,9 @@ public class QuestionActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void setAnswerButtonListener(Button addAnswerButton) {
         addAnswerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -144,11 +171,61 @@ public class QuestionActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
-        questionImageView = findViewById(R.id.questionImage);
-        setAnswerAndShow(solutionButton);
-
     }
+
+    private void setShareButtonListener(Button shareButton) {
+        shareButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Picasso.get().load(question.getLink()).into(new Target() {
+                    @Override
+                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+
+                        sendPhotoViaWhatsapp(bitmap);
+
+                    }
+
+                    @Override
+                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                        Log.v("Failed to load bitmap", e.toString());
+                    }
+
+                    @Override
+                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+
+                    }
+                });
+            }
+        });
+    }
+
+    private void sendPhotoViaWhatsapp(Bitmap bitmap) {
+        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
+        String path = MediaStore.Images.Media.insertImage(getContentResolver(),
+                bitmap,
+                "Title",
+                null);
+        Uri imageUri = Uri.parse(path);
+        
+        setWhatsappIntent(imageUri);
+    }
+
+    private void setWhatsappIntent(Uri imageUri) {
+        Intent whatsappIntent = new Intent(Intent.ACTION_SEND);
+        whatsappIntent.setPackage("com.whatsapp");
+        whatsappIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
+        whatsappIntent.setType("image/jpeg");
+        try {
+            startActivity(whatsappIntent);
+        } catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(QuestionActivity.this,
+                    "Whatsapp not installed",
+                    Toast.LENGTH_SHORT).show();
+        }
+    }
+
 
     private void setAnswerAndShow(final Button solutionButton) {
         solutionImage = findViewById(R.id.solutionImage);
@@ -175,7 +252,7 @@ public class QuestionActivity extends AppCompatActivity {
                         questionRate = "TERRIBLE";
                         numOfRates = question.getNumOfRates();
                         question.setRating((numOfRates * question.getRating() + 1) /
-                                            (numOfRates + 1));
+                                (numOfRates + 1));
                         question.setNumOfRates(numOfRates + 1);
                         break;
                     case BAD:
@@ -207,7 +284,7 @@ public class QuestionActivity extends AppCompatActivity {
                         question.setNumOfRates(numOfRates + 1);
                         break;
                 }
-                rateText.setText("Question Rate: "+ question.getRating());
+                rateText.setText("Question Rate: " + question.getRating());
                 fireStoreHandler.updateQuestion(question);
             }
         });
@@ -225,7 +302,7 @@ public class QuestionActivity extends AppCompatActivity {
 
     private void loadQuestionAndCourse() {
         Intent intent = this.getIntent();
-        String questionId =  intent.getStringExtra(QUESTION_ID);
+        String questionId = intent.getStringExtra(QUESTION_ID);
         question = fireStoreHandler.getQuestionById(questionId);
         String courseId = intent.getStringExtra(COURSE_ID);
         course = fireStoreHandler.getCourseById(courseId);
@@ -242,7 +319,7 @@ public class QuestionActivity extends AppCompatActivity {
                 if (hasAnswer && !answerRated) {
                     Answer answer = question.getAnswers().get(0);
                     answer.setRating(answer.getRating() + 1);
-                    answerRateText.setText(Integer.toString((int)answer.getRating()));
+                    answerRateText.setText(Integer.toString((int) answer.getRating()));
                     answerLikeButton.setBackground(getResources().getDrawable(R.drawable.like2));
                     fireStoreHandler.updateQuestion(question);
                     answerRated = true;
