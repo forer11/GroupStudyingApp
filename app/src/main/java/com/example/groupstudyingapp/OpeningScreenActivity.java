@@ -13,12 +13,13 @@ public class OpeningScreenActivity extends AppCompatActivity {
     private static int SPLASH_TIME_OUT = 4000;
     AppData appData;
     FirebaseAuth firebaseAuth;
+    private Boolean activityDestroyed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_opening_screen);
-
+        activityDestroyed = false;
         getAppData();
     }
 
@@ -40,15 +41,23 @@ public class OpeningScreenActivity extends AppCompatActivity {
         Intent intent;
         if (currentUser != null) {
             intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
+            if(!activityDestroyed)
+                startActivity(intent);
         } else {
             intent = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivity(intent);
+            if(!activityDestroyed)
+                startActivity(intent);
         }
     }
 
     private void getAppData() {
         appData = (AppData) getApplicationContext();
         firebaseAuth = appData.firebaseAuth;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        activityDestroyed = true;
     }
 }
