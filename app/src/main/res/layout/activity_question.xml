@@ -143,8 +143,25 @@
             android:textColor="@color/white"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/previousAnswerButton"
+            app:layout_constraintTop_toBottomOf="@+id/shareButton" />
+
+        <Button
+            android:id="@+id/previousAnswerButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            android:layout_weight="1"
+            android:background="@drawable/sign_in_button_design_blue"
+            android:padding="10dp"
+            android:text="Previous Answer"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toStartOf="@+id/nextAnswerButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/shareButton" />
+
 
         <com.hsalf.smileyrating.SmileyRating
             android:id="@+id/smileyRating"

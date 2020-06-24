@@ -312,6 +312,7 @@ public class QuestionActivity extends AppCompatActivity {
 
     private void showSolutionHandler(final Button solutionButton, final ImageView solutionImage) {
         final Button nextAnswerButton = findViewById(R.id.nextAnswerButton);
+        final Button previousAnswerButton = findViewById(R.id.previousAnswerButton);
         final Button answerLikeButton = findViewById(R.id.solutionLikeButton);
         final LinearLayout answerBox = findViewById(R.id.solutionRate);
         final TextView answerRateText = findViewById(R.id.solutionRateText);
@@ -336,6 +337,7 @@ public class QuestionActivity extends AppCompatActivity {
                     if (hasAnswer) {
                         solutionImage.setVisibility(View.VISIBLE);
                         nextAnswerButton.setVisibility(View.VISIBLE);
+                        previousAnswerButton.setVisibility(View.VISIBLE);
                         answerBox.setVisibility(View.VISIBLE);
                         solutionButton.setText("Hide solution");
                         hiddenSolution = false;
@@ -347,6 +349,7 @@ public class QuestionActivity extends AppCompatActivity {
                     if (hasAnswer) {
                         solutionImage.setVisibility(View.INVISIBLE);
                         nextAnswerButton.setVisibility(View.INVISIBLE);
+                        previousAnswerButton.setVisibility(View.INVISIBLE);
                         answerBox.setVisibility(View.INVISIBLE);
                     }
                     solutionButton.setText("Show solution");
@@ -358,26 +361,40 @@ public class QuestionActivity extends AppCompatActivity {
         nextAnswerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (question.getAnswers().size() == 1)
-                {
-                    Toast.makeText(QuestionActivity.this, ONE_ANS_MSG,
-                            Toast.LENGTH_LONG).show();
-                }
-                else {
-                    CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(QuestionActivity.this);
-                    circularProgressDrawable.setStrokeWidth(10f);
-                    circularProgressDrawable.setCenterRadius(60f);
-                    circularProgressDrawable.start();
-                    currentAnswer = (currentAnswer + 1) % question.getAnswers().size();
-                    Glide.with(QuestionActivity.this).load(Uri.parse(question.getAnswers().get(currentAnswer).getImagePath())).placeholder(circularProgressDrawable).into(solutionImage);
-
-                    Answer answer = question.getAnswers().get(currentAnswer);
-                    answerRateText.setText(Integer.toString((int) answer.getRating()));
-                }
+                offset_answer(1);
             }
         });
+
+        previousAnswerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                offset_answer(-1);
+            }
+        });
+
     }
 
+    private void offset_answer(int offset)
+    {
+        final TextView answerRateText = findViewById(R.id.solutionRateText);
+
+        if (question.getAnswers().size() == 1)
+        {
+            Toast.makeText(QuestionActivity.this, ONE_ANS_MSG,
+                    Toast.LENGTH_LONG).show();
+        }
+        else {
+            CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(QuestionActivity.this);
+            circularProgressDrawable.setStrokeWidth(10f);
+            circularProgressDrawable.setCenterRadius(60f);
+            circularProgressDrawable.start();
+            currentAnswer = (currentAnswer + offset + question.getAnswers().size()) % question.getAnswers().size();
+            Glide.with(this).load(Uri.parse(question.getAnswers().get(currentAnswer).getImagePath())).placeholder(circularProgressDrawable).into(solutionImage);
+
+            Answer answer = question.getAnswers().get(currentAnswer);
+            answerRateText.setText(Integer.toString((int) answer.getRating()));
+        }
+    }
     private void getAppData() {
         appData = (AppData) getApplicationContext();
         fireStoreHandler = appData.fireStoreHandler;
