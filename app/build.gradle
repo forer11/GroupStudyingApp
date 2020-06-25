@@ -58,3 +58,7 @@ dependencies {
     androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.0'
 
 }
+
+afterEvaluate {
+    assembleDebug.dependsOn check
+}
