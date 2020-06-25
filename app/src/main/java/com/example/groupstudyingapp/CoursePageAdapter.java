@@ -1,6 +1,8 @@
 package com.example.groupstudyingapp;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,11 +18,13 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
     private List<Question> questions;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
+    private Context context;
 
     // data is passed into the constructor
     CoursePageAdapter(Context context, List<Question> questions) {
         this.mInflater = LayoutInflater.from(context);
         this.questions = questions;
+        this.context = context;
     }
 
     // inflates the row layout from xml when needed
@@ -38,10 +42,32 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
         holder.removeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                questions.remove(position);
-                notifyDataSetChanged();
+                callDeleteDialog(position);
+//                questions.remove(position);
+//                notifyDataSetChanged();
             }
         });
+    }
+
+    private void callDeleteDialog(final int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this.context);
+        builder.setTitle("Are you sure you want to delete?")
+                .setNegativeButton("cancel",  new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        //do nothing and return to activity
+                    }
+                })
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        questions.remove(position);
+                        notifyDataSetChanged();
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     // total number of questions
@@ -56,6 +82,7 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
         TextView questionName;
         TextView rateText;
         ImageView removeButton;
+
         ViewHolder(View itemView) {
             super(itemView);
             questionName = itemView.findViewById(R.id.questionName);
