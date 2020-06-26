@@ -171,7 +171,15 @@
             android:visibility="invisible"
             app:layout_constraintTop_toBottomOf="@+id/shareButton" />
 
-
+        <TextView
+            android:id="@+id/numberOfAnswer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1 of 3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/solutionImage"
+            />
         <ImageView
             android:id="@+id/solutionImage"
             android:layout_width="wrap_content"
@@ -235,6 +243,8 @@
                 android:layout_height="wrap_content"
                 android:indeterminate="true" />
         </RelativeLayout>
+
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
