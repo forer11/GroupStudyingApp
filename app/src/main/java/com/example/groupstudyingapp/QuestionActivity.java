@@ -148,15 +148,17 @@ public class QuestionActivity extends AppCompatActivity {
         studentAnimation.playAnimation();
     }
 
-    private void setRateButtonListener(Button rateButton) {
+    private void setRateButtonListener(final Button rateButton) {
         rateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (hiddenRate) {
                     smileyRating.setVisibility(View.VISIBLE);
+                    rateButton.setBackground(getResources().getDrawable(R.drawable.smile_color));
                     hiddenRate = false;
                 } else {
                     smileyRating.setVisibility(View.INVISIBLE);
+                    rateButton.setBackground(getResources().getDrawable(R.drawable.smile));
                     hiddenRate = true;
                 }
             }
@@ -316,6 +318,7 @@ public class QuestionActivity extends AppCompatActivity {
         final Button answerLikeButton = findViewById(R.id.solutionLikeButton);
         final LinearLayout answerBox = findViewById(R.id.solutionRate);
         final TextView answerRateText = findViewById(R.id.solutionRateText);
+        final TextView showSolutionText = findViewById(R.id.showSolutionText);
 
         answerLikeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -339,7 +342,9 @@ public class QuestionActivity extends AppCompatActivity {
                         nextAnswerButton.setVisibility(View.VISIBLE);
                         previousAnswerButton.setVisibility(View.VISIBLE);
                         answerBox.setVisibility(View.VISIBLE);
-                        solutionButton.setText("Hide solution");
+//                        solutionButton.setText("Hide solution");
+                        showSolutionText.setText("Hide solution");
+                        solutionButton.setBackground(getResources().getDrawable(R.drawable.eye_color));
                         hiddenSolution = false;
                     } else {
                         Toast.makeText(QuestionActivity.this, NO_ANSWER_MSG,
@@ -352,7 +357,9 @@ public class QuestionActivity extends AppCompatActivity {
                         previousAnswerButton.setVisibility(View.INVISIBLE);
                         answerBox.setVisibility(View.INVISIBLE);
                     }
-                    solutionButton.setText("Show solution");
+//                    solutionButton.setText("Show solution");
+                    showSolutionText.setText("Show solution");
+                    solutionButton.setBackground(getResources().getDrawable(R.drawable.eye));
                     hiddenSolution = true;
                 }
             }
