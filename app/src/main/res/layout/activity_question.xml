@@ -169,7 +169,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:visibility="invisible"
-            app:layout_constraintTop_toBottomOf="@+id/shareButton" />
+            app:layout_constraintTop_toBottomOf="@+id/previousAnswerButton" />
 
 
         <ImageView
