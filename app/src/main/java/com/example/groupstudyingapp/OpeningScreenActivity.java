@@ -10,7 +10,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 public class OpeningScreenActivity extends AppCompatActivity {
-    private static int SPLASH_TIME_OUT = 4000;
+    private static int SPLASH_TIME_OUT = 2000;
     AppData appData;
     FirebaseAuth firebaseAuth;
 
@@ -18,7 +18,6 @@ public class OpeningScreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_opening_screen);
-
         getAppData();
     }
 
@@ -40,10 +39,10 @@ public class OpeningScreenActivity extends AppCompatActivity {
         Intent intent;
         if (currentUser != null) {
             intent = new Intent(getApplicationContext(), MainActivity.class);
-            startActivity(intent);
+                startActivity(intent);
         } else {
             intent = new Intent(getApplicationContext(), LoginActivity.class);
-            startActivity(intent);
+                startActivity(intent);
         }
     }
 

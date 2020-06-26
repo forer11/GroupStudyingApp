@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/dialog_bg"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/profile_image"
+        android:layout_width="155dp"
+        android:layout_height="85dp"
+        android:layout_marginTop="10dp"
+        android:layout_gravity="center_horizontal"
+        app:srcCompat="@drawable/large_profile_icon" />
+
+    <TextView
+        android:id="@+id/user_details"
+        android:layout_width="293dp"
+        android:layout_height="52dp"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:text="Guest user"
+        app:layout_constraintStart_toEndOf="@+id/profile_image"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
+    <Button
+        android:id="@+id/signout_button"
+        android:layout_width="327dp"
+        android:layout_height="42dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="20dp"
+        android:fontFamily="@font/abeezee"
+        android:background="@drawable/blurred_button_shape"
+        android:text="SignOut" />
+
+
+    <Button
+        android:id="@+id/cancel_signout"
+        android:layout_width="327dp"
+        android:layout_height="42dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="20dp"
+        android:fontFamily="@font/abeezee"
+        android:background="@drawable/blurred_button_shape"
+        android:text="cancel" />
+
+
+</LinearLayout>
