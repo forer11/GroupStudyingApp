@@ -210,7 +210,7 @@ public class QuestionActivity extends AppCompatActivity {
                 "Title",
                 null);
         Uri imageUri = Uri.parse(path);
-        
+
         setWhatsappIntent(imageUri);
     }
 
@@ -316,6 +316,7 @@ public class QuestionActivity extends AppCompatActivity {
         final Button answerLikeButton = findViewById(R.id.solutionLikeButton);
         final LinearLayout answerBox = findViewById(R.id.solutionRate);
         final TextView answerRateText = findViewById(R.id.solutionRateText);
+        final TextView numberOfAnswers = findViewById(R.id.numberOfAnswer);
 
         answerLikeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -336,6 +337,8 @@ public class QuestionActivity extends AppCompatActivity {
                 if (hiddenSolution) {
                     if (hasAnswer) {
                         solutionImage.setVisibility(View.VISIBLE);
+                        numberOfAnswers.setVisibility(View.VISIBLE);
+                        updateNumberOfAnswers();
                         nextAnswerButton.setVisibility(View.VISIBLE);
                         previousAnswerButton.setVisibility(View.VISIBLE);
                         answerBox.setVisibility(View.VISIBLE);
@@ -348,6 +351,7 @@ public class QuestionActivity extends AppCompatActivity {
                 } else {
                     if (hasAnswer) {
                         solutionImage.setVisibility(View.INVISIBLE);
+                        numberOfAnswers.setVisibility(View.INVISIBLE);
                         nextAnswerButton.setVisibility(View.INVISIBLE);
                         previousAnswerButton.setVisibility(View.INVISIBLE);
                         answerBox.setVisibility(View.INVISIBLE);
@@ -374,16 +378,19 @@ public class QuestionActivity extends AppCompatActivity {
 
     }
 
-    private void offset_answer(int offset)
-    {
+    private void updateNumberOfAnswers() {
+        final TextView numberOfAnswers = findViewById(R.id.numberOfAnswer);
+        numberOfAnswers.setText(Integer.toString(currentAnswer + 1) + " / " +
+                Integer.toString(question.getAnswers().size()));
+    }
+
+    private void offset_answer(int offset) {
         final TextView answerRateText = findViewById(R.id.solutionRateText);
 
-        if (question.getAnswers().size() == 1)
-        {
+        if (question.getAnswers().size() == 1) {
             Toast.makeText(QuestionActivity.this, ONE_ANS_MSG,
                     Toast.LENGTH_LONG).show();
-        }
-        else {
+        } else {
             CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(QuestionActivity.this);
             circularProgressDrawable.setStrokeWidth(10f);
             circularProgressDrawable.setCenterRadius(60f);
@@ -392,9 +399,11 @@ public class QuestionActivity extends AppCompatActivity {
             Glide.with(this).load(Uri.parse(question.getAnswers().get(currentAnswer).getImagePath())).placeholder(circularProgressDrawable).into(solutionImage);
 
             Answer answer = question.getAnswers().get(currentAnswer);
+            updateNumberOfAnswers();
             answerRateText.setText(Integer.toString((int) answer.getRating()));
         }
     }
+
     private void getAppData() {
         appData = (AppData) getApplicationContext();
         fireStoreHandler = appData.fireStoreHandler;
