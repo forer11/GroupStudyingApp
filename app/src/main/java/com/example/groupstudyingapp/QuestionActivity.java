@@ -320,13 +320,22 @@ public class QuestionActivity extends AppCompatActivity {
         answerLikeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (hasAnswer && !answerRated) {
-                    Answer answer = question.getAnswers().get(currentAnswer);
-                    answer.setRating(answer.getRating() + 1);
-                    answerRateText.setText(Integer.toString((int) answer.getRating()));
-                    answerLikeButton.setBackground(getResources().getDrawable(R.drawable.like2));
-                    fireStoreHandler.updateQuestion(question);
-                    answerRated = true;
+                if (hasAnswer) {
+                    if (!answerRated) {
+                        Answer answer = question.getAnswers().get(currentAnswer);
+                        answer.setRating(answer.getRating() + 1);
+                        answerRateText.setText(Integer.toString((int) answer.getRating()));
+                        answerLikeButton.setBackground(getResources().getDrawable(R.drawable.like2));
+                        fireStoreHandler.updateQuestion(question);
+                        answerRated = true;
+                    } else {
+                        Answer answer = question.getAnswers().get(currentAnswer);
+                        answer.setRating(answer.getRating() - 1);
+                        answerRateText.setText(Integer.toString((int) answer.getRating()));
+                        answerLikeButton.setBackground(getResources().getDrawable(R.drawable.like1));
+                        fireStoreHandler.updateQuestion(question);
+                        answerRated = false;
+                    }
                 }
             }
         });
@@ -374,16 +383,13 @@ public class QuestionActivity extends AppCompatActivity {
 
     }
 
-    private void offset_answer(int offset)
-    {
+    private void offset_answer(int offset) {
         final TextView answerRateText = findViewById(R.id.solutionRateText);
 
-        if (question.getAnswers().size() == 1)
-        {
+        if (question.getAnswers().size() == 1) {
             Toast.makeText(QuestionActivity.this, ONE_ANS_MSG,
                     Toast.LENGTH_LONG).show();
-        }
-        else {
+        } else {
             CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(QuestionActivity.this);
             circularProgressDrawable.setStrokeWidth(10f);
             circularProgressDrawable.setCenterRadius(60f);
@@ -395,6 +401,7 @@ public class QuestionActivity extends AppCompatActivity {
             answerRateText.setText(Integer.toString((int) answer.getRating()));
         }
     }
+
     private void getAppData() {
         appData = (AppData) getApplicationContext();
         fireStoreHandler = appData.fireStoreHandler;
