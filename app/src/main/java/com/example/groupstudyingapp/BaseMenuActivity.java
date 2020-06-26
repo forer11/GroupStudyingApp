@@ -98,7 +98,7 @@ public class BaseMenuActivity extends AppCompatActivity {
     /**
      * show the sign out dialog on screen
      */
-    public boolean showSignOutDialog() {
+    public void showSignOutDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder
                 (BaseMenuActivity.this);
         View view = getLayoutInflater().inflate(R.layout.sign_out_dialog, null);
@@ -108,8 +108,6 @@ public class BaseMenuActivity extends AppCompatActivity {
         Objects.requireNonNull(alertdialog.getWindow()).setBackgroundDrawable
                 (new ColorDrawable(Color.TRANSPARENT));
         alertdialog.show();
-
-        return true;
     }
 
     /**
