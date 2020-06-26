@@ -14,16 +14,17 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.bumptech.glide.Glide;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-
+import com.ndroid.nadim.sahel.CoolToast;
 
 import java.util.Objects;
 
@@ -130,16 +131,14 @@ public class BaseMenuActivity extends AppCompatActivity {
                     googleSignInClient.signOut().addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Toast.makeText(BaseMenuActivity.this,
-                                    "Signed out",
-                                    Toast.LENGTH_SHORT).show();
+                            CoolToast coolToast = new CoolToast(BaseMenuActivity.this);
+                            coolToast.make("Signed", CoolToast.SUCCESS);
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(BaseMenuActivity.this,
-                                    "Failed to log out",
-                                    Toast.LENGTH_SHORT).show();
+                            CoolToast coolToast = new CoolToast(BaseMenuActivity.this);
+                            coolToast.make("Failed to log out", CoolToast.SUCCESS);
                         }
                     });
                 }
