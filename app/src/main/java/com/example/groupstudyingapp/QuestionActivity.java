@@ -17,7 +17,6 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
@@ -25,6 +24,7 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
 import com.hsalf.smileyrating.SmileyRating;
+import com.ndroid.nadim.sahel.CoolToast;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -225,9 +225,8 @@ public class QuestionActivity extends AppCompatActivity {
         try {
             startActivity(whatsappIntent);
         } catch (android.content.ActivityNotFoundException ex) {
-            Toast.makeText(QuestionActivity.this,
-                    "Whatsapp not installed",
-                    Toast.LENGTH_SHORT).show();
+            CoolToast coolToast = new CoolToast(QuestionActivity.this);
+            coolToast.make("Whatsapp not installed", CoolToast.DANGER);
         }
     }
 
@@ -357,8 +356,8 @@ public class QuestionActivity extends AppCompatActivity {
                         solutionButton.setBackground(getResources().getDrawable(R.drawable.eye_color));
                         hiddenSolution = false;
                     } else {
-                        Toast.makeText(QuestionActivity.this, NO_ANSWER_MSG,
-                                Toast.LENGTH_LONG).show();
+                        CoolToast coolToast = new CoolToast(QuestionActivity.this);
+                        coolToast.make(NO_ANSWER_MSG, CoolToast.DANGER);
                     }
                 } else {
                     if (hasAnswer) {
@@ -395,8 +394,8 @@ public class QuestionActivity extends AppCompatActivity {
         final TextView answerRateText = findViewById(R.id.solutionRateText);
 
         if (question.getAnswers().size() == 1) {
-            Toast.makeText(QuestionActivity.this, ONE_ANS_MSG,
-                    Toast.LENGTH_LONG).show();
+            CoolToast coolToast = new CoolToast(QuestionActivity.this);
+            coolToast.make(ONE_ANS_MSG, CoolToast.INFO);
         } else {
             CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(QuestionActivity.this);
             circularProgressDrawable.setStrokeWidth(10f);
