@@ -29,6 +29,7 @@ import com.google.firebase.storage.UploadTask;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static android.content.ContentValues.TAG;
 
@@ -56,7 +57,7 @@ public class FireStoreHandler {
 
     private static String COURSES = "courses";
     private boolean sentOnce;
-    private int numOfCourses;
+    private AtomicInteger numOfCourses;
 
 
     public FireStoreHandler(Context context) {
@@ -100,7 +101,7 @@ public class FireStoreHandler {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful() && task.getResult() != null) {
                             int size = task.getResult().size();
-                            numOfCourses = 0;
+                            numOfCourses = new AtomicInteger();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 coursesIds.add(document.getId());
@@ -427,7 +428,7 @@ public class FireStoreHandler {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         courses.put(cid, documentSnapshot.toObject(Course.class));
-                        if (++numOfCourses == size) {
+                        if (numOfCourses.incrementAndGet() == size) {
                             sendBroadcastWhenOpeningApp(LOADING_DATA_SUCCESS);
                         }
                     }
