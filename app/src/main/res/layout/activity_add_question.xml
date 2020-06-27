@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
-            android:gravity="center_horizontal"
+            android:layout_marginStart="8dp"
             android:text="Add a new question"
             android:textAlignment="center"
             android:textSize="30sp"
