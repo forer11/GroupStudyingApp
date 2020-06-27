@@ -170,38 +170,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/shareButton" />
 
-        <Button
-            android:id="@+id/nextAnswerButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:layout_weight="1"
-            android:background="@drawable/sign_in_button_design_blue"
-            android:padding="10dp"
-            android:text="Next Answer"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/previousAnswerButton"
-            app:layout_constraintTop_toBottomOf="@+id/shareButton" />
-
-        <Button
-            android:id="@+id/previousAnswerButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:layout_weight="1"
-            android:background="@drawable/sign_in_button_design_blue"
-            android:padding="10dp"
-            android:text="Previous Answer"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:visibility="invisible"
-            app:layout_constraintEnd_toStartOf="@+id/nextAnswerButton"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/shareButton" />
-
 
         <com.hsalf.smileyrating.SmileyRating
             android:id="@+id/smileyRating"
@@ -209,19 +177,48 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:visibility="invisible"
-            app:layout_constraintTop_toBottomOf="@+id/previousAnswerButton" />
+            app:layout_constraintTop_toBottomOf="@+id/shareButton" />
 
+        <ImageButton
+            android:id="@+id/nextAnswerButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/arrow"
+            android:padding="10dp"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/previousAnswerButton"
+            app:layout_constraintTop_toBottomOf="@+id/smileyRating" />
+
+        <ImageButton
+            android:id="@+id/previousAnswerButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/arrow"
+            android:layout_marginTop="10dp"
+            android:padding="10dp"
+            android:textAllCaps="false"
+            android:rotation="180"
+            android:textColor="@color/white"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toStartOf="@+id/nextAnswerButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/smileyRating" />
 
         <ImageView
             android:id="@+id/solutionImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:visibility="invisible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/smileyRating"
+            app:layout_constraintTop_toBottomOf="@+id/previousAnswerButton"
             app:srcCompat="@drawable/question" />
+
         <LinearLayout
             android:id="@+id/solutionRate"
             android:layout_width="match_parent"
