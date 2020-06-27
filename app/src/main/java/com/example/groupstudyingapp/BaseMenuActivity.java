@@ -1,40 +1,39 @@
 package com.example.groupstudyingapp;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
-import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.Toast;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.view.MenuItemCompat;
 
 import com.bumptech.glide.Glide;
-import com.example.flatdialoglibrary.dialog.FlatDialog;
-import com.google.android.gms.auth.api.Auth;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.common.api.ResultCallback;
-import com.google.android.gms.common.api.Status;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.ndroid.nadim.sahel.CoolToast;
+
+import java.util.Objects;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class BaseMenuActivity extends AppCompatActivity {
     CircleImageView profileImage;
     private FrameLayout profileLayout;
+
 
     @SuppressLint("ClickableViewAccessibility")
     @Override
@@ -55,11 +54,7 @@ public class BaseMenuActivity extends AppCompatActivity {
         profileLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
-                final FlatDialog flatDialog = new FlatDialog(BaseMenuActivity.this);
-                setDialogData(flatDialog);
-                setDialogListeners(firebaseAuth, flatDialog);
-                flatDialog.show();
+                showSignOutDialog();
             }
         });
     }
@@ -86,7 +81,6 @@ public class BaseMenuActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -101,56 +95,105 @@ public class BaseMenuActivity extends AppCompatActivity {
         }
     }
 
-    private void setDialogListeners(final FirebaseAuth firebaseAuth, final FlatDialog flatDialog) {
-        flatDialog.withFirstButtonListner(new View.OnClickListener() {
+    /**
+     * show the sign out dialog on screen
+     */
+    public void showSignOutDialog() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder
+                (BaseMenuActivity.this);
+        View view = getLayoutInflater().inflate(R.layout.sign_out_dialog, null);
+        setDialogView(dialogBuilder, view);
+        final AlertDialog alertdialog = dialogBuilder.create();
+        onClickDialog(view, alertdialog);
+        Objects.requireNonNull(alertdialog.getWindow()).setBackgroundDrawable
+                (new ColorDrawable(Color.TRANSPARENT));
+        alertdialog.show();
+    }
+
+    /**
+     * set the actions on every user selection on the dialog
+     *
+     * @param view        the view of the dialog
+     * @param alertDialog the dialog
+     */
+    private void onClickDialog(View view, final AlertDialog alertDialog) {
+        Button signOut = view.findViewById(R.id.signout_button);
+        signOut.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
+            public void onClick(View view1) {
+                final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
                 firebaseAuth.signOut();
                 AppData appData = (AppData) getApplicationContext();
                 GoogleSignInClient googleSignInClient = appData.googleSignInClient;
                 if (googleSignInClient != null) {
-                    googleSignInClient.signOut()
-                            .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                @Override
-                                public void onSuccess(Void aVoid) {
-                                    Toast.makeText(BaseMenuActivity.this,
-                                            "Signed out",
-                                            Toast.LENGTH_SHORT).show();
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(BaseMenuActivity.this,
-                                            "Failed to log out",
-                                            Toast.LENGTH_SHORT).show();
-                                }
-                            });
+                    googleSignInClient.signOut().addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            CoolToast coolToast = new CoolToast(BaseMenuActivity.this);
+                            coolToast.make("Signed", CoolToast.SUCCESS);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            CoolToast coolToast = new CoolToast(BaseMenuActivity.this);
+                            coolToast.make("Failed to log out", CoolToast.SUCCESS);
+                        }
+                    });
                 }
-                Intent intent = new Intent(BaseMenuActivity
-                        .this, LoginActivity.class);
-                startActivity(intent);
-                finish();
+
+                Intent intent = new Intent(BaseMenuActivity.this.getBaseContext(), LoginActivity.class);
+                BaseMenuActivity.this.startActivity(intent);
+                BaseMenuActivity.this.finish();
             }
         });
-        flatDialog.withSecondButtonListner(new View.OnClickListener() {
+
+        Button cancelSignOut = view.findViewById(R.id.cancel_signout);
+        cancelSignOut.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                flatDialog.dismiss();
+            public void onClick(View view12) {
+                alertDialog.cancel();
+
             }
         });
     }
 
-    private void setDialogData(FlatDialog flatDialog) {
-        flatDialog.setCancelable(true);
-        flatDialog.setIcon(R.drawable.large_profile_icon);
-        flatDialog.setBackgroundColor(Color.parseColor("#F5FFFA"));
-        flatDialog.setTitleColor(Color.parseColor("#87CEEB"));
-        flatDialog.setSubtitleColor(Color.parseColor("#87CEFA"));
-        flatDialog.setTitle("Logout");
-        flatDialog.setSubtitle("Sure you want to logout?");
-        flatDialog.setFirstButtonText("Yes");
-        flatDialog.setSecondButtonText("No");
+    /**
+     * set the layout of the dialog
+     *  @param dialogBuilder the builder of the dialog
+     * @param view     the view of the layout to be set in the dialog
+     */
+    private void setDialogView(AlertDialog.Builder dialogBuilder, View view) {
+        final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = firebaseAuth.getCurrentUser();
+
+        if (currentUser != null) {
+            ImageView profile = view.findViewById(R.id.profile_image);
+            Uri profileUri = currentUser.getPhotoUrl();
+
+            if (profileUri != null) {
+                try {
+                    Glide
+                            .with(profile)
+                            .load(profileUri.toString())
+                            .into(profile);
+                } catch (Exception e) {
+                    // in this case we stay with the default profile photo
+                }
+            }
+            String username = currentUser.getDisplayName();
+            if (username != null) {
+                TextView user_info = view.findViewById(R.id.user_details);
+                if (!username.equals("")) {
+                    String userInfoText = username + "\n" + currentUser.getEmail();
+                    user_info.setText(userInfoText);
+                } else {
+                    String number = currentUser.getPhoneNumber();
+                    user_info.setText(number);
+                }
+            }
+        }
+        dialogBuilder.setView(view);
     }
+
 
 }

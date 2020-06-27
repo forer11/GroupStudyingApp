@@ -6,16 +6,21 @@ import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.ViewHolder> {
+public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.ViewHolder>
+        implements Filterable {
 
     private List<Question> questions;
+    private List<Question> allQuestions;
     private LayoutInflater mInflater;
     private ItemClickListener mClickListener;
     private Context context;
@@ -25,6 +30,7 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
         this.mInflater = LayoutInflater.from(context);
         this.questions = questions;
         this.context = context;
+        this.allQuestions = new ArrayList<>(this.questions);
     }
 
     // inflates the row layout from xml when needed
@@ -75,6 +81,40 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
     public int getItemCount() {
         return questions.size();
     }
+
+    @Override
+    public Filter getFilter() {
+        return questionsFilter;
+    }
+
+    private Filter questionsFilter = new Filter() {
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            ArrayList<Question> filteredQuestions = new ArrayList<>();
+
+            if (constraint == null || constraint.length() == 0) {
+                filteredQuestions.addAll(allQuestions);
+            } else {
+                String filterPattern = constraint.toString().toLowerCase().trim();
+                for (Question question : allQuestions) {
+                    if (question.getTitle().toLowerCase().contains(filterPattern)) {
+                        filteredQuestions.add(question);
+                    }
+                }
+            }
+            FilterResults results = new FilterResults();
+            results.values = filteredQuestions;
+
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            questions.clear();
+            questions.addAll((ArrayList) results.values);
+            notifyDataSetChanged();
+        }
+    };
 
 
     // stores and recycles views as they are scrolled off screen

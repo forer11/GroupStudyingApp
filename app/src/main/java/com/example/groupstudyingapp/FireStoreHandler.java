@@ -29,6 +29,7 @@ import com.google.firebase.storage.UploadTask;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static android.content.ContentValues.TAG;
 
@@ -40,6 +41,8 @@ public class FireStoreHandler {
     private static final String COURSE_UPDATE_FAILURE_MESSAGE = "could'nt update the requested course, it does'nt exist";
     public static final String TITLE = "title";
     private static final String USERS = "Users";
+    public static final String FAILED_LOADING_DATA = "Failed loading data";
+    public static final String LOADING_DATA_SUCCESS = "LOADING_DATA_SUCCESS";
 
     private FirebaseFirestore db;
     private CollectionReference coursesRef;
@@ -53,6 +56,8 @@ public class FireStoreHandler {
     FirebaseStorage storage = FirebaseStorage.getInstance();
 
     private static String COURSES = "courses";
+    private boolean sentOnce;
+    private AtomicInteger numOfCourses;
 
 
     public FireStoreHandler(Context context) {
@@ -62,6 +67,7 @@ public class FireStoreHandler {
         usersRef = db.collection(USERS);
         coursesIds = new ArrayList<>();
         courses = new HashMap<>();
+        sentOnce = false;
         loadData();
 
     }
@@ -93,17 +99,36 @@ public class FireStoreHandler {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()) {
-                            for (QueryDocumentSnapshot document : Objects.requireNonNull(task.getResult())) {
+                        if (task.isSuccessful() && task.getResult() != null) {
+                            int size = task.getResult().size();
+                            numOfCourses = new AtomicInteger();
+                            for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());
                                 coursesIds.add(document.getId());
-                                loadCourse(document.getId());
+                                loadCourse(document.getId(), size);
                             }
                         } else {
                             Log.d(TAG, "Error getting documents: ", task.getException());
+                            sendBroadcastWhenOpeningApp(FAILED_LOADING_DATA);
                         }
+
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        sendBroadcastWhenOpeningApp(FAILED_LOADING_DATA);
                     }
                 });
+    }
+
+    private void sendBroadcastWhenOpeningApp(String action) {
+        if (!sentOnce) {
+            Intent intent = new Intent();
+            intent.setAction(action);
+            context.sendBroadcast(intent);
+            sentOnce = true;
+        }
     }
 
     public void updateData() {
@@ -395,13 +420,22 @@ public class FireStoreHandler {
 //
 //    }
 
-    private void loadCourse(String courseId) {
+    private void loadCourse(String courseId, final int size) {
         final String cid = courseId;
         DocumentReference docRef = coursesRef.document(courseId);
-        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+        docRef.get()
+                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                    @Override
+                    public void onSuccess(DocumentSnapshot documentSnapshot) {
+                        courses.put(cid, documentSnapshot.toObject(Course.class));
+                        if (numOfCourses.incrementAndGet() == size) {
+                            sendBroadcastWhenOpeningApp(LOADING_DATA_SUCCESS);
+                        }
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                courses.put(cid, documentSnapshot.toObject(Course.class));
+            public void onFailure(@NonNull Exception e) {
+                sendBroadcastWhenOpeningApp(FAILED_LOADING_DATA);
             }
         });
     }

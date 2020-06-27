@@ -49,42 +49,70 @@ public class ExampleInstrumentedTest {
         appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
         assertEquals("com.example.groupstudyingapp", appContext.getPackageName());
-        onView(withId(R.id.addCourseButton));
     }
 
+
     @Test
-    public void testLogin() {
+    public void h_testSignIn() {
         onView(withId(R.id.anonymous_sign_in_button)).perform(click());
     }
 
     @Test
-    public void testGoToCourse() {
-        onView(withId(R.id.anonymous_sign_in_button)).perform(click());
-        onView(withId(R.id.rvCourses)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
-    }
-
-    @Test
-    public void testGoToQuestion() {
+    public void p_testGoToCourse() {
         onView(withId(R.id.anonymous_sign_in_button)).perform(click());
         onView(withId(R.id.rvCourses)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
-        onView(withId(R.id.recyclerView)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
     }
 
     @Test
-    public void testShowSolution() {
+    public void a_testGoToQuestion() {
         onView(withId(R.id.anonymous_sign_in_button)).perform(click());
         onView(withId(R.id.rvCourses)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
         onView(withId(R.id.recyclerView)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+    }
+
+    @Test
+    public void p_testShowSolution() {
+        onView(withId(R.id.anonymous_sign_in_button)).perform(click());
+        onView(withId(R.id.rvCourses)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.recyclerView)).perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
         onView(withId(R.id.solutionButton)).perform(click());
     }
 
     @Test
-    public void testAddQuestion() {
+    public void b_testAddQuestion() {
         onView(withId(R.id.anonymous_sign_in_button)).perform(click());
         onView(withId(R.id.rvCourses)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
         onView(withId(R.id.addQuestionButton)).perform(click());
         onView(withId(R.id.userTitle)).perform(typeText("testAddQuestion"));
 //        onView(withId(R.id.cameraButton)).perform(click()); //todo continue
     }
+
+    public void a_testLikeAnswer() {
+        onView(withId(R.id.anonymous_sign_in_button)).perform(click());
+        onView(withId(R.id.rvCourses)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.recyclerView)).perform(RecyclerViewActions.actionOnItemAtPosition(1, click()));
+        onView(withId(R.id.solutionButton)).perform(click());
+        String rateBefore = onView(withId(R.id.solutionRateText)).toString();
+        onView(withId(R.id.solutionLikeButton)).perform(click());
+        String rateAfter = onView(withId(R.id.solutionRateText)).toString();
+        assert (Integer.getInteger(rateBefore) + 1 == Integer.getInteger(rateAfter));
+    }
+
+    @Test
+    public void p_testAddAnswer() {
+        onView(withId(R.id.anonymous_sign_in_button)).perform(click());
+        onView(withId(R.id.rvCourses)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.recyclerView)).perform(RecyclerViewActions.actionOnItemAtPosition(0, click()));
+        onView(withId(R.id.addAnswerButton)).perform(click());
+        onView(withId(R.id.userAnswerTitle)).perform(typeText("testAddAnswer"));
+//        onView(withId(R.id.cameraButton)).perform(click()); //todo continue
+    }
+
+    public void z_testSignOut() {
+        onView(withId(R.id.anonymous_sign_in_button)).perform(click());
+        onView(withId(R.id.profile_image_layout)).perform(click());
+        onView(withId(R.id.signout_button)).perform(click());
+    }
+
 
 }

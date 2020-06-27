@@ -36,6 +36,7 @@ public class QuestionActivity extends AppCompatActivity {
     public static final String FAILED_TO_UPLOAD_ANSWER_IMG = "failed to upload answers' image";
     public static final String UPLOAD_ANSWER = "start uploading answer";
     public static final String NO_ANSWER_MSG = "No answer yet";
+    public static final String ONE_ANS_MSG = "There is only one answer.";
 
     public static final String QUESTION_ID = "question_id";
     public static final String TITLE = "title";
@@ -47,6 +48,7 @@ public class QuestionActivity extends AppCompatActivity {
     private boolean hiddenSolution = true;
     private boolean hiddenRate = true;
     private boolean hasAnswer = false;
+    private int currentAnswer = 0;
     private boolean answerRated = false;
     private SmileyRating.Type rateType = null;
     private SmileyRating smileyRating;
@@ -146,15 +148,17 @@ public class QuestionActivity extends AppCompatActivity {
         studentAnimation.playAnimation();
     }
 
-    private void setRateButtonListener(Button rateButton) {
+    private void setRateButtonListener(final Button rateButton) {
         rateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (hiddenRate) {
                     smileyRating.setVisibility(View.VISIBLE);
+                    rateButton.setBackground(getResources().getDrawable(R.drawable.smile_color));
                     hiddenRate = false;
                 } else {
                     smileyRating.setVisibility(View.INVISIBLE);
+                    rateButton.setBackground(getResources().getDrawable(R.drawable.smile));
                     hiddenRate = true;
                 }
             }
@@ -234,7 +238,7 @@ public class QuestionActivity extends AppCompatActivity {
             circularProgressDrawable.setStrokeWidth(10f);
             circularProgressDrawable.setCenterRadius(60f);
             circularProgressDrawable.start();
-            Glide.with(this).load(Uri.parse(question.getAnswers().get(0).getImagePath())).placeholder(circularProgressDrawable).into(solutionImage);
+            Glide.with(this).load(Uri.parse(question.getAnswers().get(currentAnswer).getImagePath())).placeholder(circularProgressDrawable).into(solutionImage);
             hasAnswer = true;
         }
         showSolutionHandler(solutionButton, solutionImage);
@@ -309,15 +313,18 @@ public class QuestionActivity extends AppCompatActivity {
     }
 
     private void showSolutionHandler(final Button solutionButton, final ImageView solutionImage) {
+        final Button nextAnswerButton = findViewById(R.id.nextAnswerButton);
+        final Button previousAnswerButton = findViewById(R.id.previousAnswerButton);
         final Button answerLikeButton = findViewById(R.id.solutionLikeButton);
         final LinearLayout answerBox = findViewById(R.id.solutionRate);
         final TextView answerRateText = findViewById(R.id.solutionRateText);
+        final TextView showSolutionText = findViewById(R.id.showSolutionText);
 
         answerLikeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (hasAnswer && !answerRated) {
-                    Answer answer = question.getAnswers().get(0);
+                    Answer answer = question.getAnswers().get(currentAnswer);
                     answer.setRating(answer.getRating() + 1);
                     answerRateText.setText(Integer.toString((int) answer.getRating()));
                     answerLikeButton.setBackground(getResources().getDrawable(R.drawable.like2));
@@ -332,8 +339,12 @@ public class QuestionActivity extends AppCompatActivity {
                 if (hiddenSolution) {
                     if (hasAnswer) {
                         solutionImage.setVisibility(View.VISIBLE);
+                        nextAnswerButton.setVisibility(View.VISIBLE);
+                        previousAnswerButton.setVisibility(View.VISIBLE);
                         answerBox.setVisibility(View.VISIBLE);
-                        solutionButton.setText("Hide solution");
+//                        solutionButton.setText("Hide solution");
+                        showSolutionText.setText("Hide solution");
+                        solutionButton.setBackground(getResources().getDrawable(R.drawable.eye_color));
                         hiddenSolution = false;
                     } else {
                         Toast.makeText(QuestionActivity.this, NO_ANSWER_MSG,
@@ -342,15 +353,55 @@ public class QuestionActivity extends AppCompatActivity {
                 } else {
                     if (hasAnswer) {
                         solutionImage.setVisibility(View.INVISIBLE);
+                        nextAnswerButton.setVisibility(View.INVISIBLE);
+                        previousAnswerButton.setVisibility(View.INVISIBLE);
                         answerBox.setVisibility(View.INVISIBLE);
                     }
-                    solutionButton.setText("Show solution");
+//                    solutionButton.setText("Show solution");
+                    showSolutionText.setText("Show solution");
+                    solutionButton.setBackground(getResources().getDrawable(R.drawable.eye));
                     hiddenSolution = true;
                 }
             }
         });
+
+        nextAnswerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                offset_answer(1);
+            }
+        });
+
+        previousAnswerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                offset_answer(-1);
+            }
+        });
+
     }
 
+    private void offset_answer(int offset)
+    {
+        final TextView answerRateText = findViewById(R.id.solutionRateText);
+
+        if (question.getAnswers().size() == 1)
+        {
+            Toast.makeText(QuestionActivity.this, ONE_ANS_MSG,
+                    Toast.LENGTH_LONG).show();
+        }
+        else {
+            CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(QuestionActivity.this);
+            circularProgressDrawable.setStrokeWidth(10f);
+            circularProgressDrawable.setCenterRadius(60f);
+            circularProgressDrawable.start();
+            currentAnswer = (currentAnswer + offset + question.getAnswers().size()) % question.getAnswers().size();
+            Glide.with(this).load(Uri.parse(question.getAnswers().get(currentAnswer).getImagePath())).placeholder(circularProgressDrawable).into(solutionImage);
+
+            Answer answer = question.getAnswers().get(currentAnswer);
+            answerRateText.setText(Integer.toString((int) answer.getRating()));
+        }
+    }
     private void getAppData() {
         appData = (AppData) getApplicationContext();
         fireStoreHandler = appData.fireStoreHandler;
