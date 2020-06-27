@@ -59,3 +59,7 @@ dependencies {
     implementation 'com.ndroid.nadim:cool-toast:1.0'
 
 }
+
+afterEvaluate {
+    assembleDebug.dependsOn check
+}
