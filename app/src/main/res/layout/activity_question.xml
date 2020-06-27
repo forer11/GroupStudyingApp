@@ -201,6 +201,7 @@
             android:layout_marginTop="10dp"
             android:padding="10dp"
             android:textAllCaps="false"
+            android:rotation="180"
             android:textColor="@color/white"
             android:visibility="invisible"
             app:layout_constraintEnd_toStartOf="@+id/nextAnswerButton"
