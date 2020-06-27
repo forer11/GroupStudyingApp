@@ -13,6 +13,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -313,8 +314,8 @@ public class QuestionActivity extends AppCompatActivity {
     }
 
     private void showSolutionHandler(final Button solutionButton, final ImageView solutionImage) {
-        final Button nextAnswerButton = findViewById(R.id.nextAnswerButton);
-        final Button previousAnswerButton = findViewById(R.id.previousAnswerButton);
+        final ImageButton nextAnswerButton = findViewById(R.id.nextAnswerButton);
+        final ImageButton previousAnswerButton = findViewById(R.id.previousAnswerButton);
         final Button answerLikeButton = findViewById(R.id.solutionLikeButton);
         final LinearLayout answerBox = findViewById(R.id.solutionRate);
         final TextView answerRateText = findViewById(R.id.solutionRateText);
