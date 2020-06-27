@@ -89,6 +89,14 @@ public class AddQuestionActivity extends AppCompatActivity {
         this.registerReceiver(br, filter);
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (isPhotoEntered){
+            saveButton.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void getAppData() {
         //TODO - the data won't be loaded again like this, were gonna send only the relevant course from main activity
         appData = (AppData) getApplicationContext();

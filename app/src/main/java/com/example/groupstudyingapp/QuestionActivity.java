@@ -148,15 +148,17 @@ public class QuestionActivity extends AppCompatActivity {
         studentAnimation.playAnimation();
     }
 
-    private void setRateButtonListener(Button rateButton) {
+    private void setRateButtonListener(final Button rateButton) {
         rateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (hiddenRate) {
                     smileyRating.setVisibility(View.VISIBLE);
+                    rateButton.setBackground(getResources().getDrawable(R.drawable.smile_color));
                     hiddenRate = false;
                 } else {
                     smileyRating.setVisibility(View.INVISIBLE);
+                    rateButton.setBackground(getResources().getDrawable(R.drawable.smile));
                     hiddenRate = true;
                 }
             }
@@ -317,17 +319,27 @@ public class QuestionActivity extends AppCompatActivity {
         final LinearLayout answerBox = findViewById(R.id.solutionRate);
         final TextView answerRateText = findViewById(R.id.solutionRateText);
         final TextView numberOfAnswers = findViewById(R.id.numberOfAnswer);
+        final TextView showSolutionText = findViewById(R.id.showSolutionText);
 
         answerLikeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (hasAnswer && !answerRated) {
-                    Answer answer = question.getAnswers().get(currentAnswer);
-                    answer.setRating(answer.getRating() + 1);
-                    answerRateText.setText(Integer.toString((int) answer.getRating()));
-                    answerLikeButton.setBackground(getResources().getDrawable(R.drawable.like2));
-                    fireStoreHandler.updateQuestion(question);
-                    answerRated = true;
+                if (hasAnswer) {
+                    if (!answerRated) {
+                        Answer answer = question.getAnswers().get(currentAnswer);
+                        answer.setRating(answer.getRating() + 1);
+                        answerRateText.setText(Integer.toString((int) answer.getRating()));
+                        answerLikeButton.setBackground(getResources().getDrawable(R.drawable.like2));
+                        fireStoreHandler.updateQuestion(question);
+                        answerRated = true;
+                    } else {
+                        Answer answer = question.getAnswers().get(currentAnswer);
+                        answer.setRating(answer.getRating() - 1);
+                        answerRateText.setText(Integer.toString((int) answer.getRating()));
+                        answerLikeButton.setBackground(getResources().getDrawable(R.drawable.like1));
+                        fireStoreHandler.updateQuestion(question);
+                        answerRated = false;
+                    }
                 }
             }
         });
@@ -342,7 +354,9 @@ public class QuestionActivity extends AppCompatActivity {
                         nextAnswerButton.setVisibility(View.VISIBLE);
                         previousAnswerButton.setVisibility(View.VISIBLE);
                         answerBox.setVisibility(View.VISIBLE);
-                        solutionButton.setText("Hide solution");
+//                        solutionButton.setText("Hide solution");
+                        showSolutionText.setText("Hide solution");
+                        solutionButton.setBackground(getResources().getDrawable(R.drawable.eye_color));
                         hiddenSolution = false;
                     } else {
                         Toast.makeText(QuestionActivity.this, NO_ANSWER_MSG,
@@ -356,7 +370,9 @@ public class QuestionActivity extends AppCompatActivity {
                         previousAnswerButton.setVisibility(View.INVISIBLE);
                         answerBox.setVisibility(View.INVISIBLE);
                     }
-                    solutionButton.setText("Show solution");
+//                    solutionButton.setText("Show solution");
+                    showSolutionText.setText("Show solution");
+                    solutionButton.setBackground(getResources().getDrawable(R.drawable.eye));
                     hiddenSolution = true;
                 }
             }

@@ -122,4 +122,9 @@ public class MainActivity extends BaseMenuActivity implements CoursesAdapter.Ite
         fireStoreHandler = appData.fireStoreHandler;
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        System.exit(0);
+    }
 }

@@ -1,9 +1,5 @@
 package com.example.groupstudyingapp;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
-import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
-
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -17,9 +13,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.bumptech.glide.Glide;
+import com.ndroid.nadim.sahel.CoolToast;
 
 import java.io.File;
 import java.io.IOException;
@@ -79,11 +79,13 @@ public class AddAnswerActivity extends AppCompatActivity {
             @Override
             public void onReceive(Context context, Intent intent) {
                 if (intent.getAction().equals(QuestionActivity.FINISHED_UPLOAD_ANSWER_IMG)) {
-                    Toast.makeText(context, "finished uploading photo", Toast.LENGTH_SHORT).show();
+                    CoolToast coolToast = new CoolToast(AddAnswerActivity.this);
+                    coolToast.make("finished uploading photo", CoolToast.SUCCESS);
                     finish();
                 }
                 if (intent.getAction().equals(FAILED_TO_UPLOAD)) {
-                    Toast.makeText(context, "failed uploading photo", Toast.LENGTH_SHORT).show();
+                    CoolToast coolToast = new CoolToast(AddAnswerActivity.this);
+                    coolToast.make("failed uploading photo", CoolToast.DANGER);
                     finish();
                 }
             }
@@ -138,13 +140,13 @@ public class AddAnswerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (titleInput.getText().toString().equals("")) {
-                    Toast.makeText(AddAnswerActivity.this, "Please write a title!",
-                                                                        Toast.LENGTH_SHORT).show();
+                    CoolToast coolToast = new CoolToast(AddAnswerActivity.this);
+                    coolToast.make("Please write a title!", CoolToast.DANGER);
                 } else {
                     String answerTitleInput = titleInput.getText().toString();
                     if (!isPhotoEntered) {
-                        Toast.makeText(AddAnswerActivity.this, PLS_UPLOAD_IMG,
-                                                                        Toast.LENGTH_SHORT).show();
+                        CoolToast coolToast = new CoolToast(AddAnswerActivity.this);
+                        coolToast.make(PLS_UPLOAD_IMG, CoolToast.DANGER);
                     } else {
                         fireStoreHandler.uploadAnswerImage(newImageUri, newQuestionImagePath,
                                                     answerTitleInput, AddAnswerActivity.this);

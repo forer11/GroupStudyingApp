@@ -37,7 +37,6 @@
 
     <style name="Theme.Transparent" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowFullscreen">true</item>
-        <item name="android:windowBackground">@mipmap/splash_screen</item>
     </style>
 
 
