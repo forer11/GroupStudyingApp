@@ -189,7 +189,9 @@ public class AddAnswerActivity extends AppCompatActivity {
     private void handleGalleryImageCase(Intent imageReturnedIntent) {
         isPhotoEntered = true;
         newImageUri = imageReturnedIntent.getData();
-        CropImage.activity(newImageUri).start(this);
+        CropImage.activity(newImageUri)
+                .setCropMenuCropButtonTitle(getString(R.string.crop_button_text))
+                .start(this);
     }
 
     /**
@@ -200,7 +202,9 @@ public class AddAnswerActivity extends AppCompatActivity {
         if (imgFile.exists()) {
             isPhotoEntered = true;
             newImageUri = Uri.fromFile(imgFile);
-            CropImage.activity(newImageUri).start(this);
+            CropImage.activity(newImageUri)
+                    .setCropMenuCropButtonTitle(getString(R.string.crop_button_text))
+                    .start(this);
         }
     }
 
