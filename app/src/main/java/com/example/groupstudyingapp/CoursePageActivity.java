@@ -130,7 +130,7 @@ public class CoursePageActivity extends BaseMenuActivity implements CoursePageAd
     }
 
     //TODO - Ido - is imagePath needed here?
-    private void addNewQuestion(String title, String questionLink) { //todo should'nt return Question but id
+    private void addNewQuestion(String title, String questionLink) {
         Question newQuestion = new Question(title, questionLink);
         newQuestion.setLink(questionLink);
         newQuestion.setId(getNewCourseId());

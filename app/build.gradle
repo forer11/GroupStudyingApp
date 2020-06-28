@@ -58,6 +58,9 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:2.0'
     implementation 'com.ndroid.nadim:cool-toast:1.0'
 
+    //for Android-Image-Cropper
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
+
 }
 
 afterEvaluate {
