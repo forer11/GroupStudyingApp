@@ -1,0 +1,50 @@
+1. Download and install node.js and Visual Studio
+2. cd to the folder you'd like to work on and run:
+	npm init
+   a "package" file will be created, copy it to your working folder.
+3. install express using:
+	npm install express
+4. then:
+	npm i mongodb
+4. then:
+	npm i react react-dom
+4. then:
+	npm i -D webpack webpack-cli
+4. then:
+	npm i -D babel-loader @babel/cli @babel/core @babel/preset-env @babel/preset-react @babel/plugin-proposal-class-properties
+4. then:
+	npm i -D nodemon
+4. then:
+	npm i -D eslint babel-eslint eslint-plugin-react
+4. then:
+	npm i prop-types
+---------------------------------------------------------------------------------------------------------------------------
+OR, instead we can just copy the files from this repo:
+https://github.com/jscomplete/learn-fullstack-javascript/tree/v1.2
+and paste it on our local folder, then run:
+	npm i
+and all the dependencies will be installed. 
+---------------------------------------------------------------------------------------------------------------------------
+IN ADDITION
+
+We can define the environment variable:
+/home/roy/Desktop/web/./node_modules/.bin
+
+Then it will be possible to run the the server using the command:
+	babel-node server.js
+
+Then for using EJS you should cd to your working directory and run fro the Terminal:
+	npm i -S ejs
+
+Then for installing the multer (package for sending images to the server), cd to the working directory and run:
+	npm i multer
+----------------------------------------------------------------------------------------------------------------------------
+
+
+IF EVERYTHING INSTALLED PROPERLY THIS SHOULD RUN THE WEBSITE:
+1. Open new Terminal and run from the web folder: npm run dev
+2. Open additional Terminal and run from the web folder: ./node_modules/.bin/babel-node server.js
+
+BROWSE TO:
+http://localhost:8080/
+
