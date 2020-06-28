@@ -20,12 +20,16 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.bumptech.glide.Glide;
 import com.ndroid.nadim.sahel.CoolToast;
+import com.theartofdev.edmodo.cropper.CropImage;
+import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
+import static java.security.AccessController.getContext;
 
 public class AddAnswerActivity extends AppCompatActivity {
 
@@ -168,12 +172,50 @@ public class AddAnswerActivity extends AppCompatActivity {
                 case GALLERY_ACTION:
                     handleGalleryImageCase(imageReturnedIntent);
                     break;
+
+                case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
+                    handleCropImageCase(imageReturnedIntent);
+                    break;
+
             }
         } else {
             Log.i("image_save_error", "image was'nt saved");
         }
     }
 
+    /**
+     * @param imageReturnedIntent handle the GALLERY_ACTION case in onActivityResult
+     */
+    private void handleGalleryImageCase(Intent imageReturnedIntent) {
+        isPhotoEntered = true;
+        newImageUri = imageReturnedIntent.getData();
+        CropImage.activity(newImageUri).start(this);
+    }
+
+    /**
+     * handles the CAMERA_ACTION case in onActivityResult
+     */
+    private void handleCameraImageCase() {
+        File imgFile = new File(currentPhotoPath);
+        if (imgFile.exists()) {
+            isPhotoEntered = true;
+            newImageUri = Uri.fromFile(imgFile);
+            CropImage.activity(newImageUri).start(this);
+        }
+    }
+
+    /**
+     * handles the CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE case in onActivityResult
+     */
+    private void handleCropImageCase(Intent imageReturnedIntent) {
+        CropImage.ActivityResult result = CropImage.getActivityResult(imageReturnedIntent);
+        newImageUri = result.getUri();
+        if (newImageUri != null) {
+            newQuestionImagePath = "answers/" + newImageUri.getLastPathSegment();
+            Glide.with(AddAnswerActivity.this).load(newImageUri)
+                    .placeholder(circularProgressDrawable).into(answerImage);
+        }
+    }
 
     /**
      * Sets everything that is needed for handling an image from the camera and calls the relevant
@@ -223,33 +265,7 @@ public class AddAnswerActivity extends AppCompatActivity {
         return image;
     }
 
-    /**
-     * @param imageReturnedIntent handle the GALLERY_ACTION case in onActivityResult
-     */
-    private void handleGalleryImageCase(Intent imageReturnedIntent) {
-        isPhotoEntered = true;
-        newImageUri = imageReturnedIntent.getData();
-        if (newImageUri != null) {
-            newQuestionImagePath = "answers/" + newImageUri.getLastPathSegment();
-            Glide.with(AddAnswerActivity.this).load(newImageUri)
-                                        .placeholder(circularProgressDrawable).into(answerImage);
 
-        }
-    }
-
-    /**
-     * handles the CAMERA_ACTION case in onActivityResult
-     */
-    private void handleCameraImageCase() {
-        File imgFile = new File(currentPhotoPath);
-        if (imgFile.exists()) {
-            isPhotoEntered = true;
-            newImageUri = Uri.fromFile(imgFile);
-            newQuestionImagePath = "answers/" + newImageUri.getLastPathSegment();
-            Glide.with(AddAnswerActivity.this).load(newImageUri)
-                                        .placeholder(circularProgressDrawable).into(answerImage);
-        }
-    }
 
     @Override
     protected void onDestroy() {
