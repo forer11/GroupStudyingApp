@@ -200,9 +200,7 @@ public class AddAnswerActivity extends AppCompatActivity {
         if (imgFile.exists()) {
             isPhotoEntered = true;
             newImageUri = Uri.fromFile(imgFile);
-            newQuestionImagePath = "answers/" + newImageUri.getLastPathSegment();
-            Glide.with(AddAnswerActivity.this).load(newImageUri)
-                    .placeholder(circularProgressDrawable).into(answerImage);
+            CropImage.activity(newImageUri).start(this);
         }
     }
 
