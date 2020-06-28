@@ -1,9 +1,11 @@
 package com.example.groupstudyingapp;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -17,7 +19,9 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
@@ -35,7 +39,6 @@ public class QuestionActivity extends AppCompatActivity {
 
     public static final String FINISHED_UPLOAD_ANSWER_IMG = "finished upload answers' image";
     public static final String FAILED_TO_UPLOAD_ANSWER_IMG = "failed to upload answers' image";
-    public static final String UPLOAD_ANSWER = "start uploading answer";
     public static final String NO_ANSWER_MSG = "No answer yet";
     public static final String ONE_ANS_MSG = "There is only one answer.";
 
@@ -43,8 +46,9 @@ public class QuestionActivity extends AppCompatActivity {
     public static final String TITLE = "title";
     public static final String COURSE_ID = "courseId";
     public static final String UPDATED_URL = "UPDATED URL";
+    public static final int WRITE_EXTERNAL_STORAGE_REQUEST = 1;
+    public static final String NULL_PATH = "null_path";
     private String questionRate = "No rate yet";
-
 
     private boolean hiddenSolution = true;
     private boolean hiddenRate = true;
@@ -79,7 +83,6 @@ public class QuestionActivity extends AppCompatActivity {
         TextView questionTextView = findViewById(R.id.questionTitle);
         questionTextView.setText(question.getTitle());
 
-//        getAppData();
         fireStoreHandler.setCurrentImagePath(question.getImagePath()); //todo needed?
 
         CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(this);
@@ -103,9 +106,7 @@ public class QuestionActivity extends AppCompatActivity {
         if (rateType != null) {
             updateRate(smileyRating);
         }
-
         setupBroadcastReceiver();
-
     }
 
     private void setupBroadcastReceiver() {
@@ -182,25 +183,53 @@ public class QuestionActivity extends AppCompatActivity {
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                int permissions = checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+                if (permissions != PackageManager.PERMISSION_GRANTED) {
+                    requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                            WRITE_EXTERNAL_STORAGE_REQUEST);
+                }
+                startSharingImageViaWhatsapp();
+            }
+        });
+    }
 
-                Picasso.get().load(question.getLink()).into(new Target() {
-                    @Override
-                    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
+                                           @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-                        sendPhotoViaWhatsapp(bitmap);
+        if(requestCode == WRITE_EXTERNAL_STORAGE_REQUEST){
+            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                startSharingImageViaWhatsapp();
+            }
+            else{
+                showPermissionsRationalDialog();
+            }
+        }
+    }
 
-                    }
+    private void showPermissionsRationalDialog() {
+        Context context = getApplicationContext();
+        CharSequence text = "If you no to this you won't be able to share via WhatsApp!";
+        int duration = Toast.LENGTH_LONG;
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
+    }
 
-                    @Override
-                    public void onBitmapFailed(Exception e, Drawable errorDrawable) {
-                        Log.v("Failed to load bitmap", e.toString());
-                    }
+    private void startSharingImageViaWhatsapp() {
+        Picasso.get().load(question.getLink()).into(new Target() {
+            @Override
+            public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+                sendPhotoViaWhatsapp(bitmap);
+            }
 
-                    @Override
-                    public void onPrepareLoad(Drawable placeHolderDrawable) {
+            @Override
+            public void onBitmapFailed(Exception e, Drawable errorDrawable) {
+                Log.v("Failed to load bitmap", e.toString());
+            }
 
-                    }
-                });
+            @Override
+            public void onPrepareLoad(Drawable placeHolderDrawable) {
             }
         });
     }
@@ -212,9 +241,14 @@ public class QuestionActivity extends AppCompatActivity {
                 bitmap,
                 "Title",
                 null);
-        Uri imageUri = Uri.parse(path);
-        
-        setWhatsappIntent(imageUri);
+        if(path != null) {
+            Uri imageUri = Uri.parse(path);
+
+            setWhatsappIntent(imageUri);
+        }
+        else{
+            Log.e(NULL_PATH, "image path is null!");
+        }
     }
 
     private void setWhatsappIntent(Uri imageUri) {
@@ -229,7 +263,6 @@ public class QuestionActivity extends AppCompatActivity {
             coolToast.make("Whatsapp not installed", CoolToast.DANGER);
         }
     }
-
 
     private void setAnswerAndShow(final Button solutionButton) {
         solutionImage = findViewById(R.id.solutionImage);
@@ -408,6 +441,7 @@ public class QuestionActivity extends AppCompatActivity {
             answerRateText.setText(Integer.toString((int) answer.getRating()));
         }
     }
+
 
     private void getAppData() {
         appData = (AppData) getApplicationContext();
