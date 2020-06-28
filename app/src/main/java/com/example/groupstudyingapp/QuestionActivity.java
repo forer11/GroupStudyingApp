@@ -161,17 +161,25 @@ public class QuestionActivity extends AppCompatActivity {
         question = (Question) intent.getSerializableExtra("EXTRA_SESSION_ID");
     }
 
+    private void hideSolution(final Button solutionButton, final ImageView solutionImage){
+        solutionImage.setVisibility(View.VISIBLE);
+        solutionButton.setText("Hide solution");
+    }
+
+    private void showSolution(final Button solutionButton, final ImageView solutionImage){
+        solutionImage.setVisibility(View.INVISIBLE);
+        solutionButton.setText("Show solution");
+    }
+
     private void showSolutionHandler(final Button solutionButton, final ImageView solutionImage) {
         solutionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (hiddenSolution) {
-                    solutionImage.setVisibility(View.VISIBLE);
-                    solutionButton.setText("Hide solution");
+                    hideSolution(solutionButton, solutionImage);
                     hiddenSolution = false;
                 } else {
-                    solutionImage.setVisibility(View.INVISIBLE);
-                    solutionButton.setText("Show solution");
+                    showSolution(solutionButton, solutionImage);
                     hiddenSolution = true;
                 }
             }
