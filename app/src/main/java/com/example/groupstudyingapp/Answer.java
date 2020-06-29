@@ -39,6 +39,10 @@ public class Answer implements Serializable {
 
     public String getImagePath() { return imagePath; }
 
+    public String getTitle() {
+        return title;
+    }
+
     /////////////////////////////////// Setters ////////////////////////////////////////////////////
     public void setId(String id) {
         this.id = id;
@@ -54,4 +58,7 @@ public class Answer implements Serializable {
 
     public void setImagePath(String imagePath) { this.imagePath = imagePath; }
 
+    public void setTitle(String title) {
+        this.title = title;
+    }
 }

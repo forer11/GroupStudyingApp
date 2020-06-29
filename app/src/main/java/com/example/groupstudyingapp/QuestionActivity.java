@@ -265,16 +265,11 @@ public class QuestionActivity extends AppCompatActivity {
     }
 
     private void setAnswerAndShow(final Button solutionButton) {
-        solutionImage = findViewById(R.id.solutionImage);
         if (question.getAnswers().size() > 0) {
-            CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(this);
-            circularProgressDrawable.setStrokeWidth(10f);
-            circularProgressDrawable.setCenterRadius(60f);
-            circularProgressDrawable.start();
-            Glide.with(this).load(Uri.parse(question.getAnswers().get(currentAnswer).getImagePath())).placeholder(circularProgressDrawable).into(solutionImage);
+            updateSolution();
             hasAnswer = true;
         }
-        showSolutionHandler(solutionButton, solutionImage);
+        showSolutionHandler(solutionButton);
     }
 
     private void userRateHandler() {
@@ -327,6 +322,27 @@ public class QuestionActivity extends AppCompatActivity {
         });
     }
 
+    private void updateSolution() {
+        final TextView answerRateText = findViewById(R.id.solutionRateText);
+        final TextView solutionTitle = findViewById(R.id.solutionTitle);
+
+        solutionImage = findViewById(R.id.solutionImage);
+
+        CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(this);
+        circularProgressDrawable.setStrokeWidth(10f);
+        circularProgressDrawable.setCenterRadius(60f);
+        circularProgressDrawable.start();
+        Answer answer = question.getAnswers().get(currentAnswer);
+        Glide.with(this).load(Uri.parse(answer.getImagePath())).placeholder(circularProgressDrawable).into(solutionImage);
+        String title = answer.getTitle();
+        if (title == null || title.equals(""))
+        {
+            title = "No title";
+        }
+        solutionTitle.setText(title);
+        answerRateText.setText(Integer.toString((int) answer.getRating()));
+    }
+
     private void updateRate(final SmileyRating smileyRating) {
         final Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
@@ -345,13 +361,15 @@ public class QuestionActivity extends AppCompatActivity {
         course = fireStoreHandler.getCourseById(courseId);
     }
 
-    private void showSolutionHandler(final Button solutionButton, final ImageView solutionImage) {
+    private void showSolutionHandler(final Button solutionButton) {
+        final ImageView solutionImage = findViewById(R.id.solutionImage);
         final ImageButton nextAnswerButton = findViewById(R.id.nextAnswerButton);
         final ImageButton previousAnswerButton = findViewById(R.id.previousAnswerButton);
         final Button answerLikeButton = findViewById(R.id.solutionLikeButton);
         final LinearLayout answerBox = findViewById(R.id.solutionRate);
         final TextView answerRateText = findViewById(R.id.solutionRateText);
         final TextView showSolutionText = findViewById(R.id.showSolutionText);
+        final TextView solutionTitle = findViewById(R.id.solutionTitle);
 
         answerLikeButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -384,6 +402,7 @@ public class QuestionActivity extends AppCompatActivity {
                         nextAnswerButton.setVisibility(View.VISIBLE);
                         previousAnswerButton.setVisibility(View.VISIBLE);
                         answerBox.setVisibility(View.VISIBLE);
+                        solutionTitle.setVisibility(View.VISIBLE);
 //                        solutionButton.setText("Hide solution");
                         showSolutionText.setText("Hide solution");
                         solutionButton.setBackground(getResources().getDrawable(R.drawable.eye_color));
@@ -398,6 +417,7 @@ public class QuestionActivity extends AppCompatActivity {
                         nextAnswerButton.setVisibility(View.INVISIBLE);
                         previousAnswerButton.setVisibility(View.INVISIBLE);
                         answerBox.setVisibility(View.INVISIBLE);
+                        solutionTitle.setVisibility(View.INVISIBLE);
                     }
 //                    solutionButton.setText("Show solution");
                     showSolutionText.setText("Show solution");
@@ -425,20 +445,14 @@ public class QuestionActivity extends AppCompatActivity {
 
     private void offset_answer(int offset) {
         final TextView answerRateText = findViewById(R.id.solutionRateText);
+        final TextView solutionTitle = findViewById(R.id.solutionTitle);
 
         if (question.getAnswers().size() == 1) {
             CoolToast coolToast = new CoolToast(QuestionActivity.this);
             coolToast.make(ONE_ANS_MSG, CoolToast.INFO);
         } else {
-            CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(QuestionActivity.this);
-            circularProgressDrawable.setStrokeWidth(10f);
-            circularProgressDrawable.setCenterRadius(60f);
-            circularProgressDrawable.start();
             currentAnswer = (currentAnswer + offset + question.getAnswers().size()) % question.getAnswers().size();
-            Glide.with(this).load(Uri.parse(question.getAnswers().get(currentAnswer).getImagePath())).placeholder(circularProgressDrawable).into(solutionImage);
-
-            Answer answer = question.getAnswers().get(currentAnswer);
-            answerRateText.setText(Integer.toString((int) answer.getRating()));
+            updateSolution();
         }
     }
 
