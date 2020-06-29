@@ -56,8 +56,9 @@ public class FireStoreHandler {
     FirebaseStorage storage = FirebaseStorage.getInstance();
 
     private static String COURSES = "courses";
-    private boolean sentOnce;
-    private AtomicInteger numOfCourses;
+    boolean sentOnce;
+    AtomicInteger numOfCourses;
+    int size;
 
 
     public FireStoreHandler(Context context) {
@@ -100,7 +101,7 @@ public class FireStoreHandler {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful() && task.getResult() != null) {
-                            int size = task.getResult().size();
+                            size = task.getResult().size();
                             numOfCourses = new AtomicInteger();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 Log.d(TAG, document.getId() + " => " + document.getData());

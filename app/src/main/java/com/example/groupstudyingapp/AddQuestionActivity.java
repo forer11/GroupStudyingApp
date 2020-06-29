@@ -20,6 +20,7 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.bumptech.glide.Glide;
 import com.ndroid.nadim.sahel.CoolToast;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.File;
 import java.io.IOException;
@@ -166,10 +167,28 @@ public class AddQuestionActivity extends AppCompatActivity {
                 case GALLERY_ACTION:
                     handleGalleryImageCase(imageReturnedIntent);
                     break;
+
+                case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
+                    handleCropImageCase(imageReturnedIntent);
+                    break;
             }
         } else {
             Log.i(IMAGE_SAVE_ERROR, IMAGE_SAVE_ERROR_MSG);
         }
+    }
+
+    /**
+     * handles the CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE case in onActivityResult
+     */
+    private void handleCropImageCase(Intent imageReturnedIntent) {
+        CropImage.ActivityResult result = CropImage.getActivityResult(imageReturnedIntent);
+        newImageUri = result.getUri();
+        if (newImageUri != null) {
+            newQuestionImagePath = "answers/" + newImageUri.getLastPathSegment();
+            Glide.with(AddQuestionActivity.this).load(newImageUri)
+                    .placeholder(circularProgressDrawable).into(questionImage);
+        }
+        adapter.notifyDataSetChanged();
     }
 
 
@@ -224,14 +243,13 @@ public class AddQuestionActivity extends AppCompatActivity {
     private void handleGalleryImageCase(Intent imageReturnedIntent) {
         isPhotoEntered = true;
         newImageUri = imageReturnedIntent.getData();
-        if (newImageUri != null) {
-            newQuestionImagePath = "questions/" + newImageUri.getLastPathSegment();
-            Glide.with(AddQuestionActivity.this)
-                                                        .load(newImageUri)
-                                                        .placeholder(circularProgressDrawable)
-                                                        .into(questionImage);
+        launchCropActivity();
+    }
 
-        }
+    private void launchCropActivity() {
+        CropImage.activity(newImageUri)
+                .setCropMenuCropButtonTitle(getString(R.string.crop_button_text))
+                .start(this);
     }
 
     /**
@@ -243,10 +261,7 @@ public class AddQuestionActivity extends AppCompatActivity {
             isPhotoEntered = true;
             newImageUri = Uri.fromFile(imgFile);
             newQuestionImagePath = "questions/" + newImageUri.getLastPathSegment();
-            Glide.with(AddQuestionActivity.this)
-                                                        .load(newImageUri)
-                                                        .placeholder(circularProgressDrawable)
-                                                        .into(questionImage);
+            launchCropActivity();
         }
     }
 
