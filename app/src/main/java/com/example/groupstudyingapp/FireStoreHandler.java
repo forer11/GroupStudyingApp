@@ -180,6 +180,7 @@ public class FireStoreHandler {
                 .getQuestions();
         for (int i = 0; i < questions.size(); ++i) {
             if (questions.get(i).getImagePath().compareTo(currentImagePath) == 0) {
+                question.sortAnswers();
                 questions.set(i, question);
             }
         }
@@ -444,6 +445,7 @@ public class FireStoreHandler {
     public void addNewAnswer(String questionId, String title, String answerUrl) {
         Question question = getQuestionById(questionId);
         question.addAnswer(title, answerUrl);
+        question.sortAnswers();
         updateCourse(currentCourseId);
     }
 

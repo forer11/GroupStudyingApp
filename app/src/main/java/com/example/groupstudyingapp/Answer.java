@@ -63,6 +63,10 @@ public class Answer implements Serializable {
         this.title = title;
     }
 
+    public static answersComparator getAnswerComparator() {
+        return new answersComparator();
+    }
+
     public static class answersComparator implements Comparator<Answer> {
 
         @Override
