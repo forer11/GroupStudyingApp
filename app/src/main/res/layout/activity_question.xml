@@ -198,7 +198,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:background="@drawable/arrow"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="5dp"
             android:padding="10dp"
             android:textAllCaps="false"
             android:rotation="180"
@@ -217,7 +217,7 @@
             android:text="1 of 3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@+id/solutionImage"
+            app:layout_constraintBottom_toTopOf="@+id/solutionTitle"
             app:layout_constraintTop_toBottomOf="@+id/previousAnswerButton"
             />
 
@@ -235,11 +235,12 @@
             />
 
 
-        <ImageView
+        <com.example.groupstudyingapp.DynamicImageView
             android:id="@+id/solutionImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="invisible"
+            android:layout_marginTop="5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/solutionTitle"
@@ -248,8 +249,8 @@
         <LinearLayout
             android:id="@+id/solutionRate"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="0dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/solutionImage"
             android:gravity="end|center_vertical"
@@ -265,8 +266,8 @@
 
             <Button
                 android:id="@+id/solutionLikeButton"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/like1">
 
