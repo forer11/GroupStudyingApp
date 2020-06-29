@@ -188,7 +188,6 @@ public class AddQuestionActivity extends AppCompatActivity {
             Glide.with(AddQuestionActivity.this).load(newImageUri)
                     .placeholder(circularProgressDrawable).into(questionImage);
         }
-        adapter.notifyDataSetChanged();
     }
 
 
