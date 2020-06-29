@@ -4,6 +4,7 @@ import android.net.Uri;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Answer implements Serializable {
 
@@ -60,5 +61,19 @@ public class Answer implements Serializable {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public static class answersComparator implements Comparator<Answer> {
+
+        @Override
+        public int compare(Answer a1, Answer a2) {
+            if (a1.getRating() > a2.getRating()) {
+                return -1;
+            }
+            else  if (a2.getRating() > a1.getRating()) {
+                return  1;
+            }
+            return 0;
+        }
     }
 }

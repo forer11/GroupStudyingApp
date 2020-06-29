@@ -93,7 +93,6 @@ public class QuestionActivity extends AppCompatActivity {
         Glide.with(this).load(Uri.parse(question.getLink())).placeholder(circularProgressDrawable).into(questionImageView);
         findViewById(R.id.loadingPanel).setVisibility(View.GONE);
 
-
         if (question.getAnswers().size() > 0) {
             Answer answer = question.getAnswers().get(0);
             solutionImage.setImageURI(Uri.parse(answer.getImagePath()));
@@ -482,3 +481,5 @@ public class QuestionActivity extends AppCompatActivity {
         unregisterReceiver(br);
     }
 }
+
+
