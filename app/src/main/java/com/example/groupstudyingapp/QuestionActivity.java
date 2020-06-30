@@ -91,7 +91,7 @@ public class QuestionActivity extends AppCompatActivity {
         circularProgressDrawable.start();
 
         Glide.with(this).load(Uri.parse(question.getLink())).placeholder(circularProgressDrawable).into(questionImageView);
-        findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+        findViewById(R.id.loadingPanelQuestion).setVisibility(View.GONE);
 
         if (question.getAnswers().size() > 0) {
             Answer answer = question.getAnswers().get(0);
@@ -329,12 +329,18 @@ public class QuestionActivity extends AppCompatActivity {
 
         solutionImage = findViewById(R.id.solutionImage);
 
+
         CircularProgressDrawable circularProgressDrawable = new CircularProgressDrawable(this);
         circularProgressDrawable.setStrokeWidth(10f);
         circularProgressDrawable.setCenterRadius(60f);
         circularProgressDrawable.start();
+
+
         Answer answer = question.getAnswers().get(currentAnswer);
+
         Glide.with(this).load(Uri.parse(answer.getImagePath())).placeholder(circularProgressDrawable).into(solutionImage);
+        findViewById(R.id.loadingPanelAnswer).setVisibility(View.GONE);
+
         String title = answer.getTitle();
         if (title == null || title.equals(""))
         {
