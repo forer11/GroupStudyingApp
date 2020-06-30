@@ -35,8 +35,6 @@ dependencies {
     implementation 'com.google.firebase:firebase-core:17.4.2'
     implementation 'com.google.firebase:firebase-storage:19.1.1'
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'com.diegodobelo.expandingview:expanding-view:0.9.4'
     implementation 'com.github.TutorialsAndroid:KAlertDialog:v4.0.19'
     implementation 'com.google.android.material:material:1.1.0'
@@ -51,12 +49,18 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
+    implementation 'com.ndroid.nadim:cool-toast:1.0'
+
+
+    // Testing dependencies
+    implementation 'androidx.test.espresso:espresso-idling-resource:3.2.0'
+    androidTestImplementation 'junit:junit:4.13'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.annotation:annotation:1.1.0'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test:rules:1.2.0'
-    androidTestImplementation 'com.android.support.test.espresso:espresso-core:2.0'
     androidTestImplementation 'com.android.support.test.espresso:espresso-contrib:2.0'
-    implementation 'com.ndroid.nadim:cool-toast:1.0'
 
     //for Android-Image-Cropper
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
