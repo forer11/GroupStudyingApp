@@ -68,6 +68,8 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         questions.remove(position);
+                        CoursePageActivity ctx = (CoursePageActivity) context;
+                        ctx.toggleAddQuestionsNote();
                         notifyDataSetChanged();
                     }
                 });
