@@ -199,6 +199,15 @@ public class CoursePageActivity extends BaseMenuActivity implements CoursePageAd
         }
     }
 
+    void toggleEmptySearchResults() {
+        TextView emptyResultsText = findViewById(R.id.empty_search_results_text);
+        if (adapter.getItemCount() == 0) {
+            emptyResultsText.setVisibility(View.VISIBLE);
+        } else {
+            emptyResultsText.setVisibility(View.GONE);
+        }
+    }
+
     //TODO - can we delete it from here?
     private void getAppData() {
         //TODO - the data won't be loaded again like this, were gonna send only the relevant course from main activity
