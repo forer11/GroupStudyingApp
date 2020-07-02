@@ -10,6 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
+/**
+ * this is a custom single choice dialog for reports
+ */
 public class ReportDialogFragment extends DialogFragment {
     int pos = 0; // default position
 

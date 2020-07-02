@@ -489,6 +489,10 @@ public class QuestionActivity extends AppCompatActivity implements ReportDialogF
         unregisterReceiver(br);
     }
 
+    /**
+     * implementation for report button click
+     * @param view
+     */
     public void reportButtonOnclick(View view){
         DialogFragment reportDialog = new ReportDialogFragment();
         reportDialog.setCancelable(false);
