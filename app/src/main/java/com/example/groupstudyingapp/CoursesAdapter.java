@@ -21,6 +21,7 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.ViewHold
     private ArrayList<Course> coursesList;
     private ArrayList<Course> coursesListFull;
     private FireStoreHandler fireStoreHandler;
+    private Context context;
 
     @Override
     public Filter getFilter() {
@@ -52,6 +53,8 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.ViewHold
         protected void publishResults(CharSequence constraint, FilterResults results) {
             coursesList.clear();
             coursesList.addAll((ArrayList) results.values);
+            MainActivity context = (MainActivity) CoursesAdapter.this.context;
+            context.toggleEmptySearchResults();
             notifyDataSetChanged();
         }
     };
@@ -76,12 +79,13 @@ public class CoursesAdapter extends RecyclerView.Adapter<CoursesAdapter.ViewHold
     }
 
 
-    public CoursesAdapter(FireStoreHandler fsh, ArrayList<Course> coursesList) {
+    public CoursesAdapter(FireStoreHandler fsh, ArrayList<Course> coursesList, Context context) {
         fireStoreHandler = fsh;
         coursesIds = fsh.getCoursesIds();
         this.coursesList = coursesList;
         updatedCoursesList();
         coursesListFull = new ArrayList<>(coursesList);
+        this.context = context;
     }
 
     private void updatedCoursesList() {
