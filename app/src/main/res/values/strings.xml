@@ -12,5 +12,9 @@
     <string name="Request_new_course_creation">Request New Course Creation</string>
 
     <string name="crop_button_text">Finished cropping</string>
+    <string name="be_the_first_one_to_add">Be the first one to add!</string>
+    <string name="embarrassed">embarrassed</string>
+    <string name="no_questions_text">Uh oh, It seems like there are no questions for this course.</string>
+    <string name="no_results_found">No results found</string>
 
 </resources>

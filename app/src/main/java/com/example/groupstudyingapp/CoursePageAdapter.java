@@ -68,6 +68,8 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
                         questions.remove(position);
+                        CoursePageActivity ctx = (CoursePageActivity) context;
+                        ctx.toggleAddQuestionsNote();
                         notifyDataSetChanged();
                     }
                 });
@@ -112,6 +114,8 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
         protected void publishResults(CharSequence constraint, FilterResults results) {
             questions.clear();
             questions.addAll((ArrayList) results.values);
+            CoursePageActivity ctx = (CoursePageActivity) context;
+            ctx.toggleEmptySearchResults();
             notifyDataSetChanged();
         }
     };

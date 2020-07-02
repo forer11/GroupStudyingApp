@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import androidx.appcompat.widget.SearchView;
 
@@ -100,7 +101,7 @@ public class MainActivity extends BaseMenuActivity implements CoursesAdapter.Ite
     private void setRecyclerViews() {
         coursesList = new ArrayList<>();
         RecyclerView rvCourses = findViewById(R.id.rvCourses);
-        adapter = new CoursesAdapter(appData.fireStoreHandler, coursesList);
+        adapter = new CoursesAdapter(appData.fireStoreHandler, coursesList, this);
         adapter.setClickListener(MainActivity.this);
         rvCourses.setAdapter(adapter);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -115,6 +116,15 @@ public class MainActivity extends BaseMenuActivity implements CoursesAdapter.Ite
         Intent intent = new Intent(getBaseContext(), CoursePageActivity.class);
         fireStoreHandler.setCurrentCourseId(coursesList.get(position).getId());
         startActivity(intent);
+    }
+
+    void toggleEmptySearchResults() {
+        TextView emptyResultsText = findViewById(R.id.empty_search_results_text);
+        if (adapter.getItemCount() == 0) {
+            emptyResultsText.setVisibility(View.VISIBLE);
+        } else {
+            emptyResultsText.setVisibility(View.GONE);
+        }
     }
 
     private void getAppData() {
