@@ -12,5 +12,7 @@
     <string name="Request_new_course_creation">Request New Course Creation</string>
 
     <string name="crop_button_text">Finished cropping</string>
+    <string name="button_sort_by">Sort</string>
+    <string name="sort_description">Sort questions by:</string>
 
 </resources>

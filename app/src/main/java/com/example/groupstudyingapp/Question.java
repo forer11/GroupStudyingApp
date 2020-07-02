@@ -1,10 +1,10 @@
 package com.example.groupstudyingapp;
 
-import android.net.Uri;
-
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Date;
 
 public class Question implements Serializable {
 
@@ -15,6 +15,7 @@ public class Question implements Serializable {
     private float rating;
     private ArrayList<Answer> answers;
     private String imagePath;
+    private Date creationDate;
     //todo tags?
 
     Question() {
@@ -28,6 +29,7 @@ public class Question implements Serializable {
         this.title = title;
         this.imagePath = imagePath;
         this.id = null;
+        this.creationDate = new Date();
     }
 
     /////////////////////////////////// Getters ////////////////////////////////////////////////////
@@ -55,6 +57,10 @@ public class Question implements Serializable {
 
     public String getImagePath() {
         return imagePath;
+    }
+
+    public static questionCompareHighestRatingFirst getQuestionComparator() {
+        return new questionCompareHighestRatingFirst();
     }
 
     /////////////////////////////////// Setters ////////////////////////////////////////////////////
@@ -85,9 +91,6 @@ public class Question implements Serializable {
         this.imagePath = imagePath;
     }
 
-    public static questionComparator getQuestionComparator() {
-        return new questionComparator();
-    }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -101,7 +104,7 @@ public class Question implements Serializable {
     }
 
 
-    public static class questionComparator implements Comparator<Question> {
+    public static class questionCompareHighestRatingFirst implements Comparator<Question> {
 
         @Override
         public int compare(Question q1, Question q2) {
@@ -112,6 +115,36 @@ public class Question implements Serializable {
                 return  1;
             }
             return 0;
+        }
+    }
+
+    public static class questionCompareLowestRatingFirst implements Comparator<Question> {
+
+        @Override
+        public int compare(Question q1, Question q2) {
+            return new questionCompareHighestRatingFirst().compare(q2, q1);
+        }
+    }
+
+    public static class questionCompareTitle implements Comparator<Question> {
+
+        @Override
+        public int compare(Question q1, Question q2) {
+            return - q1.title.compareTo(q2.title);
+        }
+    }
+
+    public static class questionCompareDateCreated implements Comparator<Question> {
+
+        @Override
+        public int compare(Question q1, Question q2) {
+            if (q1.creationDate == null){
+                q1.creationDate = new Date(1999, 12, 30);
+            }
+            if(q2.creationDate == null){
+                q2.creationDate = new Date(1999, 12, 30);
+            }
+            return q1.creationDate.compareTo(q2.creationDate);
         }
     }
 
