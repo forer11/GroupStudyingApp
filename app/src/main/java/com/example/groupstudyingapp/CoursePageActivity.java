@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
@@ -48,6 +50,7 @@ public class CoursePageActivity extends BaseMenuActivity implements CoursePageAd
         Question.questionComparator qCompare = Question.getQuestionComparator();
         questions = course.getQuestions();
         questions.sort(qCompare);
+        toggleAddQuestionsNote();
         setRecyclerView();
         setAddQuestionButtonListener();
         setBroadcastReceiver();
@@ -135,6 +138,7 @@ public class CoursePageActivity extends BaseMenuActivity implements CoursePageAd
         newQuestion.setLink(questionLink);
         newQuestion.setId(getNewCourseId());
         questions.add(newQuestion);
+        toggleAddQuestionsNote();
         adapter.notifyDataSetChanged();
     }
 
@@ -161,18 +165,47 @@ public class CoursePageActivity extends BaseMenuActivity implements CoursePageAd
     //TODO Mor/Ido do we need those?
     private void insertSingleItem(Question newQuestion) {
         questions.add(newQuestion);
+        // if you use this function - need to add toggleAddQuestionsNote()
         adapter.notifyDataSetChanged();
     }
 
 
     private void removeSingleItem(int removeIndex) {
         questions.remove(removeIndex);
+        // if you use this function - need to add toggleAddQuestionsNote()
         adapter.notifyItemRemoved(removeIndex);
     }
 
     private void removeAllItems() {
         questions.clear();
+        // if you use this function - need to add toggleAddQuestionsNote()
         adapter.notifyDataSetChanged();
+    }
+
+    public void toggleAddQuestionsNote() {
+        int totalQuestions = questions.size();
+        ImageView noQuestionsIcon = findViewById(R.id.no_questions_icon);
+        TextView noQuestionsText = findViewById(R.id.no_questions_text);
+        TextView addQuestionText = findViewById(R.id.add_question_text);
+
+        if (totalQuestions == 0) {
+            noQuestionsIcon.setVisibility(View.VISIBLE);
+            noQuestionsText.setVisibility(View.VISIBLE);
+            addQuestionText.setVisibility(View.VISIBLE);
+        } else {
+            noQuestionsIcon.setVisibility(View.GONE);
+            noQuestionsText.setVisibility(View.GONE);
+            addQuestionText.setVisibility(View.GONE);
+        }
+    }
+
+    void toggleEmptySearchResults() {
+        TextView emptyResultsText = findViewById(R.id.empty_search_results_text);
+        if (adapter.getItemCount() == 0) {
+            emptyResultsText.setVisibility(View.VISIBLE);
+        } else {
+            emptyResultsText.setVisibility(View.GONE);
+        }
     }
 
     //TODO - can we delete it from here?
