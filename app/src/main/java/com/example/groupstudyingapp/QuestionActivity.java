@@ -15,6 +15,7 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,6 +24,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.airbnb.lottie.LottieAnimationView;
@@ -34,7 +36,7 @@ import com.squareup.picasso.Target;
 
 import java.io.ByteArrayOutputStream;
 
-public class QuestionActivity extends AppCompatActivity {
+public class QuestionActivity extends AppCompatActivity implements ReportDialogFragment.SingleChoiceListener {
 
 
     public static final String FINISHED_UPLOAD_ANSWER_IMG = "finished upload answers' image";
@@ -485,6 +487,42 @@ public class QuestionActivity extends AppCompatActivity {
         super.onDestroy();
 
         unregisterReceiver(br);
+    }
+
+    public void reportButtonOnclick(View view){
+        DialogFragment reportDialog = new ReportDialogFragment();
+        reportDialog.setCancelable(false);
+        reportDialog.show(getSupportFragmentManager(), "Single Choice Dialog");
+
+    }
+
+    @Override
+    public void onPositiveButtonClicked(String[] list, int position) {
+        String[] recipients = new String[]{"shahar.birzon@gmail.com"};
+        Intent emailIntent = new Intent(Intent.ACTION_SEND);
+        emailIntent.setType("message/rfc822");
+
+        String title = "report image for StudyGroupApp";
+        String body = "The reason for reporting: " + list[position];
+
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, recipients);
+        emailIntent.putExtra(Intent.EXTRA_SUBJECT, title);
+        emailIntent.putExtra(Intent.EXTRA_TEXT, body);
+
+        Intent chooser = Intent.createChooser(emailIntent, "Send report by mail...");
+        try{
+            startActivity(chooser);
+            finish();
+        }catch (android.content.ActivityNotFoundException ex) {
+            Toast.makeText(getApplicationContext(),
+                    "There is no email client installed.", Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    @Override
+    public void onNegativeButtonClicked() {
+
     }
 }
 

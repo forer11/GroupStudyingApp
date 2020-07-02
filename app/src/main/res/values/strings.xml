@@ -12,5 +12,10 @@
     <string name="Request_new_course_creation">Request New Course Creation</string>
 
     <string name="crop_button_text">Finished cropping</string>
+    <string-array name="report_choice_items">
+        <item>offensive content</item>
+        <item>irrelevant content</item>
+        <item>other</item>
+    </string-array>
 
 </resources>
