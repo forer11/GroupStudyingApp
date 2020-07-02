@@ -498,7 +498,7 @@ public class QuestionActivity extends AppCompatActivity implements ReportDialogF
 
     @Override
     public void onPositiveButtonClicked(String[] list, int position) {
-        String[] recipients = new String[]{"shahar.birzon@gmail.com"};
+        String[] recipients = new String[]{"iporat08@gmail.com"};
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
         emailIntent.setType("message/rfc822");
 
