@@ -96,6 +96,10 @@ public class Question implements Serializable {
         answers.add(newAnswer);
     }
 
+    public void sortAnswers() {
+        answers.sort(Answer.getAnswerComparator());
+    }
+
 
     public static class questionComparator implements Comparator<Question> {
 

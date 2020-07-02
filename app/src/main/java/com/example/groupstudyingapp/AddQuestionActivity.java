@@ -13,13 +13,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.bumptech.glide.Glide;
+import com.ndroid.nadim.sahel.CoolToast;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.File;
 import java.io.IOException;
@@ -138,13 +139,13 @@ public class AddQuestionActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (titleInput.getText().toString().equals("")) {
-                    Toast.makeText(AddQuestionActivity.this, "Please write a title!",
-                                                                        Toast.LENGTH_SHORT).show();
+                    CoolToast coolToast = new CoolToast(AddQuestionActivity.this);
+                    coolToast.make("Please write a title!", CoolToast.DANGER);
                 } else {
                     String questionTitleInput = titleInput.getText().toString();
                     if (!isPhotoEntered) {
-                        Toast.makeText(AddQuestionActivity.this, PLS_UPLOAD_IMG,
-                                                                        Toast.LENGTH_SHORT).show();
+                        CoolToast coolToast = new CoolToast(AddQuestionActivity.this);
+                        coolToast.make(PLS_UPLOAD_IMG, CoolToast.DANGER);
                     } else {
                         fireStoreHandler.uploadQuestionImage(newImageUri, newQuestionImagePath,
                                 questionTitleInput,AddQuestionActivity.this);
@@ -166,9 +167,26 @@ public class AddQuestionActivity extends AppCompatActivity {
                 case GALLERY_ACTION:
                     handleGalleryImageCase(imageReturnedIntent);
                     break;
+
+                case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
+                    handleCropImageCase(imageReturnedIntent);
+                    break;
             }
         } else {
             Log.i(IMAGE_SAVE_ERROR, IMAGE_SAVE_ERROR_MSG);
+        }
+    }
+
+    /**
+     * handles the CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE case in onActivityResult
+     */
+    private void handleCropImageCase(Intent imageReturnedIntent) {
+        CropImage.ActivityResult result = CropImage.getActivityResult(imageReturnedIntent);
+        newImageUri = result.getUri();
+        if (newImageUri != null) {
+            newQuestionImagePath = "answers/" + newImageUri.getLastPathSegment();
+            Glide.with(AddQuestionActivity.this).load(newImageUri)
+                    .placeholder(circularProgressDrawable).into(questionImage);
         }
     }
 
@@ -224,14 +242,13 @@ public class AddQuestionActivity extends AppCompatActivity {
     private void handleGalleryImageCase(Intent imageReturnedIntent) {
         isPhotoEntered = true;
         newImageUri = imageReturnedIntent.getData();
-        if (newImageUri != null) {
-            newQuestionImagePath = "questions/" + newImageUri.getLastPathSegment();
-            Glide.with(AddQuestionActivity.this)
-                                                        .load(newImageUri)
-                                                        .placeholder(circularProgressDrawable)
-                                                        .into(questionImage);
+        launchCropActivity();
+    }
 
-        }
+    private void launchCropActivity() {
+        CropImage.activity(newImageUri)
+                .setCropMenuCropButtonTitle(getString(R.string.crop_button_text))
+                .start(this);
     }
 
     /**
@@ -243,10 +260,7 @@ public class AddQuestionActivity extends AppCompatActivity {
             isPhotoEntered = true;
             newImageUri = Uri.fromFile(imgFile);
             newQuestionImagePath = "questions/" + newImageUri.getLastPathSegment();
-            Glide.with(AddQuestionActivity.this)
-                                                        .load(newImageUri)
-                                                        .placeholder(circularProgressDrawable)
-                                                        .into(questionImage);
+            launchCropActivity();
         }
     }
 

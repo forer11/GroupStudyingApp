@@ -6,8 +6,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
+import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -62,7 +64,27 @@ public class CoursePageActivity extends BaseMenuActivity implements CoursePageAd
     public boolean onCreateOptionsMenu(Menu menu) {
         super.onCreateOptionsMenu(menu);
         setProfile();
+
+        MenuItem searchItem = menu.findItem(R.id.search_bar);
+        SearchView searchView = (SearchView) searchItem.getActionView();
+
+        setSearchQueryTextListener(searchView);
         return true;
+    }
+
+    private void setSearchQueryTextListener(SearchView searchView) {
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText);
+                return false;
+            }
+        });
     }
 
     private void setBroadcastReceiver() {
@@ -108,7 +130,7 @@ public class CoursePageActivity extends BaseMenuActivity implements CoursePageAd
     }
 
     //TODO - Ido - is imagePath needed here?
-    private void addNewQuestion(String title, String questionLink) { //todo should'nt return Question but id
+    private void addNewQuestion(String title, String questionLink) {
         Question newQuestion = new Question(title, questionLink);
         newQuestion.setLink(questionLink);
         newQuestion.setId(getNewCourseId());

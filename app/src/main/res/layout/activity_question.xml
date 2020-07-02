@@ -75,90 +75,98 @@
 
         <Button
             android:id="@+id/solutionButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginTop="25dp"
-            android:background="@drawable/sign_in_button_design_blue"
+            android:background="@drawable/eye"
             android:padding="10dp"
-            android:text="Show solution"
             android:textAllCaps="false"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/addAnswerButton"
             app:layout_constraintTop_toBottomOf="@+id/questionImage" />
+        <TextView
+            android:id="@+id/showSolutionText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Show solution"
+            android:textSize="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/addAnswerButton"
+            app:layout_constraintTop_toBottomOf="@+id/solutionButton"
+            />
 
 
         <Button
             android:id="@+id/rateButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginTop="25dp"
-            android:background="@drawable/sign_in_button_design_blue"
+            android:background="@drawable/smile"
             android:padding="10dp"
-            android:text="Rate"
             android:textAllCaps="false"
             android:textColor="@color/white"
             app:layout_constraintEnd_toStartOf="@+id/addAnswerButton"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toEndOf="@id/shareButton"
             app:layout_constraintTop_toBottomOf="@+id/questionImage" />
-        <Button
-            android:id="@+id/addAnswerButton"
+
+        <TextView
+            android:id="@+id/rateButtonText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add answer"
+            android:text="Rate"
+            android:textSize="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.187"
+            app:layout_constraintStart_toEndOf="@+id/shareButton"
+            app:layout_constraintTop_toBottomOf="@+id/rateButton" />
+
+        <Button
+            android:id="@+id/addAnswerButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginTop="25dp"
             android:padding="10dp"
             android:textAllCaps="false"
-            android:background="@drawable/sign_in_button_design_blue"
+            android:background="@drawable/add_answer_button_layout"
             app:layout_constraintStart_toEndOf="@+id/rateButton"
             app:layout_constraintEnd_toStartOf="@+id/solutionButton"
             app:layout_constraintTop_toBottomOf="@+id/questionImage"
             android:textColor="@color/white" />
 
-        <Button
-            android:id="@+id/shareButton"
+        <TextView
+            android:id="@+id/addAnswerText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:layout_weight="1"
-            android:background="@drawable/sign_in_button_design_blue"
-            android:padding="10dp"
-            android:text="Share To Whatsapp"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
+            android:text="Add answer"
+            android:textSize="12dp"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.237"
+            app:layout_constraintStart_toEndOf="@+id/rateButton"
             app:layout_constraintTop_toBottomOf="@+id/addAnswerButton" />
 
         <Button
-            android:id="@+id/nextAnswerButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/shareButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginTop="25dp"
             android:layout_weight="1"
-            android:background="@drawable/sign_in_button_design_blue"
+            android:background="@drawable/share_layout"
             android:padding="10dp"
-            android:text="Next Answer"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:visibility="invisible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/previousAnswerButton"
-            app:layout_constraintTop_toBottomOf="@+id/shareButton" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/rateButton"
+            app:layout_constraintTop_toBottomOf="@+id/questionImage" />
 
-        <Button
-            android:id="@+id/previousAnswerButton"
+        <TextView
+            android:id="@+id/shareButtonText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
-            android:layout_weight="1"
-            android:background="@drawable/sign_in_button_design_blue"
-            android:padding="10dp"
-            android:text="Previous Answer"
-            android:textAllCaps="false"
-            android:textColor="@color/white"
-            android:visibility="invisible"
-            app:layout_constraintEnd_toStartOf="@+id/nextAnswerButton"
+            android:text="Share"
+            android:textSize="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.139"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/shareButton" />
 
@@ -171,22 +179,78 @@
             android:visibility="invisible"
             app:layout_constraintTop_toBottomOf="@+id/shareButton" />
 
+        <ImageButton
+            android:id="@+id/nextAnswerButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/arrow"
+            android:padding="10dp"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/previousAnswerButton"
+            app:layout_constraintTop_toBottomOf="@+id/smileyRating" />
 
-        <ImageView
+        <ImageButton
+            android:id="@+id/previousAnswerButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:background="@drawable/arrow"
+            android:layout_marginTop="5dp"
+            android:padding="10dp"
+            android:textAllCaps="false"
+            android:rotation="180"
+            android:textColor="@color/white"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toStartOf="@+id/nextAnswerButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/smileyRating" />
+
+
+        <TextView
+            android:id="@+id/numberOfAnswer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:text="1 of 3"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/solutionTitle"
+            app:layout_constraintTop_toBottomOf="@+id/previousAnswerButton"
+            />
+
+        <TextView
+            android:id="@+id/solutionTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:layout_marginTop="10dp"
+            android:textSize="25sp"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/numberOfAnswer"
+            />
+
+
+        <com.example.groupstudyingapp.DynamicImageView
             android:id="@+id/solutionImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
             android:visibility="invisible"
+            android:layout_marginTop="5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/smileyRating"
+            app:layout_constraintTop_toBottomOf="@+id/solutionTitle"
             app:srcCompat="@drawable/question" />
+
         <LinearLayout
             android:id="@+id/solutionRate"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="0dp"
+            android:layout_height="45dp"
+            android:layout_marginTop="10dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/solutionImage"
             android:gravity="end|center_vertical"
@@ -202,8 +266,8 @@
 
             <Button
                 android:id="@+id/solutionLikeButton"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:layout_marginRight="20dp"
                 android:background="@drawable/like1">
 
@@ -225,10 +289,24 @@
             app:lottie_loop="true" />
 
         <RelativeLayout
-            android:id="@+id/loadingPanel"
+            android:id="@+id/loadingPanelQuestion"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center" >
+
+            <ProgressBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:indeterminate="true" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/loadingPanelAnswer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            app:layout_constraintTop_toTopOf="@id/solutionImage"
+            app:layout_constraintBottom_toBottomOf="@+id/solutionImage">
 
             <ProgressBar
                 android:layout_width="wrap_content"
