@@ -109,6 +109,7 @@ public class LoginActivity extends AppCompatActivity {
         flatDialog.setTitle("GroupStudyingApp")
                 .setSecondButtonText("Dismiss")
                 .setSubtitle("A group studying program, whose main functions are uploading and grading questions and answers")
+                //todo - you can choose to change the info as you'd like, see strings.xml
                 .withSecondButtonListner(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
