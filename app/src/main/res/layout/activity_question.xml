@@ -16,24 +16,24 @@
             android:id="@+id/textViewsLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@drawable/title_background"
-            >
+            android:background="@drawable/title_background">
+
             <TextView
                 android:id="@+id/questionTitle"
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:fontFamily="@font/abeezee"
                 android:layout_marginTop="20dp"
-                android:gravity="center"
                 android:layout_marginBottom="5dp"
-                android:text=""
-                android:textAllCaps="true"
-                android:textColor="#FFFFFF"
-                android:textSize="25sp"
+                android:fontFamily="@font/abeezee"
+                android:gravity="center"
                 android:shadowColor="@color/text_shadow"
                 android:shadowDx="-1"
                 android:shadowDy="-1"
                 android:shadowRadius="1"
+                android:text=""
+                android:textAllCaps="true"
+                android:textColor="#FFFFFF"
+                android:textSize="25sp"
                 android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -45,26 +45,26 @@
             android:id="@+id/questionRate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
+            android:layout_marginTop="15dp"
             android:layout_marginEnd="20dp"
+            android:layout_marginBottom="10dp"
             android:fontFamily="@font/abeezee"
             android:text=""
             android:textAllCaps="true"
             android:textColor="#000000"
             android:textSize="10sp"
-            android:layout_marginTop="15dp"
             android:textStyle="bold"
+            app:layout_constraintBottom_toTopOf="@+id/questionImage"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.22"
-            app:layout_constraintTop_toBottomOf="@id/textViewsLayout"
-            app:layout_constraintBottom_toTopOf="@+id/questionImage" />
+            app:layout_constraintTop_toBottomOf="@id/textViewsLayout" />
 
         <ImageView
             android:id="@+id/questionImage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:adjustViewBounds="true"
             android:layout_marginTop="15dp"
+            android:adjustViewBounds="true"
             android:visibility="visible"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -76,52 +76,58 @@
             android:id="@+id/solutionButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
+            android:layout_marginEnd="20dp"
             android:background="@drawable/sign_in_button_design_blue"
             android:padding="10dp"
             android:text="Show solution"
             android:textAllCaps="false"
             android:textColor="@color/white"
+            app:layout_constraintBottom_toTopOf="@+id/smileyRating"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/rateButton"
-            app:layout_constraintTop_toBottomOf="@+id/questionImage" />
-
+            app:layout_constraintTop_toTopOf="@+id/addAnswerButton"
+            app:layout_constraintVertical_bias="0.0" />
 
         <Button
             android:id="@+id/rateButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="25dp"
+            android:layout_marginStart="36dp"
             android:background="@drawable/sign_in_button_design_blue"
             android:padding="10dp"
             android:text="Rate"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            app:layout_constraintEnd_toStartOf="@+id/solutionButton"
+            app:layout_constraintBottom_toTopOf="@+id/smileyRating"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/questionImage" />
-
-        <com.hsalf.smileyrating.SmileyRating
-            android:id="@+id/smileyRating"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
-            android:visibility="invisible"
-            app:layout_constraintTop_toBottomOf="@+id/rateButton" />
+            app:layout_constraintTop_toTopOf="@+id/addAnswerButton"
+            app:layout_constraintVertical_bias="0.0" />
 
         <Button
             android:id="@+id/addAnswerButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Add answer"
-            android:padding="10dp"
-            android:textAllCaps="false"
+            android:layout_marginTop="48dp"
             android:background="@drawable/sign_in_button_design_blue"
-            app:layout_constraintBottom_toBottomOf="@+id/smileyRating"
-            app:layout_constraintEnd_toEndOf="parent"
+            android:padding="10dp"
+            android:text="Add answer"
+            android:textAllCaps="false"
             android:textColor="@color/white"
-            app:layout_constraintStart_toStartOf="@+id/smileyRating"
-            app:layout_constraintTop_toTopOf="@+id/smileyRating" />
+            app:layout_constraintBottom_toTopOf="@+id/smileyRating"
+            app:layout_constraintEnd_toStartOf="@+id/solutionButton"
+            app:layout_constraintHorizontal_bias="0.508"
+            app:layout_constraintStart_toEndOf="@+id/rateButton"
+            app:layout_constraintTop_toBottomOf="@+id/questionImage"
+            app:layout_constraintVertical_bias="0.125" />
+
+        <com.hsalf.smileyrating.SmileyRating
+            android:id="@+id/smileyRating"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/addAnswerButton"
+            tools:layout_editor_absoluteY="321dp" />
 
         <ImageView
             android:id="@+id/solutionImage"
@@ -151,7 +157,7 @@
             android:id="@+id/loadingPanel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center" >
+            android:gravity="center">
 
             <ProgressBar
                 android:layout_width="wrap_content"
