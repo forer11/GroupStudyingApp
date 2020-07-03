@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.airbnb.lottie.LottieAnimationView;
+import com.example.flatdialoglibrary.dialog.FlatDialog;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
@@ -26,7 +27,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import java.util.Objects;
 
 public class LoginActivity extends AppCompatActivity {
-    private Button googleSignInButton, anonymousSignInButton;
+    private Button googleSignInButton, anonymousSignInButton, infoButton;
     private GoogleSignInClient googleSignInClient;
     private String TAG = "LoginActivity";
     private int RC_SIGN_IN = 1;
@@ -72,11 +73,18 @@ public class LoginActivity extends AppCompatActivity {
                         });
             }
         });
+        infoButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                appInfo();
+            }
+        });
     }
 
     private void setViews() {
         googleSignInButton = findViewById(R.id.google_sign_in_button);
         anonymousSignInButton = findViewById(R.id.anonymous_sign_in_button);
+        infoButton = findViewById(R.id.infoBtn);
         setAnimation();
     }
 
@@ -94,6 +102,20 @@ public class LoginActivity extends AppCompatActivity {
     private void signIn() {
         Intent signInIntent = googleSignInClient.getSignInIntent();
         startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    private void appInfo(){
+        final FlatDialog flatDialog = new FlatDialog(LoginActivity.this);
+        flatDialog.setTitle("GroupStudyingApp")
+                .setSecondButtonText("Dismiss")
+                .setSubtitle("A group studying program, whose main functions are uploading and grading questions and answers")
+                .withSecondButtonListner(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        flatDialog.dismiss();
+                    }
+                })
+                .show();
     }
 
     @Override

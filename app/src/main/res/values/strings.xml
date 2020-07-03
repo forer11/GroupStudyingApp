@@ -2,4 +2,6 @@
     <string name="app_name">GroupStudyingApp</string>
     <string name="anonymous_button_text">Sign in Anonymously</string>
     <string name="google_sign_in_text">Sign in with Google</string>
+    <string name="info">A group studying program, whose main functions are uploading and
+        grading questions and answers.</string>
 </resources>
