@@ -1,23 +1,36 @@
 package com.example.groupstudyingapp;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.text.Layout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.appcompat.widget.ActionBarOverlayLayout;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+
 import java.util.ArrayList;
+import java.util.Objects;
+
+import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CoursePageActivity extends BaseMenuActivity implements CoursePageAdapter.ItemClickListener {
     public static final String IMAGE_UPLOADED = "image_uploaded";
@@ -47,9 +60,8 @@ public class CoursePageActivity extends BaseMenuActivity implements CoursePageAd
         setContentView(R.layout.activity_course_page);
         getAppData();
         // data to populate the RecyclerView with
-        Question.questionComparator qCompare = Question.getQuestionComparator();
         questions = course.getQuestions();
-        questions.sort(qCompare);
+        questions.sort(new Question.questionCompareHighestRatingFirst());
         toggleAddQuestionsNote();
         setRecyclerView();
         setAddQuestionButtonListener();
@@ -60,8 +72,18 @@ public class CoursePageActivity extends BaseMenuActivity implements CoursePageAd
     private void setToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(course.getName());
+
         setSupportActionBar(toolbar);
+        View gotoSortButton = getLayoutInflater().inflate(R.layout.sort_button, null);
+        toolbar.addView(gotoSortButton);
+        gotoSortButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSortDialog();
+            }
+        });
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -226,6 +248,67 @@ public class CoursePageActivity extends BaseMenuActivity implements CoursePageAd
     protected void onDestroy() {
         super.onDestroy();
         this.unregisterReceiver(br);
+    }
+
+    /**
+     * show the sign out dialog on screen
+     */
+    public void showSortDialog() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder
+                (CoursePageActivity.this);
+        View view = getLayoutInflater().inflate(R.layout.sort_options_dialog, null);
+        dialogBuilder.setView(view);
+//        setDialogView(dialogBuilder, view);
+        final AlertDialog alertdialog = dialogBuilder.create();
+        onClickDialog(view, alertdialog);
+        Objects.requireNonNull(alertdialog.getWindow()).setBackgroundDrawable
+                (new ColorDrawable(Color.TRANSPARENT));
+        alertdialog.show();
+    }
+
+    private void onClickDialog(View view, final AlertDialog alertDialog) {
+        Button sortByHighRating = view.findViewById(R.id.button_sort_by_high_rating);
+        Button sortByLowRating = view.findViewById(R.id.button_sort_by_low_rating);
+        Button sortByDate = view.findViewById(R.id.button_sort_by_date);
+        Button sortByTitle = view.findViewById(R.id.button_sort_by_title);
+
+        sortByHighRating.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                questions.sort(new Question.questionCompareHighestRatingFirst());
+                setRecyclerView();
+                alertDialog.cancel();
+            }
+        });
+
+        sortByLowRating.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                questions.sort(new Question.questionCompareLowestRatingFirst());
+                setRecyclerView();
+                alertDialog.cancel();
+            }
+        });
+
+        sortByDate.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                questions.sort(new Question.questionCompareDateCreated());
+                setRecyclerView();
+                alertDialog.cancel();
+            }
+        });
+
+        sortByTitle.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                questions.sort(new Question.questionCompareTitle());
+                setRecyclerView();
+                alertDialog.cancel();
+            }
+        });
+
+
     }
 }
 
