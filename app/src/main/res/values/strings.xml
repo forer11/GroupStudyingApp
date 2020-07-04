@@ -18,6 +18,8 @@
         <item>other</item>
     </string-array>
 
+    <string name="button_sort_by">Sort</string>
+    <string name="sort_description">Sort questions by:</string>
     <string name="be_the_first_one_to_add">Be the first one to add!</string>
     <string name="embarrassed">embarrassed</string>
     <string name="no_questions_text">Uh oh, It seems like there are no questions for this course.</string>

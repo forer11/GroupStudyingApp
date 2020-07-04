@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/dialog_bg"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/text_view_sort_description"
+        android:layout_width="293dp"
+        android:layout_height="52dp"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center"
+        android:text="@string/sort_description"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/button_sort_by_high_rating"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/abeezee"
+        android:background="@drawable/blurred_button_shape"
+        android:text="Highest Rating" />
+
+    <Button
+        android:id="@+id/button_sort_by_low_rating"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/abeezee"
+        android:background="@drawable/blurred_button_shape"
+        android:text="Lowest Rating"
+        app:layout_constraintTop_toBottomOf="@+id/button_sort_by_high_rating" />
+
+    <Button
+        android:id="@+id/button_sort_by_date"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/abeezee"
+        android:background="@drawable/blurred_button_shape"
+        android:text="Date"
+        app:layout_constraintTop_toBottomOf="@+id/button_sort_by_low_rating" />
+
+    <Button
+        android:id="@+id/button_sort_by_title"
+        android:layout_width="match_parent"
+        android:layout_height="42dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/abeezee"
+        android:background="@drawable/blurred_button_shape"
+        android:text="Title"
+        app:layout_constraintTop_toBottomOf="@+id/button_sort_by_date" />
+
+</LinearLayout>
