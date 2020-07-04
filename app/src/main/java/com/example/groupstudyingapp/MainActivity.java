@@ -1,6 +1,9 @@
 package com.example.groupstudyingapp;
 
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +21,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Objects;
 
 public class MainActivity extends BaseMenuActivity implements CoursesAdapter.ItemClickListener {
 
@@ -96,6 +101,74 @@ public class MainActivity extends BaseMenuActivity implements CoursesAdapter.Ite
     private void setToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        View gotoSortButton = getLayoutInflater().inflate(R.layout.sort_button, null);
+        toolbar.addView(gotoSortButton);
+        gotoSortButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showSortDialog();
+            }
+        });
+    }
+
+    public void showSortDialog() {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder
+                (MainActivity.this);
+        View view = getLayoutInflater().inflate(R.layout.courses_sort_options_dialog, null);
+        dialogBuilder.setView(view);
+        final AlertDialog alertdialog = dialogBuilder.create();
+        onClickDialog(view, alertdialog);
+        Objects.requireNonNull(alertdialog.getWindow()).setBackgroundDrawable
+                (new ColorDrawable(Color.TRANSPARENT));
+        alertdialog.show();
+    }
+
+    private void onClickDialog(View view, final AlertDialog alertDialog) {
+        Button sortByName = view.findViewById(R.id.button_sort_by_name);
+        Button sortByMost = view.findViewById(R.id.button_sort_by_most);
+        Button sortByLeast = view.findViewById(R.id.button_sort_by_least);
+
+        sortByName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                coursesList.sort(new Comparator<Course>() {
+                    @Override
+                    public int compare(Course o1, Course o2) {
+                        return o1.getName().compareTo(o2.getName());
+                    }
+                });
+                adapter.notifyDataSetChanged();
+                alertDialog.cancel();
+            }
+        });
+
+        sortByMost.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                coursesList.sort(new Comparator<Course>() {
+                    @Override
+                    public int compare(Course o1, Course o2) {
+                        return o2.getQuestions().size() - o1.getQuestions().size();
+                    }
+                });
+                adapter.notifyDataSetChanged();
+                alertDialog.cancel();
+            }
+        });
+
+        sortByLeast.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                coursesList.sort(new Comparator<Course>() {
+                    @Override
+                    public int compare(Course o1, Course o2) {
+                        return o1.getQuestions().size() - o2.getQuestions().size();
+                    }
+                });
+                adapter.notifyDataSetChanged();
+                alertDialog.cancel();
+            }
+        });
     }
 
     private void setRecyclerViews() {
