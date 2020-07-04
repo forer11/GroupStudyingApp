@@ -272,7 +272,22 @@
                 android:background="@drawable/like1">
 
             </Button>
+
+
         </LinearLayout>
+
+        <Button
+            android:id="@+id/report_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="#FB4E4E"
+            android:onClick="reportButtonOnclick"
+            android:text="report"
+            android:textColor="@color/ghost_white"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/solutionImage" />
 
 
         <com.airbnb.lottie.LottieAnimationView
