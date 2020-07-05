@@ -130,7 +130,7 @@ public class Question implements Serializable {
 
         @Override
         public int compare(Question q1, Question q2) {
-            return - q1.title.compareTo(q2.title);
+            return q1.title.compareTo(q2.title);
         }
     }
 

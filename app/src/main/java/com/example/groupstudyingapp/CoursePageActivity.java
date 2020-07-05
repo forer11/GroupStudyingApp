@@ -256,7 +256,7 @@ public class CoursePageActivity extends BaseMenuActivity implements CoursePageAd
     public void showSortDialog() {
         AlertDialog.Builder dialogBuilder = new AlertDialog.Builder
                 (CoursePageActivity.this);
-        View view = getLayoutInflater().inflate(R.layout.sort_options_dialog, null);
+        View view = getLayoutInflater().inflate(R.layout.questions_sort_options_dialog, null);
         dialogBuilder.setView(view);
 //        setDialogView(dialogBuilder, view);
         final AlertDialog alertdialog = dialogBuilder.create();
