@@ -130,7 +130,7 @@ public class BaseMenuActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Void aVoid) {
                             CoolToast coolToast = new CoolToast(BaseMenuActivity.this);
-                            coolToast.make("Signed", CoolToast.SUCCESS);
+                            coolToast.make("Signed out", CoolToast.SUCCESS);
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
