@@ -60,7 +60,8 @@ public class CoursePageActivity extends BaseMenuActivity implements CoursePageAd
         setContentView(R.layout.activity_course_page);
         getAppData();
         // data to populate the RecyclerView with
-        questions = course.getQuestions();
+        questions = new ArrayList<>();
+        questions.addAll(course.getQuestions());
         questions.sort(new Question.questionCompareHighestRatingFirst());
         toggleAddQuestionsNote();
         setRecyclerView();
@@ -281,7 +282,7 @@ public class CoursePageActivity extends BaseMenuActivity implements CoursePageAd
             }
         });
 
-        sortByLowRating.setOnClickListener(new View.OnClickListener(){
+        sortByLowRating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 questions.sort(new Question.questionCompareLowestRatingFirst());
@@ -290,7 +291,7 @@ public class CoursePageActivity extends BaseMenuActivity implements CoursePageAd
             }
         });
 
-        sortByDate.setOnClickListener(new View.OnClickListener(){
+        sortByDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 questions.sort(new Question.questionCompareDateCreated());
@@ -299,7 +300,7 @@ public class CoursePageActivity extends BaseMenuActivity implements CoursePageAd
             }
         });
 
-        sortByTitle.setOnClickListener(new View.OnClickListener(){
+        sortByTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 questions.sort(new Question.questionCompareTitle());
