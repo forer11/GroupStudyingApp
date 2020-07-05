@@ -31,6 +31,7 @@ public class MainActivity extends BaseMenuActivity implements CoursesAdapter.Ite
     FireStoreHandler fireStoreHandler;
     private ArrayList<Course> coursesList;
     private CoursesAdapter adapter;
+    private boolean isBackPress = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -142,7 +143,7 @@ public class MainActivity extends BaseMenuActivity implements CoursesAdapter.Ite
             }
         });
 
-        sortByMost.setOnClickListener(new View.OnClickListener(){
+        sortByMost.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 coursesList.sort(new Comparator<Course>() {
@@ -156,7 +157,7 @@ public class MainActivity extends BaseMenuActivity implements CoursesAdapter.Ite
             }
         });
 
-        sortByLeast.setOnClickListener(new View.OnClickListener(){
+        sortByLeast.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 coursesList.sort(new Comparator<Course>() {
@@ -208,6 +209,14 @@ public class MainActivity extends BaseMenuActivity implements CoursesAdapter.Ite
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        System.exit(0);
+        if (isBackPress) {
+            System.exit(0);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        isBackPress = true;
     }
 }
