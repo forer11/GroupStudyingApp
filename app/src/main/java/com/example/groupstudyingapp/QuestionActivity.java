@@ -211,7 +211,7 @@ public class QuestionActivity extends AppCompatActivity implements ReportDialogF
 
     private void showPermissionsRationalDialog() {
         Context context = getApplicationContext();
-        CharSequence text = "If you no to this you won't be able to share via WhatsApp!";
+        CharSequence text = "If you don't grant access you won't be able to share via WhatsApp!";
         int duration = Toast.LENGTH_LONG;
         Toast toast = Toast.makeText(context, text, duration);
         toast.show();
