@@ -16,15 +16,16 @@
         android:supportsRtl="false"
         android:theme="@style/AppTheme"
         tools:replace="android:supportsRtl">
-        <activity android:name=".SendEmailActivity"></activity>
+        <activity android:name=".SendEmailActivity">
+            
+        </activity>
         <activity android:name=".AddAnswerActivity" />
         <activity android:name=".AddQuestionActivity" />
-        <activity android:name=".CoursePageActivity" />
+        <activity
+            android:name=".CoursePageActivity"
+            android:parentActivityName=".MainActivity" />
         <activity android:name=".LoginActivity" />
         <activity android:name=".QuestionActivity" />
-        <activity
-            android:name=".PrevCoursePageActivity"
-            android:parentActivityName=".MainActivity" />
         <activity
             android:name=".OpeningScreenActivity"
             android:theme="@style/Theme.Transparent">
@@ -37,8 +38,9 @@
         <activity android:name=".MainActivity" />
         <activity android:name=".BaseMenuActivity" />
 
-        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat"/>
+        <activity
+            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/Base.Theme.AppCompat" />
 
         <provider
             android:name="androidx.core.content.FileProvider"

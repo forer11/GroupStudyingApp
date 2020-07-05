@@ -72,8 +72,8 @@ public class CoursePageActivity extends BaseMenuActivity implements CoursePageAd
     private void setToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle(course.getName());
-
         setSupportActionBar(toolbar);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         View gotoSortButton = getLayoutInflater().inflate(R.layout.sort_button, null);
         toolbar.addView(gotoSortButton);
         gotoSortButton.setOnClickListener(new View.OnClickListener() {
