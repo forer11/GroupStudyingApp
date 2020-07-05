@@ -43,6 +43,7 @@ public class QuestionActivity extends AppCompatActivity implements ReportDialogF
     public static final String FAILED_TO_UPLOAD_ANSWER_IMG = "failed to upload answers' image";
     public static final String NO_ANSWER_MSG = "No answer yet";
     public static final String ONE_ANS_MSG = "There is only one answer.";
+    public static final String SHOW_SOLUTION_MSG = "Scroll down";
 
     public static final String QUESTION_ID = "question_id";
     public static final String TITLE = "title";
@@ -52,6 +53,7 @@ public class QuestionActivity extends AppCompatActivity implements ReportDialogF
     public static final String NULL_PATH = "null_path";
     private String questionRate = "No rate yet";
 
+    private static boolean hasClickedSolution = false;
     private boolean hiddenSolution = true;
     private boolean hiddenRate = true;
     private boolean hasAnswer = false;
@@ -132,7 +134,7 @@ public class QuestionActivity extends AppCompatActivity implements ReportDialogF
         final Button addAnswerButton = findViewById(R.id.addAnswerButton);
         smileyRating = findViewById(R.id.smileyRating);
         rateText = findViewById(R.id.questionRate);
-        rateText.setText("Question Rate: " + questionRate);
+        rateText.setText("Question Rating: " + questionRate);
         Button rateButton = findViewById(R.id.rateButton);
 
         setStudentAnimation();
@@ -319,7 +321,7 @@ public class QuestionActivity extends AppCompatActivity implements ReportDialogF
                         question.setNumOfRates(numOfRates + 1);
                         break;
                 }
-                rateText.setText("Question Rate: " + question.getRating());
+                rateText.setText("Question Rating: " + question.getRating());
                 fireStoreHandler.updateQuestion(question);
             }
         });
@@ -409,6 +411,11 @@ public class QuestionActivity extends AppCompatActivity implements ReportDialogF
             public void onClick(View v) {
                 if (hiddenSolution) {
                     if (hasAnswer) {
+                        if (!hasClickedSolution){
+                            hasClickedSolution = true;
+                            CoolToast coolToast = new CoolToast(QuestionActivity.this);
+                            coolToast.make(SHOW_SOLUTION_MSG, CoolToast.INFO, CoolToast.CENTER);
+                        }
                         solutionImage.setVisibility(View.VISIBLE);
                         numberOfAnswers.setVisibility(View.VISIBLE);
                         updateNumberOfAnswers();
