@@ -19,6 +19,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -103,6 +104,10 @@ public class QuestionActivity extends AppCompatActivity implements ReportDialogF
             TextView answerRateText = findViewById(R.id.solutionRateText);
             answerRateText.setText(Integer.toString((int) answer.getRating()));
             // todo show all answers
+        }
+        else{
+            //there are no answers so nothing needs to be loaded so  hide the progress bar :
+            findViewById(R.id.loadingPanelAnswer).setVisibility(View.GONE);
         }
         userRateHandler();
         //TODO - get rate from firestore
@@ -383,6 +388,7 @@ public class QuestionActivity extends AppCompatActivity implements ReportDialogF
         final TextView numberOfAnswers = findViewById(R.id.numberOfAnswer);
         final TextView showSolutionText = findViewById(R.id.showSolutionText);
         final TextView solutionTitle = findViewById(R.id.solutionTitle);
+
 
         answerLikeButton.setOnClickListener(new View.OnClickListener() {
             @Override
