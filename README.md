@@ -18,6 +18,12 @@ Why should i use it?
 *	If you want help with a specific question while studying to an exam and want to have a discussion about it with other students.
 
 
+## Development
+
+*	The app is written in Android Studio
+
+*	We are using Firebase platform to restore all relevant data about users and app data.
+
 
 ## How to install
 
@@ -30,12 +36,6 @@ Why should i use it?
 
 *	start the app, login/signUp as you like and contribute to our Group Studying App!
 
-
-## Development
-
-*	The app is written in Android Studio
-
-*	We are using Firebase platform to restore all relevant data about users and app data.
 
 
 ## Contributing
