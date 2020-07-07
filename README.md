@@ -1,6 +1,6 @@
 # Group Studying App
 
-## Project description:
+## Description:
 
 A group studying program, whose main functions are uploading and grading questions 
 and answers.
@@ -19,7 +19,7 @@ Why should i use it?
 
 
 
-## How to install:
+## How to install
 
 *	Install android studio https://developer.android.com/studio/install
 
@@ -31,5 +31,20 @@ Why should i use it?
 *	start the app, login/signUp as you like and contribute to our Group Studying App!
 
 
+## Development
 
+*	The app is written in Android Studio
+
+*	We are using Firebase platform to restore all relevant data about users and app data.
+
+
+## Contributing
+
+	1. Create an issue first to discuss about the changes you are suggesting.
+
+	2. Create a branch.
+
+	3. Make required changes and commit to that branch.
+
+	4. Generate pull request. Mention all the required description regarding changes you made.
 
