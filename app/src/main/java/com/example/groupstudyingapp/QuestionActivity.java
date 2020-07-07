@@ -335,6 +335,7 @@ public class QuestionActivity extends AppCompatActivity implements ReportDialogF
     private void updateSolution() {
         final TextView answerRateText = findViewById(R.id.solutionRateText);
         final TextView solutionTitle = findViewById(R.id.solutionTitle);
+        final Button solutionLikeButton = findViewById(R.id.solutionLikeButton);
 
         solutionImage = findViewById(R.id.solutionImage);
 
@@ -357,6 +358,8 @@ public class QuestionActivity extends AppCompatActivity implements ReportDialogF
         }
         solutionTitle.setText(title);
         answerRateText.setText(Integer.toString((int) answer.getRating()));
+        solutionLikeButton.setBackground(getResources().getDrawable(R.drawable.like1));
+        answerRated = false;
         updateNumberOfAnswers();
     }
 
