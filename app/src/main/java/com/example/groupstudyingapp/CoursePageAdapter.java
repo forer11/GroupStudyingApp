@@ -45,37 +45,6 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
         final Question question = questions.get(position);
         holder.questionName.setText(question.getTitle());
         holder.rateText.setText(String.format("%.1f", question.getRating()));
-        holder.removeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                callDeleteDialog(position);
-//                questions.remove(position);
-//                notifyDataSetChanged();
-            }
-        });
-    }
-
-    private void callDeleteDialog(final int position) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this.context);
-        builder.setTitle("Are you sure you want to delete?")
-                .setNegativeButton("cancel",  new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        //do nothing and return to activity
-                    }
-                })
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        questions.remove(position);
-                        CoursePageActivity ctx = (CoursePageActivity) context;
-                        ctx.toggleAddQuestionsNote();
-                        notifyDataSetChanged();
-                    }
-                });
-
-        AlertDialog dialog = builder.create();
-        dialog.show();
     }
 
     // total number of questions
@@ -131,7 +100,6 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
             super(itemView);
             questionName = itemView.findViewById(R.id.questionName);
             rateText = itemView.findViewById(R.id.rateText);
-            removeButton = itemView.findViewById(R.id.removeQuestionButton);
             itemView.setOnClickListener(this);
         }
 

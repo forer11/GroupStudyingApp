@@ -31,7 +31,6 @@ public class MainActivity extends BaseMenuActivity implements CoursesAdapter.Ite
     FireStoreHandler fireStoreHandler;
     private ArrayList<Course> coursesList;
     private CoursesAdapter adapter;
-    private boolean isBackPress = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -209,14 +208,10 @@ public class MainActivity extends BaseMenuActivity implements CoursesAdapter.Ite
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (isBackPress) {
-            System.exit(0);
-        }
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        isBackPress = true;
     }
 }
