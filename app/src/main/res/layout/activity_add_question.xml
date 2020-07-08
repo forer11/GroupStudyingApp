@@ -45,15 +45,14 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/title"
             tools:ignore="RtlSymmetry" />
-
         <Button
             android:id="@+id/cameraButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginTop="25dp"
-            android:background="@drawable/sign_in_button_design_blue"
+            android:layout_weight="1"
+            android:background="@drawable/camera"
             android:padding="10dp"
-            android:text="From Camera"
             android:textAllCaps="false"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
@@ -61,19 +60,44 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/userTitle" />
 
-        <Button
-            android:id="@+id/galleryButton"
+        <TextView
+            android:id="@+id/cameraButtonText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="From Camera"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.21"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/cameraButton" />
+
+
+        <Button
+            android:id="@+id/galleryButton"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginTop="25dp"
-            android:background="@drawable/sign_in_button_design_blue"
+            android:layout_weight="1"
+            android:background="@drawable/gallery"
             android:padding="10dp"
-            android:text="From Gallery"
             android:textAllCaps="false"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/cameraButton"
             app:layout_constraintTop_toBottomOf="@+id/userTitle" />
+
+        <TextView
+            android:id="@+id/galleryButtonText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="From Gallery"
+            android:textSize="12sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.69"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/galleryButton" />
+
+
 
         <ImageView
             android:id="@+id/questionImage"
