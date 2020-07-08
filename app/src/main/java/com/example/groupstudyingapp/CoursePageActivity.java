@@ -8,29 +8,23 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.text.Layout;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.appcompat.widget.ActionBarOverlayLayout;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-
 import java.util.ArrayList;
 import java.util.Objects;
-
-import de.hdodenhof.circleimageview.CircleImageView;
 
 public class CoursePageActivity extends BaseMenuActivity implements CoursePageAdapter.ItemClickListener {
     public static final String IMAGE_UPLOADED = "image_uploaded";
@@ -170,11 +164,17 @@ public class CoursePageActivity extends BaseMenuActivity implements CoursePageAd
         // set up the RecyclerView
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(this,R.anim.layout_fall_down);
+
         adapter = new CoursePageAdapter(this, questions);
         adapter.setClickListener(CoursePageActivity.this);
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new DividerItemDecoration(getBaseContext(),
                 DividerItemDecoration.VERTICAL));
+        recyclerView.setLayoutAnimation(controller);
+        recyclerView.getAdapter().notifyDataSetChanged();
+        recyclerView.scheduleLayoutAnimation();
     }
 
 
