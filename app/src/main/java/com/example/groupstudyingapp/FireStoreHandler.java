@@ -449,6 +449,10 @@ public class FireStoreHandler {
         updateCourse(currentCourseId);
     }
 
+    public void addQuestionToCurrentCourse(Question question) {
+        courses.get(currentCourseId).addQuestion(question);
+    }
+
     //TODO Ido/Mor check if we need it
     public void setCurrentCourseId(int position) {
         currentCourseId = coursesIds.get(position);
