@@ -188,7 +188,7 @@
             android:padding="10dp"
             android:textAllCaps="false"
             android:textColor="@color/white"
-            android:visibility="invisible"
+            android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/previousAnswerButton"
             app:layout_constraintTop_toBottomOf="@+id/smileyRating" />
@@ -203,7 +203,7 @@
             android:textAllCaps="false"
             android:rotation="180"
             android:textColor="@color/white"
-            android:visibility="invisible"
+            android:visibility="gone"
             app:layout_constraintEnd_toStartOf="@+id/nextAnswerButton"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/smileyRating" />
@@ -213,7 +213,7 @@
             android:id="@+id/numberOfAnswer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="invisible"
+            android:visibility="gone"
             android:text="1 of 3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -225,7 +225,7 @@
             android:id="@+id/solutionTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="invisible"
+            android:visibility="gone"
             android:layout_marginTop="10dp"
             android:textSize="25sp"
             android:gravity="center"
@@ -239,7 +239,7 @@
             android:id="@+id/solutionImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="invisible"
+            android:visibility="gone"
             android:layout_marginTop="5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -254,7 +254,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/solutionImage"
             android:gravity="end|center_vertical"
-            android:visibility="invisible">
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/solutionRateText"
