@@ -75,10 +75,10 @@ public class SendRequestActivityTest {
                 isDisplayed())).check(matches(isDisplayed()));
 
         onView(allOf(withId(R.id.titleEditText))).perform(scrollTo(),
-                replaceText("aa"), closeSoftKeyboard());
+                replaceText("Title"), closeSoftKeyboard());
 
         onView(allOf(withId(R.id.emailContentEditText))).perform(scrollTo(),
-                replaceText("a"), closeSoftKeyboard());
+                replaceText("email body"), closeSoftKeyboard());
 
         onView(allOf(withId(R.id.sendEmailButton), withText("Send request"))).perform(click());
 
