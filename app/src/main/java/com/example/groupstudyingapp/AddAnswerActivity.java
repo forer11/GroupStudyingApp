@@ -21,15 +21,12 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 import com.bumptech.glide.Glide;
 import com.ndroid.nadim.sahel.CoolToast;
 import com.theartofdev.edmodo.cropper.CropImage;
-import com.theartofdev.edmodo.cropper.CropImageView;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-
-import static java.security.AccessController.getContext;
 
 public class AddAnswerActivity extends AppCompatActivity {
 
@@ -123,14 +120,14 @@ public class AddAnswerActivity extends AppCompatActivity {
         titleInput = findViewById(R.id.userAnswerTitle);
         titleInput.setText("");
         answerImage = findViewById(R.id.answerImage);
-        cameraButton = findViewById(R.id.cameraButtonAnswer);
+        cameraButton = findViewById(R.id.cameraButton);
         cameraButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dispatchTakePictureIntent();
             }
         });
-        galleryButton = findViewById(R.id.galleryButtonAnswer);
+        galleryButton = findViewById(R.id.galleryButton);
         galleryButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
