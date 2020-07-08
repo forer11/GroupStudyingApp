@@ -125,6 +125,7 @@ public class QuestionActivity extends AppCompatActivity implements ReportDialogF
                     String answerUrl = intent.getStringExtra(UPDATED_URL);
                     String title = intent.getStringExtra(TITLE);
                     fireStoreHandler.addNewAnswer(question.getId(), title, answerUrl);
+                    loadQuestionAndCourse();
 //                    addNewQuestion(title, questionUrl);
 //                    fireStoreHandler.updateCourse(course.getId());
                 }
@@ -379,6 +380,11 @@ public class QuestionActivity extends AppCompatActivity implements ReportDialogF
         question = fireStoreHandler.getQuestionById(questionId);
         String courseId = intent.getStringExtra(COURSE_ID);
         course = fireStoreHandler.getCourseById(courseId);
+//        if (question.getAnswers().size() > 0) {
+//            hasAnswer = true;
+//        }
+        final Button solutionButton = findViewById(R.id.solutionButton);
+        setAnswerAndShow(solutionButton);
     }
 
     private void showSolutionHandler(final Button solutionButton) {

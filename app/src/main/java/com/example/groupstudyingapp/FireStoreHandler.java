@@ -446,6 +446,7 @@ public class FireStoreHandler {
         Question question = getQuestionById(questionId);
         question.addAnswer(title, answerUrl);
         question.sortAnswers();
+        updateQuestion(question);
         updateCourse(currentCourseId);
     }
 
