@@ -112,7 +112,7 @@ public class AddQWithCameraTest {
         onView(withId(R.id.questionImage)).check(matches(not(hasDrawable())));
 
         // click the camera option button
-        onView(allOf(withId(R.id.cameraButton), withText("From Camera")))
+        onView(withId(R.id.cameraButton))
                 .perform(scrollTo(), click());
 
         // todo: Using espresso intent we know exactly what image we "receive" from the camera.

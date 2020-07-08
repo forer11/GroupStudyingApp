@@ -42,24 +42,12 @@ public class ExampleInstrumentedTest {
     public ActivityTestRule<LoginActivity> loginActivityRule
             = new ActivityTestRule<>(LoginActivity.class, true, true);
 
-    @Before
+    @Test
     public void useAppContext() {
         appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
         assertEquals("com.example.groupstudyingapp", appContext.getPackageName());
     }
 
-    @Test
-    public void testSignIn() {
-        onView(withId(R.id.anonymous_sign_in_button)).perform(click());
-    }
-
-    @Test
-    public void testSignOut() {
-        onView(withId(R.id.anonymous_sign_in_button)).perform(click());
-        onView(isRoot()).perform(waitFor(1000));
-        onView(withId(R.id.profile_image_layout)).perform(click());
-        onView(withId(R.id.signout_button)).perform(click());
-    }
 
     public static ViewAction waitFor(final long delay) {
         return new ViewAction() {
