@@ -283,29 +283,48 @@
 
             <Button
                 android:id="@+id/report_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="10dp"
-                android:backgroundTint="#FB4E4E"
+                android:background="@drawable/report_button_layout"
                 android:onClick="reportButtonOnclick"
-                android:text="report"
-                android:textColor="@color/ghost_white"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/mark_done_button" />
-
-            <Button
-                android:id="@+id/mark_done_button"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="10dp"
-                android:backgroundTint="#58FF5A"
-                android:onClick="doneButtonOnclick"
-                android:text="mark as done"
                 android:textColor="@color/ghost_white"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/solutionImage" />
+
+            <TextView
+                android:id="@+id/reportButtonText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:text="Report"
+                android:textSize="12dp"
+                app:layout_constraintHorizontal_bias="0.139"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/report_button" />
+
+            <Button
+                android:id="@+id/mark_done_button"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/done"
+                android:onClick="doneButtonOnclick"
+                android:textColor="@color/ghost_white"
+                app:layout_constraintStart_toStartOf="@id/studentAnimation"
+                app:layout_constraintTop_toBottomOf="@id/solutionImage" />
+
+            <TextView
+                android:id="@+id/doneButtonText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
+                android:text="Mark as done"
+                android:textSize="12dp"
+                app:layout_constraintStart_toStartOf="@id/studentAnimation"
+                app:layout_constraintTop_toBottomOf="@+id/mark_done_button" />
 
 
             <com.airbnb.lottie.LottieAnimationView
@@ -316,7 +335,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/solutionRate"
+                app:layout_constraintTop_toBottomOf="@+id/doneButtonText"
                 app:lottie_autoPlay="true"
                 app:lottie_fileName="student.json"
                 app:lottie_loop="true" />

@@ -521,7 +521,6 @@ public class QuestionActivity extends AppCompatActivity implements ReportDialogF
         DialogFragment reportDialog = new ReportDialogFragment();
         reportDialog.setCancelable(false);
         reportDialog.show(getSupportFragmentManager(), "Single Choice Dialog");
-
     }
 
     @Override
@@ -556,6 +555,8 @@ public class QuestionActivity extends AppCompatActivity implements ReportDialogF
     public void doneButtonOnclick(View view) {
         intentBack.putExtra("is_done",true);
         Toast.makeText(getApplicationContext(),"this question is now done!", Toast.LENGTH_SHORT).show();
+        Button doneButton = findViewById(R.id.mark_done_button);
+        doneButton.setBackground(getResources().getDrawable(R.drawable.done_color));
     }
 
     @Override
