@@ -45,6 +45,12 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
         final Question question = questions.get(position);
         holder.questionName.setText(question.getTitle());
         holder.rateText.setText(String.format("%.1f", question.getRating()));
+        if(question.isQuestionDone()){
+            holder.checkIcon.setVisibility(View.VISIBLE);
+        }
+        else{
+            holder.checkIcon.setVisibility(View.INVISIBLE);
+        }
     }
 
     // total number of questions
@@ -94,12 +100,13 @@ public class CoursePageAdapter extends RecyclerView.Adapter<CoursePageAdapter.Vi
     public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         TextView questionName;
         TextView rateText;
-        ImageView removeButton;
+        ImageView checkIcon;
 
         ViewHolder(View itemView) {
             super(itemView);
             questionName = itemView.findViewById(R.id.questionName);
             rateText = itemView.findViewById(R.id.rateText);
+            checkIcon = itemView.findViewById(R.id.check_icon);
             itemView.setOnClickListener(this);
         }
 

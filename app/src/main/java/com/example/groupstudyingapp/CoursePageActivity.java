@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.DividerItemDecoration;
@@ -36,6 +37,7 @@ public class CoursePageActivity extends BaseMenuActivity implements CoursePageAd
     AppData appData;
     FireStoreHandler fireStoreHandler;
     private Course course;
+    private Question curQuestion;
 
 
     /**
@@ -183,7 +185,21 @@ public class CoursePageActivity extends BaseMenuActivity implements CoursePageAd
         Intent intent = new Intent(getBaseContext(), QuestionActivity.class);
         intent.putExtra(QuestionActivity.QUESTION_ID, questions.get(position).getId());
         intent.putExtra(QuestionActivity.COURSE_ID, course.getId());
-        startActivity(intent);
+        curQuestion = questions.get(position);
+        startActivityForResult(intent, 123);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == 123){
+            if(resultCode == RESULT_OK){
+                if(data.getBooleanExtra("is_done",false)){
+                    curQuestion.markAsDone();
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        }
     }
 
     //TODO Mor/Ido do we need those?

@@ -67,6 +67,7 @@ public class QuestionActivity extends AppCompatActivity implements ReportDialogF
     private ImageView solutionImage;
     private Question question;
     private Course course;
+    private Intent intentBack;
     AppData appData;
     FireStoreHandler fireStoreHandler;
 
@@ -80,6 +81,7 @@ public class QuestionActivity extends AppCompatActivity implements ReportDialogF
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_question);
         getAppData();
+        intentBack = new Intent();
         loadQuestionAndCourse();
         if (question.getRating() > 0) {
             questionRate = Float.toString(question.getRating());
@@ -549,6 +551,17 @@ public class QuestionActivity extends AppCompatActivity implements ReportDialogF
     @Override
     public void onNegativeButtonClicked() {
 
+    }
+
+    public void doneButtonOnclick(View view) {
+        intentBack.putExtra("is_done",true);
+        Toast.makeText(getApplicationContext(),"this question is now done!", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(RESULT_OK, intentBack);
+        super.onBackPressed();
     }
 }
 
