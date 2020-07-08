@@ -8,7 +8,7 @@
     android:background="@mipmap/main_background"
     tools:context=".MainActivity">
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+    <com.example.groupstudyingapp.MovableFloatingActionButton
         android:id="@+id/addCourseButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
