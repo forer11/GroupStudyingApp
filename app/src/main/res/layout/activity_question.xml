@@ -292,6 +292,19 @@
                 android:text="report"
                 android:textColor="@color/ghost_white"
                 app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/mark_done_button" />
+
+            <Button
+                android:id="@+id/mark_done_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="10dp"
+                android:backgroundTint="#58FF5A"
+                android:onClick="doneButtonOnclick"
+                android:text="mark as done"
+                android:textColor="@color/ghost_white"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/solutionImage" />
 
 

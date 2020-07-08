@@ -16,6 +16,7 @@ public class Question implements Serializable {
     private ArrayList<Answer> answers;
     private String imagePath;
     private Date creationDate;
+    private boolean isDone;
     //todo tags?
 
     Question() {
@@ -30,6 +31,8 @@ public class Question implements Serializable {
         this.imagePath = imagePath;
         this.id = null;
         this.creationDate = new Date();
+        isDone = false;
+
     }
 
     /////////////////////////////////// Getters ////////////////////////////////////////////////////
@@ -57,6 +60,9 @@ public class Question implements Serializable {
 
     public String getImagePath() {
         return imagePath;
+    }
+    public boolean isQuestionDone(){
+        return isDone;
     }
 
     public static questionCompareHighestRatingFirst getQuestionComparator() {
@@ -89,6 +95,14 @@ public class Question implements Serializable {
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    public void markAsDone(){
+        isDone = true;
+    }
+
+    public void markAsNotDone(){
+        isDone = false;
     }
 
 

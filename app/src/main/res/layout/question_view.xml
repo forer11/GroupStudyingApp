@@ -25,6 +25,13 @@
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             app:fontFamily="sans-serif-smallcaps" />
 
+        <ImageView
+            android:id="@+id/check_icon"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:visibility="invisible"
+            app:srcCompat="@drawable/ic_check_icon" />
+
         <LinearLayout
             android:layout_width="35dp"
             android:layout_height="55dp"
