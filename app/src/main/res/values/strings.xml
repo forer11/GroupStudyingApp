@@ -24,6 +24,7 @@
     <string name="embarrassed">embarrassed</string>
     <string name="no_questions_text">Uh oh, It seems like there are no questions for this course.</string>
     <string name="no_results_found">No results found</string>
+    <string name="type_your_message_here">Type your message here</string>
 
 
 </resources>
