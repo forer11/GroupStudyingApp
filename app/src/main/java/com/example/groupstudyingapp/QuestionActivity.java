@@ -448,12 +448,12 @@ public class QuestionActivity extends AppCompatActivity implements ReportDialogF
                     }
                 } else {
                     if (hasAnswer) {
-                        solutionImage.setVisibility(View.INVISIBLE);
-                        numberOfAnswers.setVisibility(View.INVISIBLE);
-                        nextAnswerButton.setVisibility(View.INVISIBLE);
-                        previousAnswerButton.setVisibility(View.INVISIBLE);
-                        answerBox.setVisibility(View.INVISIBLE);
-                        solutionTitle.setVisibility(View.INVISIBLE);
+                        solutionImage.setVisibility(View.GONE);
+                        numberOfAnswers.setVisibility(View.GONE);
+                        nextAnswerButton.setVisibility(View.GONE);
+                        previousAnswerButton.setVisibility(View.GONE);
+                        answerBox.setVisibility(View.GONE);
+                        solutionTitle.setVisibility(View.GONE);
                     }
 //                    solutionButton.setText("Show solution");
                     showSolutionText.setText("Show solution");
