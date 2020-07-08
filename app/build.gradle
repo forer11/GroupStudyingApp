@@ -65,6 +65,7 @@ dependencies {
 
     //for Android-Image-Cropper
     implementation 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
+    implementation 'info.hoang8f:fbutton:1.0.5'
 
 }
 

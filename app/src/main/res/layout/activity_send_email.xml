@@ -90,12 +90,18 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
-            <Button
+
+
+            <info.hoang8f.widget.FButton
                 android:id="@+id/sendEmailButton"
-                style="@style/Widget.AppCompat.Button.Colored"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:textAlignment="center"
+                android:textSize="15sp"
+                android:textColor="@color/white"
                 android:text="@string/send_request"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -103,7 +109,9 @@
                 app:layout_constraintHorizontal_bias="0.798"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/emailContentEditText"
-                app:layout_constraintVertical_bias="0.105" />
+                app:layout_constraintVertical_bias="0.105"
+                />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 </LinearLayout>
