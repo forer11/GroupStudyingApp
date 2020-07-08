@@ -161,6 +161,7 @@ public class CoursePageActivity extends BaseMenuActivity implements CoursePageAd
         newQuestion.setLink(questionLink);
         newQuestion.setId(getNewCourseId());
         questions.add(newQuestion);
+        fireStoreHandler.addQuestionToCurrentCourse(newQuestion);
         toggleAddQuestionsNote();
         adapter.notifyDataSetChanged();
     }
