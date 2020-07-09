@@ -17,7 +17,7 @@ Why should i use it?
 
 *	If you want help with a specific question while studying to an exam and want to have a discussion about it with other students.
 
-![](app-gif.gif)
+![](app_gif.gif)
 
 ## Development
 
