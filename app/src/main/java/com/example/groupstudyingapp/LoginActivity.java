@@ -16,6 +16,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
@@ -49,27 +50,40 @@ public class LoginActivity extends AppCompatActivity {
         googleSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                googleSignInButton.setEnabled(false);
                 signIn();
             }
         });
         anonymousSignInButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                firebaseAuth.signInAnonymously()
-                        .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (task.isSuccessful()) {
-                                    goToMainScreen();
-                                } else {
-                                    Log.w(TAG, "signInAnonymously:failure",
-                                            task.getException());
-                                    Toast.makeText(LoginActivity.this,
-                                            "Authentication failed.",
-                                            Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        });
+                anonymousSignInButton.setEnabled(false);
+                signInAnonymously();
+            }
+        });
+    }
+
+    private void signInAnonymously() {
+        firebaseAuth.signInAnonymously()
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            goToMainScreen();
+                        } else {
+                            Log.w(TAG, "signInAnonymously:failure",
+                                    task.getException());
+                            Toast.makeText(LoginActivity.this,
+                                    "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                        anonymousSignInButton.setEnabled(true);
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                anonymousSignInButton.setEnabled(true);
+                Log.v("bad_login", e.toString());
             }
         });
     }
@@ -99,11 +113,11 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == RC_SIGN_IN) {
             handelSignInResults(data);
         }
+        googleSignInButton.setEnabled(true);
     }
 
     private void handelSignInResults(Intent data) {
