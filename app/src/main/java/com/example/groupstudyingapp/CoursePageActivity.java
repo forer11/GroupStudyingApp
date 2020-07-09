@@ -31,6 +31,8 @@ public class CoursePageActivity extends BaseMenuActivity implements CoursePageAd
     public static final String IMAGE_UPLOADED = "image_uploaded";
     public static final String ANSWER_IMAGE_UPLOADED = "answer_image_uploaded";
     public static final String TITLE = "title";
+    private static final int FAST_SCROLL_POSITION = 15;
+
 
     CoursePageAdapter adapter;
     private ArrayList<Question> questions;
@@ -49,6 +51,7 @@ public class CoursePageActivity extends BaseMenuActivity implements CoursePageAd
      * The local path of the last image taken by the camera
      **/
     private String currentPhotoPath; //todo - needed?
+    private RecyclerView recyclerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -164,10 +167,10 @@ public class CoursePageActivity extends BaseMenuActivity implements CoursePageAd
 
     private void setRecyclerView() {
         // set up the RecyclerView
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
+        recyclerView = findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(this,R.anim.layout_fall_down);
+        LayoutAnimationController controller = AnimationUtils.loadLayoutAnimation(this, R.anim.layout_fall_down);
 
         adapter = new CoursePageAdapter(this, questions);
         adapter.setClickListener(CoursePageActivity.this);
@@ -192,9 +195,9 @@ public class CoursePageActivity extends BaseMenuActivity implements CoursePageAd
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == 123){
-            if(resultCode == RESULT_OK){
-                if(data.getBooleanExtra("is_done",false)){
+        if (requestCode == 123) {
+            if (resultCode == RESULT_OK) {
+                if (data.getBooleanExtra("is_done", false)) {
                     curQuestion.markAsDone();
                     adapter.notifyDataSetChanged();
                 }
@@ -325,8 +328,24 @@ public class CoursePageActivity extends BaseMenuActivity implements CoursePageAd
                 alertDialog.cancel();
             }
         });
+    }
 
+    @Override
+    public void onBackPressed() {
+        int position = ((LinearLayoutManager) Objects.
+                requireNonNull(recyclerView.getLayoutManager())).findFirstVisibleItemPosition();
+        if (position > 0) {
+            scrollToTop(position);
+        } else {
+            super.onBackPressed();
+        }
+    }
 
+    void scrollToTop(int position) {
+        if (position > FAST_SCROLL_POSITION) {
+            recyclerView.getLayoutManager().scrollToPosition(FAST_SCROLL_POSITION);
+        }
+        recyclerView.smoothScrollToPosition(0);
     }
 }
 
