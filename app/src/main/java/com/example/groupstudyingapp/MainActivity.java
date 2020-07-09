@@ -26,11 +26,13 @@ import java.util.Objects;
 
 public class MainActivity extends BaseMenuActivity implements CoursesAdapter.ItemClickListener {
 
+    private static final int FAST_SCROLL_POSITION = 15;
     private Button saveButton;
     AppData appData;
     FireStoreHandler fireStoreHandler;
     private ArrayList<Course> coursesList;
     private CoursesAdapter adapter;
+    private RecyclerView rvCourses;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +102,7 @@ public class MainActivity extends BaseMenuActivity implements CoursesAdapter.Ite
 
     private void setToolbar() {
         Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar.setTitle("Courses");
         setSupportActionBar(toolbar);
         View gotoSortButton = getLayoutInflater().inflate(R.layout.sort_button, null);
         toolbar.addView(gotoSortButton);
@@ -173,7 +176,7 @@ public class MainActivity extends BaseMenuActivity implements CoursesAdapter.Ite
 
     private void setRecyclerViews() {
         coursesList = new ArrayList<>();
-        RecyclerView rvCourses = findViewById(R.id.rvCourses);
+        rvCourses = findViewById(R.id.rvCourses);
         adapter = new CoursesAdapter(appData.fireStoreHandler, coursesList, this);
         adapter.setClickListener(MainActivity.this);
         rvCourses.setAdapter(adapter);
@@ -212,6 +215,19 @@ public class MainActivity extends BaseMenuActivity implements CoursesAdapter.Ite
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
+        int position = ((LinearLayoutManager) Objects.
+                requireNonNull(rvCourses.getLayoutManager())).findFirstVisibleItemPosition();
+        if (position > 0) {
+            scrollToTop(position);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+    void scrollToTop(int position) {
+        if (position > FAST_SCROLL_POSITION) {
+            rvCourses.getLayoutManager().scrollToPosition(FAST_SCROLL_POSITION);
+        }
+        rvCourses.smoothScrollToPosition(0);
     }
 }
