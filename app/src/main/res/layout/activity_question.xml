@@ -67,7 +67,7 @@
                 app:layout_constraintHorizontal_bias="0.22"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
+            <com.github.chrisbanes.photoview.PhotoView
                 android:id="@+id/questionImage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
