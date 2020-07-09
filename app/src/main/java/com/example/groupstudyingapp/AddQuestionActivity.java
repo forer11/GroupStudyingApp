@@ -39,6 +39,7 @@ public class AddQuestionActivity extends AppCompatActivity {
     public static final String FAILED_TO_UPLOAD = "failed to upload";
     public static final String IMAGE_SAVE_ERROR_MSG = "image was'nt saved";
     public static final String IMAGE_SAVE_ERROR = "image_save_error";
+    public static final int MAX_TITLE_LENGTH = 30;
 
     private EditText titleInput;
     private Button cameraButton;
@@ -141,17 +142,22 @@ public class AddQuestionActivity extends AppCompatActivity {
                 if (titleInput.getText().toString().equals("")) {
                     CoolToast coolToast = new CoolToast(AddQuestionActivity.this);
                     coolToast.make("Please write a title!", CoolToast.DANGER);
-                } else {
-                    String questionTitleInput = titleInput.getText().toString();
-                    if (!isPhotoEntered) {
-                        CoolToast coolToast = new CoolToast(AddQuestionActivity.this);
-                        coolToast.make(PLS_UPLOAD_IMG, CoolToast.DANGER);
-                    } else {
-                        fireStoreHandler.uploadQuestionImage(newImageUri, newQuestionImagePath,
-                                questionTitleInput,AddQuestionActivity.this);
+                } else if (titleInput.getText().length()>MAX_TITLE_LENGTH) {
+                    CoolToast coolToast = new CoolToast(AddQuestionActivity.this);
+                    coolToast.make("Title Length is too long!", CoolToast.DANGER);
+                }
+                else{
+                        String questionTitleInput = titleInput.getText().toString();
+                        if (!isPhotoEntered) {
+                            CoolToast coolToast = new CoolToast(AddQuestionActivity.this);
+                            coolToast.make(PLS_UPLOAD_IMG, CoolToast.DANGER);
+                        } else {
+                            fireStoreHandler.uploadQuestionImage(newImageUri, newQuestionImagePath,
+                                    questionTitleInput,AddQuestionActivity.this);
+                        }
                     }
                 }
-            }
+
         });
     }
 
