@@ -30,6 +30,8 @@ import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
 import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.hsalf.smileyrating.SmileyRating;
 import com.ndroid.nadim.sahel.CoolToast;
 import com.squareup.picasso.Picasso;
@@ -97,7 +99,13 @@ public class QuestionActivity extends AppCompatActivity implements ReportDialogF
         circularProgressDrawable.setCenterRadius(60f);
         circularProgressDrawable.start();
 
-        Glide.with(this).load(Uri.parse(question.getLink())).placeholder(circularProgressDrawable).into(questionImageView);
+        Glide.with(this)
+                .load(Uri.parse(question.getLink()))
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
+                .error(R.drawable.broken_image)
+                .fallback(R.drawable.broken_image)
+                .placeholder(circularProgressDrawable)
+                .into(questionImageView);
         findViewById(R.id.loadingPanelQuestion).setVisibility(View.GONE);
 
         if (question.getAnswers().size() > 0) {
@@ -106,8 +114,7 @@ public class QuestionActivity extends AppCompatActivity implements ReportDialogF
             TextView answerRateText = findViewById(R.id.solutionRateText);
             answerRateText.setText(Integer.toString((int) answer.getRating()));
             // todo show all answers
-        }
-        else{
+        } else {
             //there are no answers so nothing needs to be loaded so  hide the progress bar :
             findViewById(R.id.loadingPanelAnswer).setVisibility(View.GONE);
         }
@@ -209,11 +216,10 @@ public class QuestionActivity extends AppCompatActivity implements ReportDialogF
                                            @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if(requestCode == WRITE_EXTERNAL_STORAGE_REQUEST){
-            if(grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        if (requestCode == WRITE_EXTERNAL_STORAGE_REQUEST) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 startSharingImageViaWhatsapp();
-            }
-            else{
+            } else {
                 showPermissionsRationalDialog();
             }
         }
@@ -253,12 +259,11 @@ public class QuestionActivity extends AppCompatActivity implements ReportDialogF
                 "Title",
                 null);
 
-        if(path != null) {
+        if (path != null) {
             Uri imageUri = Uri.parse(path);
 
             setWhatsappIntent(imageUri);
-        }
-        else{
+        } else {
             Log.e(NULL_PATH, "image path is null!");
         }
 
@@ -351,12 +356,16 @@ public class QuestionActivity extends AppCompatActivity implements ReportDialogF
 
         Answer answer = question.getAnswers().get(currentAnswer);
 
-        Glide.with(this).load(Uri.parse(answer.getImagePath())).placeholder(circularProgressDrawable).into(solutionImage);
+        Glide.with(this)
+                .load(Uri.parse(answer.getImagePath()))
+                .diskCacheStrategy(DiskCacheStrategy.DATA)
+                .error(R.drawable.broken_image)
+                .fallback(R.drawable.broken_image)
+                .placeholder(circularProgressDrawable).into(solutionImage);
         findViewById(R.id.loadingPanelAnswer).setVisibility(View.GONE);
 
         String title = answer.getTitle();
-        if (title == null || title.equals(""))
-        {
+        if (title == null || title.equals("")) {
             title = "No title";
         }
         solutionTitle.setText(title);
@@ -428,7 +437,7 @@ public class QuestionActivity extends AppCompatActivity implements ReportDialogF
             public void onClick(View v) {
                 if (hiddenSolution) {
                     if (hasAnswer) {
-                        if (!hasClickedSolution){
+                        if (!hasClickedSolution) {
                             hasClickedSolution = true;
                             CoolToast coolToast = new CoolToast(QuestionActivity.this);
                             coolToast.make(SHOW_SOLUTION_MSG, CoolToast.INFO, CoolToast.CENTER);
@@ -515,9 +524,10 @@ public class QuestionActivity extends AppCompatActivity implements ReportDialogF
 
     /**
      * implementation for report button click
+     *
      * @param view
      */
-    public void reportButtonOnclick(View view){
+    public void reportButtonOnclick(View view) {
         DialogFragment reportDialog = new ReportDialogFragment();
         reportDialog.setCancelable(false);
         reportDialog.show(getSupportFragmentManager(), "Single Choice Dialog");
@@ -537,10 +547,10 @@ public class QuestionActivity extends AppCompatActivity implements ReportDialogF
         emailIntent.putExtra(Intent.EXTRA_TEXT, body);
 
         Intent chooser = Intent.createChooser(emailIntent, "Send report by mail...");
-        try{
+        try {
             startActivity(chooser);
             finish();
-        }catch (android.content.ActivityNotFoundException ex) {
+        } catch (android.content.ActivityNotFoundException ex) {
             Toast.makeText(getApplicationContext(),
                     "There is no email client installed.", Toast.LENGTH_SHORT).show();
         }
@@ -553,8 +563,8 @@ public class QuestionActivity extends AppCompatActivity implements ReportDialogF
     }
 
     public void doneButtonOnclick(View view) {
-        intentBack.putExtra("is_done",true);
-        Toast.makeText(getApplicationContext(),"this question is now done!", Toast.LENGTH_SHORT).show();
+        intentBack.putExtra("is_done", true);
+        Toast.makeText(getApplicationContext(), "this question is now done!", Toast.LENGTH_SHORT).show();
         Button doneButton = findViewById(R.id.mark_done_button);
         doneButton.setBackground(getResources().getDrawable(R.drawable.done_color));
     }
