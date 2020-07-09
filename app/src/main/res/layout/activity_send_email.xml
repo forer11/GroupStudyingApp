@@ -81,7 +81,7 @@
                 android:layout_height="150dp"
                 android:inputType="textMultiLine|textImeMultiLine"
                 android:maxLines="7"
-                android:paddingStart="12dp"
+                android:padding="15dp"
                 android:hint="@string/type_your_message_here"
                 android:gravity="start|center_horizontal"
                 android:background="@drawable/ic_msg_back"
