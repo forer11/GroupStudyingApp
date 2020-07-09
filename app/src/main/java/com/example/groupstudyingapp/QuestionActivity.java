@@ -32,6 +32,7 @@ import com.airbnb.lottie.LottieAnimationView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.hsalf.smileyrating.SmileyRating;
 import com.ndroid.nadim.sahel.CoolToast;
 import com.squareup.picasso.Picasso;
@@ -65,8 +66,8 @@ public class QuestionActivity extends AppCompatActivity implements ReportDialogF
     private SmileyRating.Type rateType = null;
     private SmileyRating smileyRating;
     private TextView rateText;
-    private ImageView questionImageView;
-    private ImageView solutionImage;
+    private PhotoView questionImageView;
+    private DynamicImageView solutionImage;
     private Question question;
     private Course course;
     private Intent intentBack;
